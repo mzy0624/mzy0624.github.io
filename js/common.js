@@ -1,6 +1,5 @@
 function icons(str) {
-    let name = str == 'C++' ? 'Cpp' : str;
-    return `<img class="icon" src="icons/${name}.svg"/>`;
+    return `<img class="icon" src="icons/${str}.svg"/>`;
 }
 
 let URLs = {
