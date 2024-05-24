@@ -1,0 +1,37 @@
+<h1>解决了什么问题</h1>
+
+<p>在程序合成（Program Synthesis）领域，<a href="https://arxiv.org/abs/2107.03374" target="_blank">CodeX</a> 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen。</p>
+
+<p>程序合成的两大困难在于：搜索空间太大和正确理解用户意图太难。作者因此提出了一个新场景 “多轮程序合成”（Multi-Turn Program Synthesis）。</p>
+
+<h1>Multi-Turn Program Synthesis</h1>
+
+<p>所谓的 Multi-Turn 就是把一个问题分解成多个子问题，让模型先分别解决这些子问题，然后再串联在一起从而解决原问题，例如：</p>
+
+<div style="text-align: center;">
+    <img src="files/study7/1.png" width="80%" />
+</div>
+
+<h1>为什么要 Multi-Turn</h1>
+
+<ul>
+    <li>将长且复杂的用户意图分解成多个子意图，可以缩小搜索空间，简化模型理解。模型可以专注在子程序的相关意图上，避免费力地跟踪子程序之间复杂的依赖关系；</li>
+    <li>代码通常会存在可利用的自然语言和编程语言交错的 “弱模式”，这种模式是程序员为代码写注释形成的。以语言建模为目标，这种模式会给模型提供一个监督信号，从而在多个回合内生成期望的程序。而这个监督信号是比较弱且含有高噪声的，因为注释可能不准确或者没有实用信息，甚至位置都不对。为了克服这种弱监督，可以把模型做大或者用更多的数据；</li>
+</ul>
+
+<p></p>
+
+<p></p>
+
+<h1>CodeGen</h1>
+
+<p>CodeGen 就是自回归的 Transformer 架构，用 “next-token prediction” 的语言建模作为训练目标。CodeGen 依次在三个预处理过的训练集上训练：</p>
+
+<ol>
+    <li><a href="https://arxiv.org/abs/2101.00027" target="_blank">ThePile</a>：自然语言数据集（含小部分代码）。</li>
+    <li><a href="https://cloud.google.com/bigquery" target="_blank">BigQuery</a>：多语言代码数据集。</li>
+    <li><a href="https://github.com/tkarabela/bigpython" target="_blank">BigPython</a>：单语言代码数据集。</li>
+</ol>
+
+<p>CodeGen 先在 ThePile 数据集上训练，得到的模型称作 CodeGen-NL；CodeGen-NL 在 BigQuery 数据集上训练，得到 CodeGen-Multi；CodeGen-Multi 在 BigPython 数据集上训练，得到 CodeGen-Mono。</p>
+

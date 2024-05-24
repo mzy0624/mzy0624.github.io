@@ -1,0 +1,135 @@
+<h1>自编码器</h1>
+
+<p>自编码器（Auto Encoder，AE）包含一个编码器 $\mathcal{E}$ 和一个解码器 $\mathcal{D}$，给定数据 $x\in\mathbb{R}^D$：</p>
+
+<ul>
+    <li>编码器会将数据压缩到 $d$ 维（$d\ll D$）：$z=\mathcal{E}(x)\in\mathbb{R}^d$，这个低维数据称为编码（code）；</li>
+    <li>解码器可以将编码 $z$ 重新解码还原成原始数据：$\hat{x}=\mathcal{D}(z)=\mathcal{D}(\mathcal{E}(x))\in\mathbb{R}^D$；
+    <li>优化目标是让 $x$ 和 $\hat{x}$ 接近：$\min \|x-\hat{x}\|_2^2$</li>
+</ul>
+
+<p>AE 的常见应用有：降维、异常检测等，不过既然都有编码器和解码器结构了，那为什么不能拿解码器来生成新内容呢？在 AE 中，编码器将原始数据映射到低维隐空间中，解码器可以几乎无损失地解码，但这样会导致过拟合：在隐空间中采样的某些点会被解码成无意义的内容，因为训练仅以无损解码为目标，而不管隐空间如何组织。所以为了让解码器可以用于生成新内容，必须保证隐空间足够规则，一个可能的方案是引入正则化。</p>
+
+<h2>什么是规则的隐空间</h2>
+
+<p>规则性主要通过<b>连续性</b>和<b>完整性</b>来体现：</p>
+
+<ul>
+    <li>连续性：隐空间中相似的两个点被解码后的内容也应该相似；</li>
+    <li>完整性：隐空间中的点解码被解码后的内容应该有意义。</li>
+</ul>
+
+<h1>变分自编码器</h1>
+
+<p>变分自编码器（Variational Auto Encoder，VAE，<s>用 🐿️ 做这篇文章的图标是因为许嵩也叫 VAE。。。</s>）的训练引入了正则化来避免过拟合，而这使得 VAE 的编码器和 AE 的有所不同：<b>不再将原始数据编码成隐空间中的单个点，而是将其编码成隐空间中的概率分布</b>，再对模型进行如下训练：</p>
+
+<ol>
+    <li>将输入编码为在隐空间上的分布；</li>
+    <li>从该分布中采样一个数据点；</li>
+    <li>对采样的点进行解码并计算重构误差；</li>
+    <li>反向传播训练模型。</li>
+</ol>
+
+<p>而训练过程中的正则化项通过拉近编码器输出的分布和标准高斯分布来规范隐空间的组织，这可以通过最小化两个分布之间的 KL 散度来实现。</p>
+
+<h2>VAE 的数学原理</h2>
+
+<p>假设可观测数据为 $x$，它是由不可观测的隐变量 $z$ 生成的（从先验分布 $p(z)$ 中采样 $z$，然后根据条件分布 $p(x\mid z)$ 生成 $x$）。这种情况下，编码器可以定义为 $p(z\mid x)$ 而解码器为 $p(x\mid z)$。</p>
+
+<p>
+    注意到，AE 所缺乏的隐空间的正则化体现在 “假设 $z$ 遵循先验分布 $p(z)$” 上。根据贝叶斯公式：
+    $$p(z\mid x)=\dfrac{p(x\mid z)p(z)}{p(x)}=\dfrac{p(x\mid z)p(z)}{\int p(x\mid z)p(z){\rm d}z}$$
+    其中 $p(x)$ 称为证据（evidence），但是由于 $p(z)$ 和 $p(x\mid z)$ 都不知道，所以 $p(x)$ 求不出来。
+</p>
+
+<p>
+    假设 $p(z)$ 是标准高斯分布，$p(x\mid z)$ 也是高斯分布（其方差为定值且均值与 $z$ 有关），但是由于积分的存在，$p(x)$ 还是求不出来，不过可以使用<b>变分推断</b>来近似。由于 $p(z)$ 和 $p(x\mid z)$ 都是高斯分布，所以 $p(z\mid x)$ 也是高斯分布，只是参数不知道。可以用另一个高斯分布 $q(z\mid x)\sim\mathcal{N}(\mu,\sigma^2I)$ 来近似它（因为 $z$ 的各个维度是独立的，所以协方差矩阵是一个对角阵），可以通过最小化它们之间的 KL 散度来实现：
+    \begin{align*}
+    {\rm KL}(q(z\mid x)\ \|\ p(z\mid x))=&\ \int q(z\mid x)\log\dfrac{q(z\mid x)}{p(z\mid x)}{\rm d}z\\
+    =&\ {\rm KL}(q(z\mid x)\ \|\ p(z))-\mathbb{E}_{q(z\mid x)}[\log p(x\mid z)]+\log p(x)
+    \end{align*}
+</p>
+
+<p>
+    这样就得到了 VAE 的关键公式：
+    $$\log p(x)-{\rm KL}(q(z\mid x)\ \|\ p(z\mid x))=\mathbb{E}_{q(z\mid x)}[\log p(x\mid z)]-{\rm KL}(q(z\mid x)\ \|\ p(z))$$
+</p>
+
+<p>
+    由于 $\log p(x)$ 是定值，所以最小化 ${\rm KL}(q(z\mid x)\ \|\ p(z\mid x))$ 等价于：
+    $$\max\mathbb{E}_{q(z\mid x)}[\log p(x\mid z)]-{\rm KL}(q(z\mid x)\ \|\ p(z))$$
+    即最大化重构似然 $\mathbb{E}_{q(z\mid x)}[\log p(x\mid z)]$ 的同时还要让 $q(z\mid x)$ 和 $p(z)$ 尽量接近。
+</p>
+
+<h2>将神经网络引入 VAE</h2>
+
+<p>设 $q(z\mid x)$ 和 $p(x\mid z)$ 的参数分别为 $\phi$ 和 $\theta$，其中：</p>
+
+<ul>
+    <li>
+        编码器 $\mathcal{E}$ 输出分布 $q(z\mid x)$ 的均值和方差，而这两部分并不是完全独立的，它们共享一部分结构：
+        $$\mu=\mathcal{E}_\mu(\mathcal{E}_{\rm base}(x)),\ \sigma=\mathcal{E}_\sigma(\mathcal{E}_{\rm base}(x))$$
+        得到分布的均值和方差后，可以从分布中采样得到编码 $z$；
+    </li>
+    <li>解码器 $\mathcal{D}$ 接收编码 $z$ 为输入，输出重构后的 $x$。</li>
+</ul>
+
+<h2>The reparameterization trick（重参数化技巧）</h2>
+
+<p>过程中有一个步骤是从分布中采样，然而采样操作是不可导的，但是重参数化技巧使得梯度下降成为可能：任何一个高斯分布 $\mathcal{N}(\mu,\sigma^2)$ 的值 $z$ 都可以通过先从标准高斯分布中采样一个噪声 $\epsilon\sim\mathcal{N}(0,1)$，再作变换 $z=\mu+\sigma\epsilon$ 得到。对于模型来说，高斯噪声就是一个常数，不在计算图上，从而可以对 $\mu$ 和 $\sigma$ 求梯度并反向传播。</p>
+
+<h1>总结一下 VAE</h1>
+
+<p>对于一个数据集 $X=\{x_i\}_{i=1}^N$，训练 VAE 的过程如下：</p>
+
+<ol>
+    <li>对每个训练样本 $x_i$，编码器都会输出一个分布 $q(z\mid x_i)\sim\mathcal{N}(\mu_i,\sigma_i^2)$；</li>
+    <li>通过重参数化技巧从分布 $q(z\mid x_i)$ 中 “采样” 编码 $z$；</li>
+    <li>将编码 $z$ 输入到解码器中，解码器输出重构后的数据，然后通过上面的目标函数更新模型参数。</li>
+</ol>
+
+<p>VAE 训练完成后，就可以通过在标准高斯分布中采样噪声输入到解码器中来生成新样本。训练过程中是从 $q(z\mid x)$ 中采样编码输入到解码器，而优化目标保证了 $q(z\mid x)$ 和先验 $p(z)$（即标准高斯分布）尽可能接近。所以经过训练后，编码空间中的数据分布接近于标准高斯分布。</p>
+
+<hr>
+
+<h1>附：两个高斯分布之间的 KL 散度</h1>
+
+<p>
+    设 $p(x)\sim\mathcal{N}(\mu_1,\sigma_1),q(x)\sim\mathcal{N}(\mu_2,\sigma_2)$，则 $p,q$ 之间的 KL 散度为：
+    $${\rm KL}(p\ \|\ q)=\int p(x)\log\dfrac{p(x)}{q(x)}{\rm d}x=\int p(x)\log p(x){\rm d}x-\int p(x)\log q(x){\rm d}x$$
+</p>
+
+<p>
+    先计算第二项：
+    \begin{align*}
+        \int p(x)\log q(x){\rm d}x=&\ \int p(x)\log\left(\dfrac{1}{\sigma_2\sqrt{2\pi}}{\rm e}^{-\frac{(x-\mu_2)^2}{2\sigma_2^2}}\right){\rm d}x\\
+        =&\ \mathbb{E}_p\left[\dfrac{1}{2}\log(2\pi\sigma_2^2)-\dfrac{(x-\mu_2)^2}{2\sigma_2^2}\right]\\
+        =&\ \dfrac{1}{2}\log(2\pi\sigma_2^2)-\dfrac{\mathbb{E}_p[(x-\mu_2)^2]}{2\sigma_2^2}
+    \end{align*}
+</p>
+
+<p>
+    由于 $\mathbb{E}_p[x^2]-\mathbb{E}_p^2[x]=\sigma_1^2$，所以 $\mathbb{E}_p[x^2]=\mu_1^2+\sigma_1^2$，所以：
+    \begin{align*}
+        \mathbb{E}_p[(x-\mu_2)^2]=&\ \mathbb{E}_p[x^2]-2\mu_2\mathbb{E}_p[x]+\mu_2^2\\
+        =&\ \mu_1^2+\sigma_1^2-2\mu_1\mu_2+\mu_2^2\\
+        =&\ \sigma_1^2+(\mu_1-\mu_2)^2
+    \end{align*}
+</p>
+
+<p>从而第二项可以化为：$$\int p(x)\log q(x){\rm d}x=\dfrac{1}{2}\log(2\pi\sigma_2^2)-\dfrac{\sigma_1^2+(\mu_1-\mu_2)^2}{2\sigma_2^2}$$</p>
+
+<p>
+    第一项是第二项的特例：
+    $$\int p(x)\log p(x){\rm d}x=\dfrac{1}{2}\log(2\pi\sigma_1^2)-\dfrac{\sigma_1^2+(\mu_1-\mu_1)^2}{2\sigma_1^2}=\dfrac{1}{2}\log(2\pi\sigma_1^2)-\dfrac{1}{2}$$
+</p>
+
+
+<p>
+    所以：
+    \begin{align*}
+        {\rm KL}(p\ \|\ q)=&\ \int p(x)\log p(x){\rm d}x-\int p(x)\log q(x){\rm d}x\\
+        =&\ \dfrac{1}{2}\log(2\pi\sigma_1^2)-\dfrac{1}{2}-\dfrac{1}{2}\log(2\pi\sigma_2^2)+\dfrac{\sigma_1^2+(\mu_1-\mu_2)^2}{2\sigma_2^2}\\
+        =&\ \log\dfrac{\sigma_1}{\sigma_2}+\dfrac{\sigma_1^2-\sigma_2^2+(\mu_1-\mu_2)^2}{2\sigma_2^2}
+    \end{align*}
+</p>

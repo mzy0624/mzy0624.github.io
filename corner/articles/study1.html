@@ -1,0 +1,83 @@
+<p>
+    知识蒸馏中，设教师模型和学生模型的 logits 分别为 $v,\ z$，并设：
+    $$
+        p^{(t)}={\rm softmax}(v/t)\\
+        q^{(t)}={\rm softmax}(z/t)
+    $$
+</p>
+
+<p>其中 $t$ 是温度参数，以分类任务为例，目标函数有两部分：</p>
+
+<ul>
+    <li>
+        学生模型的输出和真实标记之间的分类损失  $\mathcal{L}_{\rm classification}$：
+        $$\mathcal{L}_{\rm classification}={\rm CrossEntropy}\left(y,\ q^{(1)}\right)=-\sum_{i=1}^Ny_i\log q_i^{(1)}$$
+    </li>
+
+    <li>
+        教师模型和学生模型之间的蒸馏损失 $\mathcal{L}_{\rm distillation}$：
+        $$\mathcal{L}_{\rm distillation}=t^2\times{\rm CrossEntropy}\left(p^{(t)},\ q^{(t)}\right)=t^2\sum_{i=1}^Np_i^{(t)}\log q_i^{(t)}$$
+    </li>
+</ul>
+<hr>
+
+<p>
+    但是在大部分蒸馏损失的实现中，都使用教师模型和学生模型之间的 KL 散度来代替交叉熵损失：
+    \begin{align*}
+        \mathcal{L}_{\rm distillation}=&\ t^2\times{\rm KL}\left(p^{(t)}\ \big\|\ q^{(t)}\right)\\
+        =&\ t^2\sum_{i=1}^Np_i^{(t)}\log\dfrac{p_i^{(t)}}{q_i^{(t)}}\\
+        =&\ t^2\left(\sum_{i=1}^Np_i^{(t)}\log p_i^{(t)}-\sum_{i=1}^Np_i^{(t)}\log q_i^{(t)}\right)\\
+        =&\ t^2\left({\rm Entropy}\left(p^{(t)}\right)+{\rm CrossEntropy}\left(p^{(t)},\ q^{(t)}\right)\right)
+    \end{align*}
+</p>
+
+<p>由于教师模型是固定的，所以 $p^{(t)}$ 也是固定的，即 ${\rm Entropy}\left(p^{(t)}\right)$ 是常数，则优化 KL 散度就等价于优化交叉熵，所以就有两个问题：</p>
+
+<ul>
+    <li>为什么不直接用交叉熵作为损失，而要用 KL 散度？</li>
+    <li>在分类问题中，目标分布也是固定的，为什么一般用交叉熵作为损失而不用 KL 散度？</li>
+</ul>
+
+<hr>
+
+<p>对于分类问题，目标分布一般以 one-hot 向量的形式参与损失计算，而 one-hot 向量的熵为零，所以此时 KL 散度等于交叉熵，然而求解交叉熵一般都会比求解 KL 散度快，因为只需要对 logit 求解 log_softmax 即可。</p>
+
+<p>但是 KL 散度比交叉熵更适合作为蒸馏损失，因为当学生模型完美匹配教师模型时，蒸馏损失会为零，而交叉熵却不为零，使用交叉熵作为蒸馏损失可能会导致损失随着 batch 波动。</p>
+
+<p>另外，蒸馏损失带有因子 $t^2$ 的原因如下。</p>
+
+<p>
+    设 $\mathcal{L}={\rm CrossEntropy}\left(p^{(t)},\ q^{(t)}\right)$ ，那么对于 $1\leqslant k\leqslant n$：
+    $$
+        \dfrac{\partial\mathcal{L}}{\partial z_k}=-\sum_{i=1}^Np_i^{(t)}\dfrac{\partial\log q_i^{(t)}}{\partial z_k}=-\sum_{i=1}^N\dfrac{p_i^{(t)}}{q_i^{(t)}}\dfrac{\partial q_i^{(t)}}{\partial z_k}
+    $$
+</p>
+
+<p>
+    而对于 $1\leqslant i,k\leqslant n$：   
+    \begin{align*}
+        \dfrac{\partial q^{(t)}_i}{\partial z_k}=&\ \dfrac{\partial\dfrac{{\rm e}^{z_i/t}}{\sum_j{\rm e}^{z_j/t}}}{\partial z_k}=\dfrac{\dfrac{\delta_{ik}{\rm e}^{z_i/t}}{t}\cdot\sum_j{\rm e}^{z_j/t}-\dfrac{{\rm e}^{z_k/t}}{t}\cdot{\rm e}^{z_i/t}}{\left(\sum_j{\rm e}^{z_j/t}\right)^2}\\
+        =&\ \dfrac{1}{t}\left(\dfrac{\delta_{ik}{\rm e}^{z_i/t}}{\sum_j{\rm e}^{z_j/t}}-\dfrac{{\rm e}^{z_k/t}}{\sum_j{\rm e}^{z_j/t}}\cdot\dfrac{{\rm e}^{z_i/t}}{\sum_j{\rm e}^{z_j/t}}\right)\\
+        =&\ \dfrac{1}{t}\left(\delta_{ik}-q_{k}^{(t)}\right)
+    \end{align*}
+</p>
+
+<p>
+    其中 $\delta_{ik}=1$ 当且仅当 $i$ 和 $k$ 相等，否则 $\delta_{ik}=0$，那么：
+    \begin{align*}
+        \dfrac{\partial\mathcal{L}}{\partial z_k}=&\ -\dfrac{1}{t}\sum_{i=1}^Np_i^{(t)}\left(\delta_{ik}-q^{(t)}_k\right)\\
+        =&\ \dfrac{1}{t}\left(q_k^{(t)}\sum_{i=1}^Np_i^{(t)}-\sum_{i=1}^Np_i^{(t)}\delta_{ik}\right)\\
+        =&\ \dfrac{1}{t}\left(q_k^{(t)}-p_k^{(t)}\right)
+    \end{align*}
+</p>
+
+<p>
+    当 $t$ 足够大时，有 ${\rm e}^{x/t}\approx 1+x/t$，假设 $z$ 和 $v$ 都进行了归一化，即 $\sum_jz_j=\sum_jv_j=0$，所以：
+    \begin{align*}
+        \dfrac{\partial\mathcal{L}}{\partial z_k}=&\ \dfrac{1}{t}\left(\dfrac{{\rm e}^{z_i/t}}{\sum_j{\rm e}^{z_j/t}}-\dfrac{{\rm e}^{v_i/t}}{\sum_j{\rm e}^{v_j/t}}\right)\\
+        \approx&\ \dfrac{1}{t}\left(\dfrac{1+z_i/t}{N+\sum_jz_j/t}-\dfrac{1+v_i/t}{N+\sum_jv_j/t}\right)\\
+        =&\ \dfrac{1}{t}\left(\dfrac{1+z_i/t}{N}-\dfrac{1+v_i/t}{N}\right)\\
+        =&\ \dfrac{1}{t}\cdot\dfrac{z_i/t-v_i/t}{N}\\
+        =&\ \dfrac{z_i-v_i}{Nt^2}
+    \end{align*}
+</p>

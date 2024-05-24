@@ -1,0 +1,33 @@
+<h1>解决了什么问题</h1>
+
+<p>代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码（Execution-based Minimum Bayes Risk Decoding）方法。</p>
+
+<h1>最小化贝叶斯风险（Minimum Bayes Risk, MBR）</h1>
+
+<p>
+    设 $F$ 为输入，$E$ 为 ground-truth，$\ell$ 为损失函数，那么 MBR 可以表示为：
+    $$\hat{E}=\mathop{\arg\min}_{E'\in\mathcal{E}_h}\sum_{E\in\mathcal{E}_e}\ell(E,E')P(E\mid F)$$
+</p>
+
+<p>其中 $\mathcal{E}_h,\mathcal{E}_e$ 分别为假设（hypothesis）空间和证据（evidence）空间。</p>
+
+<h1>基于执行的最小化贝叶斯风险（MBR-EXEC）</h1>
+
+<p>
+    设 $C$ 是自然语言描述，首先从模型中采样 $N$ 个输出 $\mathcal{P}=\{p_i\}_{i=1}^N$，那么 MBR-EXEC 可以表示为：   
+    \begin{align*}
+        \hat{p}=&\ \mathop{\arg\min}_{p\in\mathcal{P}}\ \mathcal{L}_{\rm MBR}(p;\mathcal{P})\\
+        =&\ \mathop{\arg\min}_{p\in\mathcal{P}}\sum_{p_{\rm ref}\in\mathcal{P}}\ell(p,p_{\rm ref})
+    \end{align*}
+</p>
+
+<p>
+    其中 $\mathcal{L}_{\rm MBR}$ 代表 MBR 损失，$\ell$ 为预定义的基于执行的损失函数，它用来检查两个程序之间的差异：
+    $$\ell(p_i,p_j)=\max_{t\in\mathcal T}\mathbb{I}[p_i(t)\ne p_j(t)]$$
+</p>
+
+<p>$\ell$ 利用 “语义相同的程序在相同输入下的输出相同” 来描述了两个程序之间的差异性，这个值越大，表示这两个程序差异越大。</p>
+
+<p>所以采样出的 $\hat p$ 即为集合 $\mathcal{P}$ 中和其他所有程序差异总和最小的程序。</p>
+
+<p>但我没想通为什么是 $\max$，我感觉 $\sum$ 更适合一点，$\sum\limits_{t\in\mathcal{T}}\mathbb{I}[p_i(t)\ne p_j(t)]$ 表示的是 $p_i,p_j$ 在多少个测试输入上的输出不同。</p>

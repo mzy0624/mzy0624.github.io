@@ -1,0 +1,33 @@
+<h1>解决了什么问题</h1>
+
+<p>尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题。</p>
+
+<h1>The Pipeline of Self-Refine</h1>
+
+<p>给定输入序列，Self-Refine 会生成初始输出、提供对输出的反馈（feedback）并根据反馈优化（refine）输出。模型在反馈和优化之间迭代，直到满足所需的条件。假设输入序列为 $x$，模型为 $\mathcal{M}$，模型在时刻 $t$ 的输出为 $y_t$，生成、反馈和优化的 prompts 分别为 $p_{\rm gen},p_{\rm fb}$ 和 $p_{\rm refine}$，则 Self-Refine 的伪代码为：</p>
+
+<div style="width: 60%">
+    <pre id="self-refine" class="pseudocode">
+        \begin{algorithm}
+            \caption{Self-Refine}
+            \begin{algorithmic}
+                \STATE $y_0=\mathcal{M}(p_{\rm gen}\ \|\ x)$
+                \STATE $t=0$
+                \WHILE{not done}
+                    \STATE $fb_t=\mathcal{M}(p_{\rm fb}\ \|\ x\ \|\ y_t)$
+                    \STATE $y_{t+1}=\mathcal{M}(p_{\rm refine}\ \|\ x\ \|\ y_0\ \|\ fb_0\ \|\ \cdots\ \|\ y_t\ \|\ fb_t)$
+                    \STATE $t=t+1$
+                \ENDWHILE
+                \STATE\RETURN $y_t$
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+
+<script>pseudocode.renderElement(document.getElementById("self-refine"));</script>
+
+<hr>
+
+<h1>个人看法</h1>
+
+<p>思路比较简单，并且有效，只需要基于大模型使用简单的 prompt 就可以实现，并不需要额外的数据和训练，而对于不同的任务，只需要重新设计 prompt 就可以了。但是多轮的反馈和优化可能会导致计算成本高，而且所用到的 prompt 都依赖人工设计，自动化做的不是很好。</p>

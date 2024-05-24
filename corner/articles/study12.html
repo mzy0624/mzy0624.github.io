@@ -1,0 +1,35 @@
+<h1>解决了什么问题</h1>
+
+<p>让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。</p>
+
+<h1>The Pipeline of Self-Debugging</h1>
+
+<p>Self-Debugging 基于训练好的大模型，给定一个自然语言需求，模型会经过多轮然后输出代码，每一轮包含生成（Generation）、解释（Explanation）和反馈（Feedback）三个步骤：</p>
+
+<ul>
+    <li>生成：给定自然语言需求（或加上反馈信息），模型生成候选代码；</li>
+    <li>解释：使用 prompt 让模型用语义上有用的方式来处理生成的代码，例如用自然语言解释，或给定输入描述代码的执行轨迹；</li>
+    <li>反馈：模型生成关于代码正确性的反馈信息，这可以通过模型本身生成，也可以通过外部单元测试生成。</li>
+</ul>
+
+<p>这个过程会一直迭代，直到反馈信息表明代码正确或者达到最大允许调试次数。反馈的种类有：</p>
+
+<ul>
+    <li><b>Simple Feedback</b>：最简单的反馈信息就是直接表明代码的正确性，不附加额外信息。</li>
+    
+    <li><b>Unit Test Feedback</b>：如果单元测试可用，那么除了代码的正确性说明，还可以附上单元测试的结果。</li>
+    
+    <li><b>Code Explanation Feedback</b>：让模型解释自己生成的代码，然后与自然语言需求进行比较（其实就是橡皮鸭调试法：把自己的代码跟橡皮鸭讲一遍，试图让它帮忙 debug，不过橡皮鸭什么也听不懂，但在这个过程中，自己发现了 bug 并把它调好了）。</li>
+    
+    <li><b>Execution Trace Feedback</b>：如果单元测试可用，还可以使用另一种反馈：模型被要求逐行解释代码的执行过程（即模拟代码的执行）。</li>
+</ul>
+
+<hr>
+
+<h1>个人看法</h1>
+
+<p>这篇文章和上一篇 Self-Refine 很像，都是模型对自己生成的内容做出反馈，然后基于反馈来重新生成（优化）内容。实际上这两篇文章应该是属于同时期的，Self-Refine 挂上 arXiv 的日期是 2023.03.30，而这篇是 2023.04.11，Self-Refine 中的是 <a href="https://proceedings.neurips.cc/paper_files/paper/2023/hash/91edff07232fb1b55a505a9e9f6c0ff3-Abstract-Conference.html" target="_blank">NIPS2023</a>，而这篇中的是 <a href="https://iclr.cc/virtual/2024/poster/18880" target="_blank">ICLR2024</a>
+
+<p>如果要比较的话，这篇文章在反馈的形式上可能更加丰富一点，它可以使用 prompt 让模型基于单元测试、解释代码或模拟执行路径来生成反馈，而 Self-Refine 是完全基于大模型的。</p>
+
+<p>但是 Self-Refine 在优化输出时，是基于之前所有的输出和反馈，而 Self-Debugging 只基于当前时刻的输出和反馈。即若 $t$ 时刻模型输出为 $y_t$，反馈为 $fb_t$，则下一时刻的输出会基于 $y_0\ \|\ fb_0\ \|\ y_1\ \|\ fb_1\ \|\ \cdots\ \|\ y_t\ \|\ fb_t$，其中 $\|$ 表示拼接操作，而 Self-Debugging 只是基于 $y_t$ 和 $fb_t$。</p>

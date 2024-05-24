@@ -1,0 +1,70 @@
+<h1>解决了什么问题</h1>
+
+<p>对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解（例如：“我不知道”），这种解非常 “安全”、但 “没有营养”，作者提出的基于最大化互信息（Maximum Mutual Information，MMI）的解码方法可以有效缓解这个问题。</p>
+
+<h1>为什么最大化似然函数不好</h1>
+
+<p>设 $x$ 是输入，$y$ 是模型输出，如果 $y^*=\mathop{\arg\max}\limits_y\{\log p(y\mid x)\}$ 的话，因为训练语料中这种类似 “我不知道” 的解出现的多，而且对于任何问题，回答 “我不知道” 的语义连贯性都很好，必然会使得 $p(y\mid x)$ 很高，从而就会导致模型生成这种解。</p>
+
+<h1>什么是互信息</h1>
+
+<p>
+    $x$ 和 $y$ 的互信息定义为：
+    $${\rm MMI}(x,y)=\log\dfrac{p(x,y)}{p(x)p(y)}$$
+</p>
+
+<h1>为什么互信息好</h1>
+
+<p>
+    如果以互信息作为目标函数，那么：
+    \begin{align*}
+        y^*=&\ \mathop{\arg\max}_y\left\{\log\dfrac{p(x,y)}{p(x)p(y)}\right\}\\
+        =&\ \mathop{\arg\max}_y\big\{\log p(y\mid x)-\log p(y)\big\}
+    \end{align*}
+</p>
+
+<p>就相当于要最大化 $\log p(y\mid x)$ 的同时，还要最小化 $\log p(y)$，就是说 $y$ 在训练语料中不能出现太多次，这样会一定程度上抑制傻逼解的生成。</p>
+
+<h1>带有权重的互信息</h1>
+
+<p>
+    可以用一个权重 $\lambda\in(0,1)$ 来控制 $\log p(y)$ 在决策过程的比重：   
+    \begin{align*}
+        y^*=&\ \mathop{\arg\max}_y\left\{\log p(y\mid x)-\lambda\log p(y)\right\}\\
+        =&\ \mathop{\arg\max}_y\left\{\log\dfrac{p(x,y)}{p(x)p(y)^\lambda}\right\}\\
+        =&\ \mathop{\arg\max}_y\left\{(1-\lambda)p(y\mid x)+\lambda p(x\mid y)-\lambda p(x)\right\}\\
+        =&\ \mathop{\arg\max}_y\left\{(1-\lambda)p(y\mid x)+\lambda p(x\mid y)\right\}
+    \end{align*}
+</p>
+
+<p>作者分别根据 $\log p(y\mid x)-\lambda\log p(y)$ 和 $(1-\lambda)p(y\mid x)+\lambda p(x\mid y)$ 提出两种 MMI，记作 MMI-antiLM 和 MMI-bidi。</p>
+
+<h1>MMI-antiLM</h1>
+
+<p>antiLM 对应 $-\log p(y)$，anti 对应负号，而 LM 即语言模型，对应 $\log p(y)$。但是这一项不仅惩罚了高频词、通用词，还惩罚了 “流利” 的输出，导致不符合语法的输出。但理论上，当 $\lambda < 1$ 时，这个问题就不会出现，因为不符合语法的输出收到第一项更严重的惩罚。然而实践中模型仍然倾向于选择不合语法的输出，作者提出了一个可能的解决办法：<p>
+
+<p>
+    设 $y=(y_1,y_2,\cdots,y_n)$，则 
+    $$p(y)=\prod_{i=1}^np(y_i\mid y_{1:i-1})$$
+</p>
+
+<p>
+    设 $g(i)=\mathbb{I}(i\leqslant\gamma)$，用 $u(y)$ 来代替 $p(y)$，其中
+    $$
+        u(y)=\prod_{i=1}^np(y_i\mid y_{1:i-1})\cdot g(i)=\left\{\begin{array}{ll}
+        p(y)&n\leqslant\gamma\\
+        0&n>\gamma
+        \end{array}\right.
+    $$
+</p>
+
+<p>阈值 $\gamma$ 是超参数，长度大于阈值的 $y$ 的 $u(y)=0$，即只对当前时刻的前几个单词进行惩罚，越早的时刻作用越小。</p>
+
+<p>
+    实际中还要鼓励生成长句子，可以加一个句子长度的奖励项，从而 MMI-antiLM 的形式为：
+    $$y^*=\mathop{\arg\max}_y\left\{\log p(y\mid x)-\lambda\log u(y)+\gamma|y|\right\}$$
+</p>
+
+<h1>MMI-bidi</h1>
+
+<p>直接从 $(1-\lambda)\log p(y\mid x)+\lambda p(x\mid y)$ 解码可能比较困难，因为计算 $p(x\mid y)$ 需要在计算 $p(y\mid x)$ 之前得到 $y$ 的分布。由于 $y$ 的搜索空间太大了，所以这几乎是不可能的。实际中通常采用近似算法，：首先根据第一项生成 $N$ 个最佳的输出 $Y=\{\hat{y_i}\}_{i=1}^N$，然后对这些输出按照第二项进行重排序。因为根据第一项生成的 $N$ 个最佳的输出通常是合乎语法的，所以最终选择的输出也是格式良好的。当然，对于 MMI-bidi，也可以加一个句子长度的奖励项。</p>

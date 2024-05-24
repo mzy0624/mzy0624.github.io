@@ -1,0 +1,70 @@
+<h1>Motivation</h1>
+
+<p>
+    对于代码生成任务，假设自然语言需求是 $x$，主流的做法是从模型（称为 Coder）中采样多个程序 $y$，然后重排序选择似然最高的那个，即：
+    $$y^*={\arg\max}_y\log p(y\mid x)$$
+</p>
+
+<p>
+    但是这样会导致模型偏好生成退化解（例如：短代码）。有人提出一种改进的方法，就是对其做归一化：
+    $$y^*={\arg\max}_y\dfrac{1}{|y|}\log p(y\mid x)$$
+</p>
+
+<p>但是这样又有点 overcorrect 了，就是会导致模型偏好生成长的代码。而且模型性能还会随着采样的程序数量的增加而下降。</p>
+
+<p>作者受到 “协作编程” (Collaborative Programming) 的启发，提出了 Coder-Reviewer Reranking (CRR)。</p>
+
+<h1>Coder-Reviewer Reranking</h1>
+
+<p>对于自然语言需求 $x$，Coder 根据 $p(y\mid x)$ 生成程序 $y$，而 Reviewer 的任务则是对于生成的程序 $y$，估计自然语言需求 $x$ 的似然 $p(x\mid y)$。需要注意的是，Coder 和 Reviewer 是同一个模型，只是 prompt 不同。</p>
+
+<p>
+    CRR 做的事情就是对于自然语言需求 $x$，一旦模型生成了程序 $y$，就调换 $x$ 和 $y$ 的顺序作为新的 prompt 再输入到模型中，它不仅要保证 $\log p(y\mid x)$ 大，也要保证 $\log p(x\mid y)$ 大，所以 CRR 要最大化的目标函数是：    
+    $$\log p(y\mid x)p(x\mid y)=\log p(y\mid x)+\log p(x\mid y)$$
+</p>
+
+<p>
+    直觉上这个目标函数很好理解，就是 $x$ 和 $y$ 的互相牵制（从而引出了下面的互信息）。同样地，也可以对这个目标函数做归一化 (N.CRR)：
+    $$\dfrac{1}{|y|}\log p(y\mid x)+\dfrac{1}{|x|}\log p(x\mid y)$$
+</p>
+
+<h1>和互信息的关系</h1>
+
+<p>
+    之前有写过一篇关于互信息的论文笔记，<a href="https://arxiv.org/abs/1510.03055" target="_blank">那篇文章</a>也是说生成任务中生成的解质量不高，只不过那是自然语言对话生成，这篇是代码生成（其实差的不是很多）。$x$ 和 $y$ 的互信息定义如下：
+    $${\rm MMI}(x,y)=\log\dfrac{p(x,y)}{p(x)p(y)}=\log p(y\mid x)-\log p(y)$$
+</p>
+
+<p>
+    带有权重 $\alpha$ 的互信息定义如下
+    $$\log\dfrac{p(x,y)}{p(x)p(y)^\alpha}=\log p(y\mid x)-\alpha \log p(y)$$
+</p>
+
+<p>其实 CRR 就是 $\alpha=0.5$ 的互信息的特例。</p>
+
+<h1>分析退化解</h1>
+<p>他们用实验分析了各种方法对退化解的偏好，并提出了一些拒绝模型生成退化解的方法：</p>
+<ul>
+    <li>过滤空程序，对于 Python 函数补全的数据集，还要过滤只含 return 或 pass 的数据；</li>
+    <li>过滤有重复语句的数据，例如含有多个相同 print 语句的数据；</li>
+    <li>删除注释、文档、print 语句和 assert 语句。</li>
+</ul>
+
+<h1>实验部分</h1>
+<p>他们用三个模型族中的八个模型在六个数据集上进行实验，这些实验表明：</p>
+<ul>
+    <li>Coder-Reviewer（包括 CRR 和 N.CRR）在大部分情况下要么表现最好，要么表现次好；</li>
+    <li>Coder-Reviewer 在大部分情况下的表现都比 Coder-Only 好；</li>
+    <li>Coder-Reviewer 在采样更多的程序时，表现得更为稳定和鲁棒；</li>
+    <li>调整 $\alpha$ 的值对性能的提升并不高；</li>
+    <li>拒绝退化解的方法有效。</li>
+</ul>
+
+<h1>个人看法</h1>
+<ul>
+    <li>首先新颖度不够，无非就是把互信息包装成了所谓的 Coder-Reviewer，然后做实验说 $\alpha$ 不需要调整；</li>
+    <li>然后和其他方法的性能对比实验不具有说服性，因为他们有两个不一样的方法（CRR 和 N.CRR），但是他们是将这两个方法混成一个方法说的，说他们的方法不是最好就是次好，但这两个不同的方法只是使得模型有了不同的偏好，从而导致在不同的数据集上的性能不同，它们之中也没有哪一个是能在所有数据集上都表现得好的。</li>
+    <li>总之我感觉这篇文章偏水（凭什么能中啊）。</li>
+</ul>
+
+<p>点击<a href="files/study4/1.pdf" target="_blank">这里</a>查看或下载 PPT。</p>

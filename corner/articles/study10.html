@@ -1,0 +1,29 @@
+<h1>解决了什么问题</h1>
+
+<p>对于代码生成任务，大模型在平衡 “代码生成” 和 “测试用例生成与执行” 方面做得不够好。作者提出了 Multiagent-Code Generation (AgentCoder)，它包含 programmer agent、test designer agent 和 test executor agent 三部分。</p>
+
+<h1>The Pipeline of AgentCoder</h1>
+
+<p>给定自然语言需求，programmer 会生成相应的代码片段，test designer 会生成相应的测试用例，然后生成的代码片段和测试用例会输入到 test executor 中，它会在本地环境中使用生成的测试用例测试代码，如果运行过程中出现错误（例如语法错误、assert 等），test executor 会将报错信息反馈给 programmer 并让其重新生成代码直到通过所有测试用例。</p>
+
+<h2>Programmer Agent</h2>
+
+<p>它基于大模型，使用 Chain-of-Thought 方法来生成代码。</p>
+
+<h2>Test Designer Agent</h2>
+
+<p>它也基于大模型，作者设计了相应的 prompts 使得 test designer 满足：</p>
+
+<ol>
+    <li>可以生成基础测试用例；</li>
+    <li>可以生成类似 “点了一份炒饭” 的边缘测试用例；</li>
+    <li>可以生成大规模的测试用例。</li>
+</ol>
+
+<h2>Test Executor Agent</h2>
+
+<p>它是通过与本地环境和其他两个 agents 交互的 Python 脚本实现的。在接收到来自其他两个 agents 的代码和测试用例后，它在本地环境中使用测试用例来测试代码，并且监视来自本地环境的返回信息：如果执行结果中包含错误信息，则它会将这些错误信息反馈给 programmer 并让其重新生成代码以修复这些 bug，直到代码通过了所有测试用例。</p>
+
+<h1>个人看法</h1>
+
+<p>很难评，基本上都是基于大模型的，只是让 “代码生成” 和 “测试用例生成” 的过程相互独立罢了。</p>
