@@ -37,7 +37,7 @@ let titles = {
 };
 
 for (let item in titles) {
-    fetch(`articles/${item}.txt`).then(
+    fetch(`articles/${item}.json`).then(
         response => response.json()
     ).then(data => {
         let head    = new Head(titles[item]);
