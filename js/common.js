@@ -129,6 +129,10 @@ class BaseElement {
         }
     }
 
+    cover_innerhtml(content) {
+        this.elem.innerHTML = content;
+    }
+
     toString() {
         return this.elem.outerHTML;
     }
@@ -169,8 +173,7 @@ class Center extends BaseElement {
 
 class Img extends BaseElement {
     constructor(src, attributes=[]) {
-        super('img', attributes);
-        this.elem.src = src;
+        super('img', [['src', src], ...attributes]);
     }
 }
 
@@ -183,8 +186,7 @@ class Head extends BaseElement {
 
 class Anchor extends BaseElement {
     constructor(url, content, attributes=[], target="_blank") {
-        attributes = addAttributes(attributes, [['href', url], ['target', target]])
-        super('a', attributes);
+        super('a', [['href', url], ['target', target], ...attributes]);
         this.append(content);
     }
 }

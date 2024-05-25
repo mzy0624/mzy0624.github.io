@@ -47,5 +47,18 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML"></script>
         <script src="js/pseudocode.min.js"></script>
         <script>pseudocode.renderClass("pseudocode");</script>
+        <script>
+            // only for large images that in json files
+            setTimeout(
+                function () { 
+                    Array.from(
+                        document.getElementsByClassName('large_image')
+                    ).forEach(
+                        span => add_large_image(span, span.id)
+                    ); 
+                }, 
+                500
+            );
+        </script>
     </body>
 </html>

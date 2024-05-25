@@ -1,80 +1,85 @@
 [
     {
-        "date"  : "2024.05.23",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/2402.16906\" target=\"_blank\">LDB: A Large Language Model Debugger via Verifying Runtime Execution Step-by-step</a> 阅读笔记",
-        "body"  : "很多代码生成的方法都是让大模型迭代地生成并优化自己的代码，但是这些方法大多都将代码看成一个整体，这会使得大模型很难优化复杂的代码。受到人类会经常打断点调试程序的启发，作者提出了 Large <u>L</u>anguage Model <u>D</u>e<u>b</u>ugger (LDB) 来缓解这个问题。",
-        "file"  : "study13"
+        "date"    : "2024.05.05",
+        "title"   : "⛓️ 什么是 Chain-of-Thought",
+        "content" : "Chain-of-Thought (CoT) 是一系列中间推理步骤，用这些步骤作为 prompt 会让大模型得到更好的效果（<a href=\"https://arxiv.org/abs/2201.11903\" target=\"_blank\">原论文</a>），例如 <span id=\"files/study14/1.png\" class=\"large_image\"></span>。"
     },
     {
-        "date"  : "2024.05.22",
-        "title" : "📝 论文 <a href=\"https://openreview.net/forum?id=KuPixIqPiq\" target=\"_blank\">Teaching Large Language Models to Self-Debug</a> 阅读笔记",
-        "body"  : "让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。",
-        "file"  : "study12"
+        "date"    : "2024.05.23",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2402.16906\" target=\"_blank\">LDB: A Large Language Model Debugger via Verifying Runtime Execution Step-by-step</a> 阅读笔记",
+        "content" : "很多代码生成的方法都是让大模型迭代地生成并优化自己的代码，但是这些方法大多都将代码看成一个整体，这会使得大模型很难优化复杂的代码。受到人类会经常打断点调试程序的启发，作者提出了 Large <u>L</u>anguage Model <u>D</u>e<u>b</u>ugger (LDB) 来缓解这个问题。",
+        "file"    : "study13"
     },
     {
-        "date"  : "2024.05.21",
-        "title" : "📝 论文 <a href=\"https://openreview.net/forum?id=S37hOerQLB\" target=\"_blank\">Self-Refine: Iterative Refinement with Self-Feedback</a> 阅读笔记",
-        "body"  : "尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题。",
-        "file"  : "study11"
+        "date"    : "2024.05.22",
+        "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=KuPixIqPiq\" target=\"_blank\">Teaching Large Language Models to Self-Debug</a> 阅读笔记",
+        "content" : "让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。",
+        "file"    : "study12"
     },
     {
-        "date"  : "2024.05.21",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/2312.13010\" target=\"_blank\">AgentCoder: Multiagent-Code Generation with Iterative Testing and Optimisation</a> 阅读笔记",
-        "body"  : "对于代码生成任务，大模型在平衡 “代码生成” 和 “测试用例生成与执行” 方面做得不够好。作者提出了 Multiagent-Code Generation 来缓解这个问题。",
-        "file"  : "study10"
+        "date"    : "2024.05.21",
+        "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=S37hOerQLB\" target=\"_blank\">Self-Refine: Iterative Refinement with Self-Feedback</a> 阅读笔记",
+        "content" : "尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题。",
+        "file"    : "study11"
     },
     {
-        "date"  : "2024.05.15",
-        "title" : "🐿️ Variational Auto Encoder（VAE，变分自编码器）",
-        "body"  : "之前有看过 VAE 相关的东西，但忘得差不多了，现在重新捡起来。",
-        "file"  : "study9"
+        "date"    : "2024.05.21",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2312.13010\" target=\"_blank\">AgentCoder: Multiagent-Code Generation with Iterative Testing and Optimisation</a> 阅读笔记",
+        "content" : "对于代码生成任务，大模型在平衡 “代码生成” 和 “测试用例生成与执行” 方面做得不够好。作者提出了 Multiagent-Code Generation 来缓解这个问题。",
+        "file"    : "study10"
     },
     {
-        "date"  : "2024.05.14",
-        "title" : "⚖️ 什么是 Scaling Law",
-        "body"  : "Scaling Law 描述的是变量之间的函数关系，一个量的变化会引起另一个量与<b>变化的幂</b>成比例地相对变化。在机器学习中，Scaling Law 描述的是一系列与模型参数相关的量之间的函数关系。",
-        "file"  : "study8"
+        "date"    : "2024.05.15",
+        "title"   : "🐿️ Variational Auto Encoder（VAE，变分自编码器）",
+        "content" : "之前有看过 VAE 相关的东西，但忘得差不多了，现在重新捡起来。",
+        "file"    : "study9"
     },
     {
-        "date"  : "2024.05.14",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/2203.13474\" target=\"_blank\">CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis</a> 阅读笔记",
-        "body"  : "在程序合成领域，CodeX 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen，并提出了一个新场景 “多轮程序合成”。",
-        "file"  : "study7"
+        "date"    : "2024.05.14",
+        "title"   : "⚖️ 什么是 Scaling Law",
+        "content" : "Scaling Law 描述的是变量之间的函数关系，一个量的变化会引起另一个量与<b>变化的幂</b>成比例地相对变化。在机器学习中，Scaling Law 描述的是一系列与模型参数相关的量之间的函数关系。",
+        "file"    : "study8"
     },
     {
-        "date"  : "2024.05.13",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/1904.09751\" target=\"_blank\">The Curious Case of Neural Text Degeneration</a> 阅读笔记",
-        "body"  : "之前有笔记提到，在生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解。作者提出了 Nucleus 采样，通过截断概率分布的不可靠尾部来缓解这个问题。",
-        "file"  : "study6"
+        "date"    : "2024.05.14",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2203.13474\" target=\"_blank\">CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis</a> 阅读笔记",
+        "content" : "在程序合成领域，CodeX 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen，并提出了一个新场景 “多轮程序合成”。",
+        "file"    : "study7"
     },
     {
-        "date"  : "2024.05.11",
-        "title" : "📝 论文 <a href=\"https://www.researchgate.net/publication/362173423\" target=\"_blank\">CodeT: Code Generation with Generated Tests</a> 阅读笔记",
-        "body"  : "之前的笔记有提到，在代码生成问题中，可以在测试用例上运行代码来评估代码的好坏，问题在于如何设计高质量的测试用例，作者提出了一个自动生成测试用例并选择最佳程序的方法。",
-        "file"  : "study5"
+        "date"    : "2024.05.13",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/1904.09751\" target=\"_blank\">The Curious Case of Neural Text Degeneration</a> 阅读笔记",
+        "content" : "之前有笔记提到，在生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解。作者提出了 Nucleus 采样，通过截断概率分布的不可靠尾部来缓解这个问题。",
+        "file"    : "study6"
     },
     {
-        "date"  : "2024.05.10",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/2211.16490\" target=\"_blank\">Coder Reviewer Reranking for Code Generation</a> 阅读笔记",
-        "body"  : "组会被分配到讲这篇文章，拿过来分享一下。",
-        "file"  : "study4"
+        "date"    : "2024.05.11",
+        "title"   : "📝 论文 <a href=\"https://www.researchgate.net/publication/362173423\" target=\"_blank\">CodeT: Code Generation with Generated Tests</a> 阅读笔记",
+        "content" : "之前的笔记有提到，在代码生成问题中，可以在测试用例上运行代码来评估代码的好坏，问题在于如何设计高质量的测试用例，作者提出了一个自动生成测试用例并选择最佳程序的方法。",
+        "file"    : "study5"
     },
     {
-        "date"  : "2024.05.09",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/2204.11454\" target=\"_blank\">Natural Language to Code Translation with Execution</a> 阅读笔记",
-        "body"  : "代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码方法。",
-        "file"  : "study3"
+        "date"    : "2024.05.10",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2211.16490\" target=\"_blank\">Coder Reviewer Reranking for Code Generation</a> 阅读笔记",
+        "content" : "组会被分配到讲这篇文章，拿过来分享一下。",
+        "file"    : "study4"
     },
     {
-        "date"  : "2024.05.09",
-        "title" : "📝 论文 <a href=\"https://arxiv.org/abs/1510.03055\" target=\"_blank\">A Diversity-Promoting Objective Function for Neural Conversation Models</a> 阅读笔记",
-        "body"  : "对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解，作者提出的基于最大化互信息的解码方法可以有效缓解这个问题。",
-        "file"  : "study2"
+        "date"    : "2024.05.09",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2204.11454\" target=\"_blank\">Natural Language to Code Translation with Execution</a> 阅读笔记",
+        "content" : "代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码方法。",
+        "file"    : "study3"
     },
     {
-        "date"  : "2024.04.19",
-        "title" : "📉 关于知识蒸馏的损失函数",
-        "body"  : "之前思考了一下为什么知识蒸馏中的蒸馏损失要使用 KL 散度而不直接用交叉熵，直接把文章搬过来。",
-        "file"  : "study1"
+        "date"    : "2024.05.09",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/1510.03055\" target=\"_blank\">A Diversity-Promoting Objective Function for Neural Conversation Models</a> 阅读笔记",
+        "content" : "对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解，作者提出的基于最大化互信息的解码方法可以有效缓解这个问题。",
+        "file"    : "study2"
+    },
+    {
+        "date"    : "2024.04.19",
+        "title"   : "📉 关于知识蒸馏的损失函数",
+        "content" : "之前思考了一下为什么知识蒸馏中的蒸馏损失要使用 KL 散度而不直接用交叉熵，直接把文章搬过来。",
+        "file"    : "study1"
     }
 ]

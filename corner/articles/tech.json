@@ -1,32 +1,37 @@
 [
     {
-        "date"  : "2024.05.21",
-        "title" : "#️⃣ 网页支持算法伪代码了",
-        "body"  : "用 <a href=\"https://github.com/AtomicVar/pseudocode.js\" target=\"_blank\">pseudocode.js</a> 让网页支持算法伪代码了，然后顺便弥补了这个网页代码的一些不足（用了 GPT 辅助，太牛了 QAQ）。"
+        "date"    : "2024.05.24",
+        "title"   : "🚚 网页迁移了",
+        "content" : "把网页迁移到 GitHub 上了，不再部署在组里的服务器上了。"
     },
     {
-        "date"  : "2024.05.09",
-        "title" : "🔣 网页支持数学公式了",
-        "body"  : "用 <a href=\"https://www.mathjax.org/\" target=\"_blank\">MathJax</a> 让网页支持 $\\LaTeX$ 数学公式了（需要联网），符号 $\\LaTeX$ 就是用行内公式 $\\$$\\LaTeX$\\$$ 打出来的，如果看到一堆 $\\$$ 符号那估计是网络问题。"
+        "date"    : "2024.05.21",
+        "title"   : "#️⃣ 网页支持算法伪代码了",
+        "content" : "用 <a href=\"https://github.com/AtomicVar/pseudocode.js\" target=\"_blank\">pseudocode.js</a> 让网页支持算法伪代码了，然后顺便弥补了这个网页代码的一些不足（用了 GPT 辅助，太牛了 QAQ）。"
     },
     {
-        "date"  : "2024.05.05",
-        "title" : "📄 如何在网页里内嵌 PDF 文件",
-        "body"  : "使用 &lt;embed&gt; 标签即可。例如：<code>&lt;embed width=\"100%\" fullscreen=\"yes\" src=\"path.pdf\"&gt;&lt;/embed&gt;</code>"
+        "date"    : "2024.05.09",
+        "title"   : "🔣 网页支持数学公式了",
+        "content" : "用 <a href=\"https://www.mathjax.org/\" target=\"_blank\">MathJax</a> 让网页支持 $\\LaTeX$ 数学公式了（需要联网），符号 $\\LaTeX$ 就是用行内公式 $\\$$\\LaTeX$\\$$ 打出来的，如果看到一堆 $\\$$ 符号那估计是网络问题。"
     },
     {
-        "date"  : "2024.05.04",
-        "title" : "📁 从文件夹打开终端",
-        "body"  : "突然发现在文件夹界面右键不跳出来 “Open in Terminal” 了。解决办法：<code>sudo apt-get install nautilus-extension-gnome-terminal</code>"
+        "date"    : "2024.05.05",
+        "title"   : "📄 如何在网页里内嵌 PDF 文件",
+        "content" : "使用 &lt;embed&gt; 标签即可。例如：<code>&lt;embed width=\"100%\" fullscreen=\"yes\" src=\"path.pdf\"&gt;&lt;/embed&gt;</code>"
     },
     {
-        "date"  : "2024.04.28",
-        "title" : "📋 留言板",
-        "body"  : "想在这搞一个留言板，但是涉及前后端和数据库等等的技术，有点小复杂，而且九成九没人看，不过还是期待一下吧哈哈哈。"
+        "date"    : "2024.05.04",
+        "title"   : "📁 从文件夹打开终端",
+        "content" : "突然发现在文件夹界面右键不跳出来 “Open in Terminal” 了。解决办法：<code>sudo apt-get install nautilus-extension-gnome-terminal</code>"
     },
     {
-        "date"  : "2024.04.19",
-        "title" : "🎉 这个网页的代码写好了",
-        "body"  : "目前没什么东西，不过很快就有了，哈哈哈。"
+        "date"    : "2024.04.28",
+        "title"   : "📋 留言板",
+        "content" : "想在这搞一个留言板，但是涉及前后端和数据库等等的技术，有点小复杂，而且九成九没人看，不过还是期待一下吧哈哈哈。"
+    },
+    {
+        "date"    : "2024.04.19",
+        "title"   : "🎉 这个网页的代码写好了",
+        "content" : "目前没什么东西，不过很快就有了，哈哈哈。"
     }
 ]
