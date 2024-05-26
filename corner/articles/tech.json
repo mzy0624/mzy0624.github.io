@@ -1,5 +1,10 @@
 [
     {
+        "date"    : "2024.05.25",
+        "title"   : "🎛️ 如何用 ffmpeg 提取 / 替换视频的左右声道",
+        "content" : "先安装 ffmpeg <code>sudo apt-get install ffmpeg</code><br>先提取视频 video.mp4 的音频（格式为 .aac）<code>ffmpeg -i video.mp4 -vn -acodec copy audio.</code><br>然后分离左右声道 <code>ffmpeg -i audio.aac -map_channel 0.0.0 left.aac -map_channel 0.0.1 right.aac</code><br>将原视频的左右声道替换成其它音频 <code>ffmpeg -i video.mp4 -i l.aac -i r.aac -map 0:v -map 1:a -c copy -map 2:a -c copy -shortest video.mp4</code>"
+    },
+    {
         "date"    : "2024.05.24",
         "title"   : "🚚 网页迁移了",
         "content" : "把网页迁移到 GitHub 上了，不再部署在组里的服务器上了。"
