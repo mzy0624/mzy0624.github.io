@@ -8,8 +8,8 @@ let interests = new Ul([
 ]);
 
 let TAs = new Ul([
-    new TA('CPL',    ['2021 Fall, 2022 Fall, 2023 Fall. Teacher: Hengfeng Wei']),
-    new TA('Python', ['2021 Fall: Teacher: Ye Tao', '2022 Spring, 2022 Fall, 2023 Spring, 2024 Spring. Teacher: Li Zhang']),
+    new TA('CPL',    ['Teacher: Hengfeng Wei. (<i>2021 Fall, 2022 Fall, 2023 Fall</i>).']),
+    new TA('Python', ['Teacher: Ye Tao. (<i>2021 Fall</i>).', 'Teacher: Li Zhang. (<i>2022 Spring, 2022 Fall, 2023 Spring, 2024 Spring</i>).']),
 ]);
 
 let Skills = new Ul([
