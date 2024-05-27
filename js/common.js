@@ -292,7 +292,7 @@ class Tr extends BaseElement {
 
 class Tbody extends BaseElement {
     // Table Body
-    constructor(contents, attributes=[], has_header) {
+    constructor(contents, attributes=[], has_header=false) {
         super('tbody', attributes);
         if (has_header == true) {
             this.append(new Tr(contents[0], [], Th));

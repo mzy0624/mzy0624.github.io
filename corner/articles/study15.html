@@ -1,0 +1,96 @@
+<h1><a href="https://arxiv.org/abs/2302.13971" target="_blank">LLaMa 1</a> (2023.02)</h1>
+<p>在大型语料库上训练的大语言模型展现出很强的小样本学习（Few-Shot Learning）能力，这在模型做到足够大时首次出现，所以很多工作都想把模型做大，都基于假设 “更多的参数带来更好的性能”。</p>
+<p>但是 <a href="https://arxiv.org/abs/2203.15556" target="_blank">Hoffmann 等人</a>提出（这篇文章还没看过，这两天看一下），对于给定的训练预算，最佳性能不是由最大的模型实现的，而是由较小模型在更大的数据集上实现的。不过他们忽略了推理预算（这在实际使用时至关重要）：给定目标性能，我们更希望模型的推理速度快，而不是训练得快。</p>
+<p>LLaMa 1 的重点是在<b>更大的数据集上训练更小的模型，以在给定的推理预算下实现尽可能好的性能</b>。</p>
+
+<h2>训练集</h2>
+<p>LLaMa 1 在一个混合的（预处理过的）训练集上训练：</p>
+<div id="study15-table1"></div>
+<script>
+    append_elem(
+        'study15-table1', 
+        new Table([
+            ['Dataset',       'Sampling prop.', 'Epochs', 'Disk size'],
+            ['CommonCrawl',   '67.0%',          '1.10',   '3.3TB'],
+            ['C4',            '15.0%',          '1.06',   '783GB'],
+            ['Github',         '4.5%',          '0.64',   '328GB'],
+            ['Wikipedia',      '4.5%',          '2.45',    '83GB'],
+            ['Books',          '4.5%',          '2.23',    '85GB'],
+            ['ArXiv',          '2.5%',          '1.06',    '92GB'],
+            ['StackExchange',  '2.0%',          '1.03',    '78GB'],
+        ], [['class', 'table-with-border']], has_header=true)
+    );
+</script>
+<p>Tokenizer 使用 BytePair Encoding (BPE) 算法实现，整个数据集大约包含 1.4T 的 tokens。对于大部分数据，每个 token 在训练期间只使用一次，除了 Wikipedia 和 Books 使用两个 epochs。</p>
+
+<h2>LLaMa 1 模型架构</h2>
+<p>LLaMa 1 基于 Transformer，但是有以下调整：</p>
+<ul>
+    <li>使用 Pre-normalization，即对每个 Transformer 子层的输入做归一化，而不是对输出做归一化；</li>
+    <li>替换 ReLU 为 <a href="https://arxiv.org/abs/2002.05202" target="_blank">SwiGLU</a>：$${\rm SwiGLU}(x,W,V,b,c,\beta)={\rm Swish}_{\beta}(xW+b)\odot(xV+c)\\ {\rm Swish}_{\beta}(x)=x\sigma(\beta x)=\dfrac{x}{1+{\rm e}^{-\beta x}}$$</li>
+    <li>替换绝对位置编码（Absolutely Positional Embedding）为<a href="https://arxiv.org/abs/2104.09864" target="_blank">旋转式位置编码（Rotary Positional Embedding, RoPE）</a>。</li>
+</ul>
+
+<h2>LLaMa 1 的训练</h2>
+<p>LLaMa 1 使用 AdamW 优化器，超参数可以在<a href="https://arxiv.org/abs/2302.13971" target="_blank">原文</a>找到，并且使用了一些技巧来加速训练：</p>
+<ul>
+    <li>使用 Casual Multi-head Attention：不存储 attention 权重，且不计算被 mask 部分的 key/query score；</li>
+    <li>通过保存一些计算量比较大的 activation 值（比如线性层的输出）来减少计算量。</li>
+</ul>
+<p>65B 的 LLaMa 1 训练速度约为 380 tokens/s/GPU，所以在 2048 块 80G 的 A100 上，1.4T 的数据大约要训练 21 天（真有钱 QAQ）。有意思的是，文章还研究了碳足迹（Carbon footprint），他们估算开发这些模型的耗电量约为 2638 MWh（即 263.8 万度电），二氧化碳当量约 1015 tCO<sub>2</sub>eq。</p>
+<hr>
+
+<h1><a href="https://arxiv.org/abs/2307.09288" target="_blank">LLaMa2</a> (2023.07)</h1>
+<p>当时的一些开源预训练大模型（例如 BLOOM，LLaMa 1 和 Falcon）已经可以和闭源预训练大模型（例如 GPT-3 和 Chinchilla）不相上下了，但是它们都不是闭源 “产品” 大模型（例如 ChatGPT，Bard 和 Claude）的合适替代品，因为这些 “产品” 都经过了严格的微调，以符合人类的偏好，这大大提高了它们的可用性和安全性。而 “微调” 步骤需要大量的计算成本和人工成本，而且往往不透明。</p>
+<p>于是他们又发布了 LLaMa 2，一个预训练且微调过的大模型族，且有 LLaMa 2 和 LLaMa 2-Chat 两个版本：</p>
+<ul>
+    <li>LLaMa 2 是 LLaMa 1 的升级版。公开的 LLaMa 2 共有 7B，13B 和 70B 三种大小，还有 34B 的但没公开；</li>
+    <li>LLaMa 2-Chat 是 LLaMa 2 微调后用于对话任务的产物，也有 7B，13B 和 70B 三种大小。</li>
+</ul>
+<p>在一系列可用性和安全性的 benchmarks 上，LLaMa 2-Chat 比当时的开源大模型表现得更好，且和一些闭源 “产品” 不相上下。</p>
+
+<h2>预训练数据</h2>
+<p>LLaMa 2 的预训练语料库比 LLaMa 1 的更大（1.4T $\rightarrow$ 2T）且更干净（删除了包含大量个人信息的数据）。</p>
+
+<h2>训练细节</h2>
+<p>相比于 LLaMa 1，LLaMa 2 只是将上下文长度翻倍且采用了 <a href="https://arxiv.org/abs/2305.13245" target="_blank">Grouped-Query Attention (GQA)</a>。LLaMa 1 和 LLaMa 2 的部分对比如下表：</p>
+<div id="study15-table2"></div>
+<script>
+    append_elem(
+        'study15-table2',
+        new Table([
+            ['', 'Training<br>Data', 'Params', 'Context<br>Length', 'GQA', 'Tokens', 'Learning<br>Rate'],
+            [
+                ['LLaMa 1',   [['rowspan', '4']]], 
+                ['See Above', [['rowspan', '8']]], 
+                '7B', '2K', 'N', '1.0T', '$3.0\\times 10^{-4}$'
+            ],
+            [  '13B', '2K', 'N', '1.0T', '$3.0\\times 10^{-4}$'],
+            [  '33B', '2K', 'N', '1.4T', '$1.5\\times 10^{-4}$'],
+            [  '13B', '2K', 'N', '1.4T', '$1.5\\times 10^{-4}$'],
+            [
+                ['LLaMa 2',   [['rowspan', '4'], ['style', 'vertical-align:middle']]], 
+                '7B', '4K', 'N', '2.0T', '$3.0\\times 10^{-4}$'
+            ],
+            [  '13B', '4K', 'N', '2.0T', '$3.0\\times 10^{-4}$'],
+            [  '34B', '4K', 'Y', '2.0T', '$1.5\\times 10^{-4}$'],
+            [  '70B', '4K', 'Y', '2.0T', '$1.5\\times 10^{-4}$'],
+        ], [['class', 'table-with-border'], ['style', 'vertical-align: middle']], has_header=true)
+    )
+</script>
+
+<h2>LLaMa 2 的微调</h2>
+<p>微调包括了 Supervised Fine-Tuning (SFT) 和 reinforcement learning with human feedback (RLHF) 两个过程，目的是与人类偏好对齐。其中 RLHF 其实是 Reward Modeling，使用 <a href="https://arxiv.org/abs/1707.06347" target="_blank">PPO</a> 和 Rejection Sampling Fine-Tuning 算法（采样 $K$ 个输出并选择根据得分最佳的那个）。</p>
+<hr>
+
+<h1>LLaMa3</h1>
+
+<hr>
+
+<h1>Code LLaMa</h1>
+
+<hr>
+
+<h1>LLaMa 模型的部署</h1>
+
+<p>现在暂时用不到，等用到了再来写。</p>

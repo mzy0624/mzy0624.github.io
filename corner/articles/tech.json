@@ -17,7 +17,7 @@
     {
         "date"    : "2024.05.09",
         "title"   : "🔣 网页支持数学公式了",
-        "content" : "用 <a href=\"https://www.mathjax.org/\" target=\"_blank\">MathJax</a> 让网页支持 $\\LaTeX$ 数学公式了（需要联网），符号 $\\LaTeX$ 就是用行内公式 $\\$$\\LaTeX$\\$$ 打出来的，如果看到一堆 $\\$$ 符号那估计是网络问题。"
+        "content" : "用 <a href=\"https://www.mathjax.org/\" target=\"_blank\">MathJax</a> 让网页支持 $\\LaTeX$ 数学公式了，符号 $\\LaTeX$ 就是用行内公式 $\\$$\\LaTeX$\\$$ 打出来的，如果看到一堆 $\\$$ 符号那估计是网络问题。"
     },
     {
         "date"    : "2024.05.05",

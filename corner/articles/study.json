@@ -1,5 +1,11 @@
 [
     {
+        "date"    : "2024.05.27",
+        "title"   : "🦙 <a href=\"https://llama.meta.com/\" target=\"_blank\">LLaMa</a> (Large Language Model Meta AI)",
+        "content" : "LLaMa 是 Meta AI (Facebook) 推出的大模型族，目前（2024 年 5 月）的最新版是 LLaMa3。",
+        "file"    : "study15"
+    },
+    {
         "date"    : "2024.05.05",
         "title"   : "⛓️ 什么是 Chain-of-Thought (CoT)",
         "content" : "CoT 是一系列中间推理步骤，用这些步骤作为 prompt 会让大模型得到更好的效果（<a href=\"https://arxiv.org/abs/2201.11903\" target=\"_blank\">原论文</a>），例如 <span id=\"files/study14/1.png\" class=\"large_image\"></span>"
