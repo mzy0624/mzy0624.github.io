@@ -38,15 +38,6 @@
         </footer></div>
 
         <script src="js/contents.js"></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ 
-                TeX: { equationNumbers: {autoNumber: "AMS"} },
-                tex2jax: { inlineMath: [["$","$"],["\\(","\\)"]] } 
-            });
-        </script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML"></script>
-        <script src="js/pseudocode.min.js"></script>
-        <script>pseudocode.renderClass("pseudocode");</script>
         <script>
             // only for large images that in json files
             setTimeout(
@@ -57,8 +48,17 @@
                         span => add_large_image(span, span.id)
                     ); 
                 }, 
-                500
+                1000
             );
         </script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ 
+                TeX: { equationNumbers: {autoNumber: "AMS"} },
+                tex2jax: { inlineMath: [["$","$"],["\\(","\\)"]] } 
+            });
+        </script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script src="js/pseudocode.min.js"></script>
+        <script>pseudocode.renderClass("pseudocode");</script>
     </body>
 </html>
