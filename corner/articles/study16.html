@@ -1,0 +1,10 @@
+<p>基于人类反馈的强化学习 （RLHF）在大语言模型的训练中起到了很重要的作用，目的是为了将大模型和人类偏好对齐，使得模型表现得更 “像” 人。RLHF 可以大致分为三个阶段：</p>
+<ol>
+    <li><b>有监督微调（SFT）</b>：在有监督数据集上对基础大模型进行微调；</li> <!-- 为模型的输出赋一个 0 到 1 之间的实数值，1 为最精确 0 为最不精确。有了这些分数，模型就有了一个策略，旨在输出得分更高（即更接近人类）的响应。 -->
+    <li><b>训练奖励模型（Reward Model）</b>：RLHF 的核心是基于人类反馈训练一个独立的奖励模型，该模型可以估计人类对任何给定的响应的评分；</li>
+    <li><b>用奖励模型优化大模型</b>：大模型基于策略生成对给定 prompt 的反馈，奖励模型给予该反馈输出奖励值，然后用强化学习算法来优化策略。</li>
+    <p></p>
+</ol>
+
+<p>大致流程如图所示（图片引用于<a href="https://aws.amazon.com/what-is/reinforcement-learning-from-human-feedback" target="_blank">这个网站</a>）：</p>
+<div style="text-align: center; padding-bottom: 1em;"><img src="files/study16/1.png" style="width: 85%;" /></div>

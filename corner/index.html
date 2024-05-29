@@ -38,19 +38,6 @@
         </footer></div>
 
         <script src="js/contents.js"></script>
-        <script>
-            // only for large images that in json files
-            setTimeout(
-                function () { 
-                    Array.from(
-                        document.getElementsByClassName('large_image')
-                    ).forEach(
-                        span => add_large_image(span, span.id)
-                    ); 
-                }, 
-                1000
-            );
-        </script>
         <script type="text/x-mathjax-config">
             MathJax.Hub.Config({ 
                 TeX: { equationNumbers: {autoNumber: "AMS"} },

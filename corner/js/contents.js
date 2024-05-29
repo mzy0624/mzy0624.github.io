@@ -63,3 +63,12 @@ for (let item in titles) {
         append_elem(item, head, article, count, button, new Hr());
     });
 }
+
+// only for large images that in json files
+setTimeout(function () { 
+    Array.from(
+        document.getElementsByClassName('large_image')
+    ).forEach(
+        span => add_large_image(span, span.id)
+    ); 
+}, 1000);
