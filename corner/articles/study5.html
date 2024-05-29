@@ -79,9 +79,9 @@
             1&1&1&0&0\\
             0&1&1&1&1\\
             1&0&1&0&0
-        \end{pmatrix}\\
-        f(\mathcal{X}_1)=\dfrac{3\sqrt{2}}{5},f(\mathcal{X}_2)=\dfrac 45,f(\mathcal{X}_3)=\dfrac 25
+        \end{pmatrix}
     $$
+    $$f(\mathcal{X}_1)=\dfrac{3\sqrt{2}}{5},f(\mathcal{X}_2)=\dfrac 45,f(\mathcal{X}_3)=\dfrac 25$$
 
     即从 $\mathcal{X}_1$ 中的两个函数中选择一个。
 </p>
@@ -90,10 +90,8 @@
 
 <p>
     在 CodeT 中，每一个通过的测试用例对代码得分的贡献相同，那么问题来了：不同的测试用例有不同的重要性吗？作者进一步提出了 CodeT-Iter，以迭代的方式考虑测试用例的重要性：$\mathcal{X_i}$ 和 $y_i$ 的得分可以记作：
-    $$
-        f(\mathcal{X}_i)=\alpha r_i\sum_{j=1}^MW_{ij}g(y_j)+(1-\alpha)f_0(\mathcal{X}_i)\\
-        g(y_j)=\beta\sum_{i=1}^MW_{ij}f(\mathcal{X}_i)+(1-\beta)g_0(y_j)
-    $$
+    $$f(\mathcal{X}_i)=\alpha r_i\sum_{j=1}^MW_{ij}g(y_j)+(1-\alpha)f_0(\mathcal{X}_i)$$
+    $$g(y_j)=\beta\sum_{i=1}^MW_{ij}f(\mathcal{X}_i)+(1-\beta)g_0(y_j)$$
 </p>
 
 <p>其中，$f_0(\mathcal{X}_i)=r_i\ /\ \sum_{n=1}^Nr_n$ 是 $\mathcal{X}_i$ 的初始归一化分数，$\alpha,\beta\in[0,1]$ 是控制初始分数重要性的超参。然后通过迭代的方式计算 $\mathcal{X}_i$ 和 $y_j$ 的得分。为了能收敛，需要再每次迭代后对每组代码和测试用例做归一化。</p>
