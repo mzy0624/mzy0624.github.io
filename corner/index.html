@@ -51,21 +51,13 @@
                 1000
             );
         </script>
-        <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script> -->
-        <script>
-            MathJax = {
-                tex: { 
-                    inlineMath: [['$', '$'], ['\\(', '\\)']],
-                    displayMath: [['$$','$$'], ['\[','\]']],
-                    processEscapes: true,
-                    processEnvironments: true,
-                }
-            }
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ 
+                TeX: { equationNumbers: {autoNumber: "AMS"} },
+                tex2jax: { inlineMath: [["$","$"],["\\(","\\)"]] } 
+            });
         </script>
-        <!-- <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin></script>
-        <!-- <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> -->
-        <!-- <script id="MathJax-script" async src="MathJax-3.2.2/es5/tex-chtml.js"></script> -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML"></script>
         <script src="js/pseudocode.min.js"></script>
         <script>pseudocode.renderClass("pseudocode");</script>
     </body>
