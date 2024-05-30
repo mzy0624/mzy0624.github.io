@@ -1,17 +1,17 @@
 <h1>解决了什么问题</h1>
 
-<p>代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码（Execution-based Minimum Bayes Risk Decoding）方法。</p>
+<p>代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码 (Execution-based Minimum Bayes Risk Decoding) 方法。</p>
 
-<h1>最小化贝叶斯风险（Minimum Bayes Risk, MBR）</h1>
+<h1>最小化贝叶斯风险 (Minimum Bayes Risk, MBR)</h1>
 
 <p>
     设 $F$ 为输入，$E$ 为 ground-truth，$\ell$ 为损失函数，那么 MBR 可以表示为：
     $$\hat{E}=\mathop{\arg\min}_{E'\in\mathcal{E}_h}\sum_{E\in\mathcal{E}_e}\ell(E,E')P(E\mid F)$$
 </p>
 
-<p>其中 $\mathcal{E}_h,\mathcal{E}_e$ 分别为假设（hypothesis）空间和证据（evidence）空间。</p>
+<p>其中 $\mathcal{E}_h,\mathcal{E}_e$ 分别为假设 (hypothesis) 空间和证据 (evidence) 空间。</p>
 
-<h1>基于执行的最小化贝叶斯风险（MBR-EXEC）</h1>
+<h1>基于执行的最小化贝叶斯风险 (MBR-EXEC)</h1>
 
 <p>
     设 $C$ 是自然语言描述，首先从模型中采样 $N$ 个输出 $\mathcal{P}=\{p_i\}_{i=1}^N$，那么 MBR-EXEC 可以表示为：   

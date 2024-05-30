@@ -1,5 +1,5 @@
 <h1><a href="https://arxiv.org/abs/2302.13971" target="_blank">LLaMa 1</a> (2023.02)</h1>
-<p>在大型语料库上训练的大语言模型展现出很强的小样本学习（Few-Shot Learning）能力，这在模型做到足够大时首次出现，所以很多工作都想把模型做大，都基于假设 “更多的参数带来更好的性能”。</p>
+<p>在大型语料库上训练的大语言模型展现出很强的小样本学习 (Few-Shot Learning) 能力，这在模型做到足够大时首次出现，所以很多工作都想把模型做大，都基于假设 “更多的参数带来更好的性能”。</p>
 <p>但是 <a href="https://arxiv.org/abs/2203.15556" target="_blank">Hoffmann 等人</a>提出（这篇文章还没看过，这两天看一下），对于给定的训练预算，最佳性能不是由最大的模型实现的，而是由较小模型在更大的数据集上实现的。不过他们忽略了推理预算（这在实际使用时至关重要）：给定目标性能，我们更希望模型的推理速度快，而不是训练得快。</p>
 <p>LLaMa 1 的重点是在<b>更大的数据集上训练更小的模型，以在给定的推理预算下实现尽可能好的性能</b>。</p>
 
@@ -32,7 +32,7 @@
         $${\rm SwiGLU}(x,W,V,b,c,\beta)={\rm Swish}_{\beta}(xW+b)\odot(xV+c)$$
         $${\rm Swish}_{\beta}(x)=x\sigma(\beta x)=\dfrac{x}{1+{\rm e}^{-\beta x}}$$
     </li>
-    <li>替换绝对位置编码（Absolutely Positional Embedding）为<a href="https://arxiv.org/abs/2104.09864" target="_blank">旋转式位置编码（Rotary Positional Embedding, RoPE）</a>。</li>
+    <li>用<a href="https://arxiv.org/abs/2104.09864" target="_blank">旋转式位置编码 (Rotary Positional Embedding, RoPE)</a> 替换绝对 (Absolutely) 位置编码。</li>
 </ul>
 <h2>LLaMa 1 的训练</h2>
 <p>LLaMa 1 使用 AdamW 优化器，超参数可以在<a href="https://arxiv.org/abs/2302.13971" target="_blank">原文</a>找到，并且使用了一些技巧来加速训练：</p>
@@ -40,7 +40,7 @@
     <li>使用 Casual Multi-head Attention：不存储 attention 权重，且不计算被 mask 部分的 key/query score；</li>
     <li>通过保存一些计算量比较大的 activation 值（比如线性层的输出）来减少计算量。</li>
 </ul>
-<p>65B 的 LLaMa 1 训练速度约为 380 tokens/s/GPU，所以在 2048 块 80G 的 A100 上，1.4T 的数据大约要训练 21 天（真有钱 QAQ）。有意思的是，文章还研究了能源和碳足迹（Carbon footprint），他们估算开发这些模型的耗电量大约为 2638 MWh（即 263.8 万度电），二氧化碳当量约 1015 tCO<sub>2</sub>eq。</p>
+<p>65B 的 LLaMa 1 训练速度约为 380 tokens/s/GPU，所以在 2048 块 80G 的 A100 上，1.4T 的数据大约要训练 21 天（真有钱 QAQ）。有意思的是，文章还研究了能源和碳足迹 (Carbon footprint)，他们估算开发这些模型的耗电量大约为 2638 MWh（即 263.8 万度电），二氧化碳当量约 1015 tCO<sub>2</sub>eq。</p>
 <hr>
 
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
@@ -97,7 +97,7 @@
     <img src="./files/study15/1.png" width="90%" /><br>
     <img src="./files/study15/2.png" width="90%" />
 </div>
-<p>其中，$\rightleftarrows$ 表示可填充（Infilling-capable）模型。而 70B 的模型是在相同的数据上训练了两次（相当于 1T）。70B 的 Code LLaMa-Instruct 由 70B 的 Code LLaMa-Python 微调而来，而其他大小的 Code-LLaMa-Instruct 由相应大小的 Code-LLaMa 微调而来。Code LLaMa 训练数据集的详细信息如下表所示：</p>
+<p>其中，$\rightleftarrows$ 表示可填充 (Infilling-capable) 模型。而 70B 的模型是在相同的数据上训练了两次（相当于 1T）。70B 的 Code LLaMa-Instruct 由 70B 的 Code LLaMa-Python 微调而来，而其他大小的 Code-LLaMa-Instruct 由相应大小的 Code-LLaMa 微调而来。Code LLaMa 训练数据集的详细信息如下表所示：</p>
 <div id="study15-table3"></div>
 <script>
     append_elem(
@@ -116,7 +116,7 @@
 </script>
 
 <h2>代码填充 (Code Infilling)</h2>
-<p>微调出来的 Code LLaMa 只会做给定前面的代码预测后面的代码这种任务，还不会做已知上下文预测中间内容的任务（即代码补全），比如给定函数签名和具体实现生成 docstring。这种任务和大模型预测下一个 token 的任务模式不同，需要对训练模式改造。论文采用了 Casual Mask 的模式，即将训练序列中间的一部分移动到最后，自回归地预测这部分内容。具体来说，就是将训练序列分割成三部分：前缀、中间和后缀，分割位置利用均匀分布来确定。训练序列一半为前缀-后缀-中间（PSM）格式，另一半为后缀-前缀-中间（SPM）格式。</p>
+<p>微调出来的 Code LLaMa 只会做给定前面的代码预测后面的代码这种任务，还不会做已知上下文预测中间内容的任务（即代码补全），比如给定函数签名和具体实现生成 docstring。这种任务和大模型预测下一个 token 的任务模式不同，需要对训练模式改造。论文采用了 Casual Mask 的模式，即将训练序列中间的一部分移动到最后，自回归地预测这部分内容。具体来说，就是将训练序列分割成三部分：前缀、中间和后缀，分割位置利用均匀分布来确定。训练序列一半为前缀-后缀-中间 (PSM) 格式，另一半为后缀-前缀-中间 (SPM) 格式。</p>
 
 <h2>长上下文微调</h2>
 <p>LLaMa 2 的最长 token 数为 4096，对于代码生成任务来说是比较小的，为了适应 repository 级别的任务，需要对上下文长度进行扩充，Code LLaMa 在微调阶段将其扩充至原来的四倍，即 16384。实验表明这样训练出的 Code LLaMa 在 100K tokens 的任务下也表现得很稳定。</p>

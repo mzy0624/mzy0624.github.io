@@ -1,9 +1,9 @@
 <h1>自编码器</h1>
 
-<p>自编码器（Auto Encoder，AE）包含一个编码器 $\mathcal{E}$ 和一个解码器 $\mathcal{D}$，给定数据 $x\in\mathbb{R}^D$：</p>
+<p>自编码器 (Auto Encoder, AE) 包含一个编码器 $\mathcal{E}$ 和一个解码器 $\mathcal{D}$，给定数据 $x\in\mathbb{R}^D$：</p>
 
 <ul>
-    <li>编码器会将数据压缩到 $d$ 维（$d\ll D$）：$z=\mathcal{E}(x)\in\mathbb{R}^d$，这个低维数据称为编码（code）；</li>
+    <li>编码器会将数据压缩到 $d$ 维 ($d\ll D$) ：$z=\mathcal{E}(x)\in\mathbb{R}^d$，这个低维数据称为编码 (code)；</li>
     <li>解码器可以将编码 $z$ 重新解码还原成原始数据：$\hat{x}=\mathcal{D}(z)=\mathcal{D}(\mathcal{E}(x))\in\mathbb{R}^D$；
     <li>优化目标是让 $x$ 和 $\hat{x}$ 接近：$\min \|x-\hat{x}\|_2^2$</li>
 </ul>
@@ -39,7 +39,7 @@
 <p>
     注意到，AE 所缺乏的隐空间的正则化体现在 “假设 $z$ 遵循先验分布 $p(z)$” 上。根据贝叶斯公式：
     $$p(z\mid x)=\dfrac{p(x\mid z)p(z)}{p(x)}=\dfrac{p(x\mid z)p(z)}{\int p(x\mid z)p(z){\rm d}z}$$
-    其中 $p(x)$ 称为证据（evidence），但是由于 $p(z)$ 和 $p(x\mid z)$ 都不知道，所以 $p(x)$ 求不出来。
+    其中 $p(x)$ 称为证据 (evidence)，但是由于 $p(z)$ 和 $p(x\mid z)$ 都不知道，所以 $p(x)$ 求不出来。
 </p>
 
 <p>

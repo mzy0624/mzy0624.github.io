@@ -29,7 +29,7 @@
         same(x)=\{x\in\mathcal{X}\mid x\text{ 和 }x'\text{通过相同的测试用例}\}
         $$
     </li>
-    <li>然后再计算 $(x,y)$ 的一致集（Consensus Set）$S=same(x)\times pass(x)$。$S$ 中的每一个对 $(x',y')$ 都和 $(x,y)$ 达成一致。</li>
+    <li>然后再计算 $(x,y)$ 的一致集 (Consensus Set) $S=same(x)\times pass(x)$。$S$ 中的每一个对 $(x',y')$ 都和 $(x,y)$ 达成一致。</li>
     <li>计算 $(x,y)$ 的得分 $f(x,y)=|S|，这个得分度量了代码的正确性：越多的对和 $(x,y)$ 一致，代码越可能正确。</li>
     <li>重复上面的操作若干次，选择得分最高的代码作为 $\hat{x}$。</li>
 </ol>

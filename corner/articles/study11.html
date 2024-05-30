@@ -4,7 +4,7 @@
 
 <h1>The Pipeline of Self-Refine</h1>
 
-<p>给定输入序列，Self-Refine 会生成初始输出、提供对输出的反馈（feedback）并根据反馈优化（refine）输出。模型在反馈和优化之间迭代，直到满足所需的条件。假设输入序列为 $x$，模型为 $\mathcal{M}$，模型在时刻 $t$ 的输出为 $y_t$，生成、反馈和优化的 prompts 分别为 $p_{\rm gen},p_{\rm fb}$ 和 $p_{\rm refine}$，则 Self-Refine 的伪代码为：</p>
+<p>给定输入序列，Self-Refine 会生成初始输出、提供对输出的反馈 (feedback) 并根据反馈优化 (refine) 输出。模型在反馈和优化之间迭代，直到满足所需的条件。假设输入序列为 $x$，模型为 $\mathcal{M}$，模型在时刻 $t$ 的输出为 $y_t$，生成、反馈和优化的 prompts 分别为 $p_{\rm gen},p_{\rm fb}$ 和 $p_{\rm refine}$，则 Self-Refine 的伪代码为：</p>
 
 <div style="width: 60%">
     <pre id="self-refine" class="pseudocode">
