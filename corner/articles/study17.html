@@ -116,7 +116,7 @@
 <p>为了更好地将 $Q$-Learning 算法和神经网络结合，DQN 算法采用了经验回放方法，即维护一个回放缓存 (Replay Buffer)，将每次从环境中采样的 $(s,a,r,s')$ 存储到缓存中，训练 $Q$ 网络的时候再从缓存中随机采样若干数据来进行训练。</p>
 <h2>Target Network（目标网络）</h2>
 <p>DQN 算法的目标是让 $Q_\phi(s,a)$ 逼近 $r+\gamma\max_{a'}Q_\phi(s',a')$，由于目标函数本身就包含神经网络的输出，所以更新网络参数的同时目标函数也在改变，这会导致训练的不稳定。因此 DQN 算法采用了目标网络 $Q_{\phi'}$，用 $Q_{\phi'}$ 计算 TD 目标，每次更新的是 $Q_\phi$，而 $Q_{\phi'}$ 是定期基于 $Q_\phi$ 更新。</p>
-<div style="width: 70%">
+<div style="width: 90%">
     <pre id="dqn" class="pseudocode">
         \begin{algorithm}
             \caption{DQN}
