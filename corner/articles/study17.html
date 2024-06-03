@@ -170,7 +170,7 @@
         \nabla_\theta\bar{R}_\theta=&\ \mathbb{E}_{p_\theta(\tau)}\left[R(\tau)\sum_{t=1}^T\nabla_\theta\log p_\theta(a_t\mid s_t)\right]\\
                                    \approx&\ \dfrac{1}{N}\sum_{n=1}^N\sum_{t=1}^TR(\tau_n)\nabla_\theta\log p_\theta(a_{nt}\mid s_{nt})
     \end{align*}
-    其中 $\tau_1,\cdots,\tau_n$ 是从分布 $p_\theta(\tau)$ 中采样得到的。为了让不好的动作得到负反馈，可以让期望减去一个 baseline：
+    其中 $\tau_1,\cdots,\tau_n$ 是从分布 $p_\theta(\tau)$ 中采样得到的。为了减小方差，可以让期望减去一个 baseline：
     $$\nabla_\theta\bar{R}_\theta\approx\dfrac{1}{N}\sum_{n=1}^N\sum_{t=1}^T(R(\tau_n)-b)\nabla_\theta\log p_\theta(a_{nt}\mid s_{nt})$$
     实际中常用的 $R(\tau)$ 是优势函数 $A(s,a)=Q(s,a)-V(s)$，优势函数衡量了动作 $a$ 在当前状态 $s$ 下的相对价值，它可以看成一个已包含 baseline 的估计，所以梯度也可以写为：
     $$\nabla_\theta\bar{R}_\theta=\mathbb{E}_{(s,a)\sim\pi_\theta}\left[A_\theta(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]$$
@@ -219,7 +219,7 @@
 
 <h1>Proximal Policy Optimization (PPO)</h1>
 <p>
-    <a href="https://arxiv.org/abs/1707.06347" target="_blank">近端策略优化 (PPO)</a> 算法是目前非常流行的强化学习算法，由 OpenAI 在 2017 年提出。根据策略梯度的公式：
+    <a href="https://arxiv.org/abs/1707.06347" target="_blank">近端策略优化 (PPO)</a> 是目前非常流行的强化学习算法，由 OpenAI 在 2017 年提出。根据策略梯度的公式：
     $$\nabla_\theta\bar{R}_\theta=\mathbb{E}_{(s,a)\sim\pi_\theta}\left[A_\theta(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]$$
     可知每次更新 $\theta$ 会导致原来采样的数据不能用了，需要重新采样，这就使得训练速度非常慢，这是 on-policy 方法的通病。
 </p>
