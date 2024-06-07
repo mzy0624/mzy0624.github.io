@@ -148,5 +148,21 @@
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
 <h1>LLaMa 模型的部署</h1>
+<p>先把 LLaMa 的 GitHub 仓库克隆到本地：</p>
+<div class="code-container"><pre><code>git clone https://github.com/meta-llama/llama3.git</code></pre></div>
+<p>然后安装 llama 包：</p>
+<div class="code-container"><pre><code>pip install -e llama3</code></pre></div>
+<p>再去<a href="https://llama.meta.com/llama-downloads/" target="_blank">官网</a>申请 LLaMa 模型，填写信息后马上就得到相应的 URL。然后在 GitHub 仓库中有一个 download.sh 脚本，运行该脚本，粘贴刚才的 URL，再选择要下载的版本，之后等待就可以了。</p>
+<p>GitHub 仓库中有两个例子，使用 torchrun 来运行这两个文件，例如：</p>
 
-<p>现在暂时用不到，等用到了再来写。</p>
+<div class="code-container">
+<pre><code>torchrun --nproc_per_node 1 example_chat_completion.py \
+         --ckpt_dir checkpoint_dir \
+         --tokenizer_path tokenizer_path \
+         --max_seq_len 512 --max_batch_size 6
+</code></pre></div> 
+<p>要指定 GPU 可以直接用 os 模块设置环境变量 os.environ["CUDA_VISIBLE_DEVICE"] 为相应的 GPU。</p>
+<hr>
+
+<h1>LLaMa 模型的微调</h1>
+<p>To Be Done</p>

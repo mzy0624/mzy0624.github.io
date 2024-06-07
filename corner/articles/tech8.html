@@ -1,0 +1,8 @@
+<p>可以使用 ffmpeg 来实现该功能，首先安装 ffmpeg：</p>
+<div class="code-container"><pre><code>sudo apt-get install ffmpeg</code></pre></div>
+<p>然后提取视频 video.mp4 的音频（格式为 .aac）：</p>
+<div class="code-container"><pre><code>ffmpeg -i video.mp4 -vn -acodec copy audio.</code></pre></div>
+<p>再分离音频的左右声道：</p>
+<div class="code-container"><pre><code>ffmpeg -i audio.aac -map_channel 0.0.0 left.aac -map_channel 0.0.1 right.aac</code></pre></div>
+<p>假设有其他音频 l.acc 和 r.acc，那么可以将原视频的左右声道替换成这两个音频：</p>
+<div class="code-container"><pre><code>ffmpeg -i video.mp4 -i l.aac -i r.aac -map 0:v -map 1:a -c copy -map 2:a -c copy -shortest video.mp4</code></pre></div>

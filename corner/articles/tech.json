@@ -1,8 +1,9 @@
 [
     {
         "date"    : "2024.05.25",
-        "title"   : "🎛️ 如何用 ffmpeg 提取 / 替换视频的左右声道",
-        "content" : "先安装 ffmpeg <code>sudo apt-get install ffmpeg</code><br>先提取视频 video.mp4 的音频（格式为 .aac）<code>ffmpeg -i video.mp4 -vn -acodec copy audio.</code><br>然后分离左右声道 <code>ffmpeg -i audio.aac -map_channel 0.0.0 left.aac -map_channel 0.0.1 right.aac</code><br>将原视频的左右声道替换成其它音频 <code>ffmpeg -i video.mp4 -i l.aac -i r.aac -map 0:v -map 1:a -c copy -map 2:a -c copy -shortest video.mp4</code>"
+        "title"   : "🎛️ 如何用提取 / 替换视频的左右声道",
+        "content" : "可以使用 ffmpeg 来实现该功能。",
+        "file"    : "tech8"
     },
     {
         "date"    : "2024.05.24",
@@ -22,12 +23,12 @@
     {
         "date"    : "2024.05.05",
         "title"   : "📄 如何在网页里内嵌 PDF 文件",
-        "content" : "使用 &lt;embed&gt; 标签即可。例如：<code>&lt;embed width=\"100%\" fullscreen=\"yes\" src=\"path.pdf\"&gt;&lt;/embed&gt;</code>"
+        "content" : "使用 &lt;embed&gt; 标签即可。例如：<div class=\"code-container\"><pre><code>&lt;embed width=\"100%\" fullscreen=\"yes\" src=\"path.pdf\"&gt;&lt;/embed&gt;</code></pre></div>"
     },
     {
         "date"    : "2024.05.04",
         "title"   : "📁 从文件夹打开终端",
-        "content" : "突然发现在文件夹界面右键不跳出来 “Open in Terminal” 了。解决办法：<code>sudo apt-get install nautilus-extension-gnome-terminal</code>"
+        "content" : "突然发现在文件夹界面右键不跳出来 “Open in Terminal” 了。解决办法：<div class=\"code-container\"><pre><code>sudo apt-get install nautilus-extension-gnome-terminal</code></pre></div>"
     },
     {
         "date"    : "2024.04.28",

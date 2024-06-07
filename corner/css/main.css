@@ -539,13 +539,34 @@ th {
     border-radius: 50%;
 }
 
-code {
-    background-color: #efefef;
-}
-
 .image-container {
     position: relative;
     display: none;
     margin: 10px 0;
     text-align: center;
+}
+
+.code-container {
+    position: relative;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5em;
+    margin: 1em 0;
+    overflow: auto;
+    font-size: 0.95em; /* 代码块字体大小略微小于正常文字 */
+}
+
+.code-container pre {
+    margin: 0;
+    font-family: Consolas, "Courier New", monospace;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+code {
+    border-radius: 4px; /* 圆角边框 */
+    font-family: Consolas, "Courier New", monospace; /* 字体，选择等宽字体 */
+    font-size: 0.95em; /* 字体大小，略微小于正常文字 */
+    overflow-x: auto; /* 水平滚动条，处理长行代码 */
 }
