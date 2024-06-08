@@ -157,12 +157,35 @@
 
 <div class="code-container">
 <pre><code>torchrun --nproc_per_node 1 example_chat_completion.py \
-         --ckpt_dir checkpoint_dir \
-         --tokenizer_path tokenizer_path \
-         --max_seq_len 512 --max_batch_size 6
-</code></pre></div> 
-<p>要指定 GPU 可以直接用 os 模块设置环境变量 os.environ["CUDA_VISIBLE_DEVICE"] 为相应的 GPU。</p>
+         --ckpt_dir checkpoint_dir --tokenizer_path tokenizer_path \
+         --max_seq_len 512 --max_batch_size 6</code></pre></div> 
+<p>要指定 GPU 可以直接用 os 模块设置环境变量 CUDA_VISIBLE_DEVICE 为相应的 GPU。</p>
 <hr>
 
 <h1>LLaMa 模型的微调</h1>
-<p>To Be Done</p>
+<p>首先安装 llama-recipes：</p>
+<div class="code-container"><pre><code>pip install llama-recipes</code></pre></div>
+<p>因为微调是基于 huggingface 的模型，所以如果是从 Meta AI 官网下载的模型，则需要进行转换：</p>
+<div class="code-container"><pre><code>pip freeze | grep transformers
+git clone https://github.com/huggingface/transformers.git
+cd transformers
+pip install protobuf
+python src/transformers/models/llama/convert_llama_weights_to_hf.py \
+       --input_dir /path/to/downloaded/llama/weights \
+       --model_size 7B \
+       --output_dir /output/path \
+       --llama_version 3 # 官网教程中没有这个参数，但 LLaMa 3 缺少这个参数会报错</code></pre></div>
+<p>根据，可以对模型在多 GPU 上进行微调（单 GPU 只需要设置环境变量 CUDA_VISIBLE_DEVICES 即可）：</p>
+<div class="code-container"><pre><code>torchrun --nnodes 1 --nproc_per_node 4 finetuning.py \
+         --enable_fsdp \
+         --model_name LLaMa-3/Meta-Llama-3-8B \
+         --use_peft \
+         --peft_method lora \
+         --output_dir output_dir</code></pre></div>
+<p>其中，用到的参数为：</p>
+<ul>
+    <li> --enable_fsdp：启用 FSDP (Fully Sharded Data Parallel)</li>
+    <li> --use_peft：启用 PEFT (Parameter-Efficient Fine-Tuning)</li>
+    <li> --peft_method： 为了指定 PEFT 方法，这里使用了 lora (LOw-Rank Adaptation)，还可以选择 llama_adapter</li>
+</ul>
+<p>更多的参数可以看<a href="https://github.com/meta-llama/llama-recipes/blob/main/docs/multi_gpu.md" target="_blank">官方教程</a>。在其他数据集上微调看<a href="https://github.com/meta-llama/llama-recipes/blob/main/docs/multi_gpu.md#how-to-run-with-different-datasets" target="_blank">这里</a>，修改配置文件看<a href="https://github.com/meta-llama/llama-recipes/blob/main/docs/multi_gpu.md#where-to-configure-settings" target="_blank">这里</a>。</p>
