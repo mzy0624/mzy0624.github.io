@@ -1,7 +1,9 @@
 <p>可以使用 ffmpeg 来实现该功能，首先安装 ffmpeg：</p>
 <div class="code-container"><pre><code>sudo apt-get install ffmpeg</code></pre></div>
 <p>然后提取视频 video.mp4 的音频（格式为 .aac）：</p>
-<div class="code-container"><pre><code>ffmpeg -i video.mp4 -vn -acodec copy audio.</code></pre></div>
+<div class="code-container"><pre><code>ffmpeg -i video.mp4 -vn -acodec copy audio.aac</code></pre></div>
+<p>或者提取为 .mp3：</p>
+<div class="code-container"><pre><code>ffmpeg -i video.mp4 -f mp3 -vn audio.mp3</code></pre></div>
 <p>再分离音频的左右声道：</p>
 <div class="code-container"><pre><code>ffmpeg -i audio.aac \
        -map_channel 0.0.0 left.aac \
@@ -13,3 +15,9 @@
        -map 1:a -c copy \
        -map 2:a -c copy \
        -shortest video.mp4</code></pre></div>
+<p>如果想把视频的音频（左右声道）替换为文件 audio.mp3，只需要：</p>
+<div class="code-container"><pre><code>ffmpeg -i video.mp4 -i video.mp3 \
+       -c copy \
+       -map 0:v:0 \
+       -map 1:a:0 \
+       video.mp4</code></pre></div>
