@@ -2,7 +2,7 @@
     {
         "date"    : "2024.05.25",
         "title"   : "🎛️ 如何用提取 / 替换视频的左右声道",
-        "content" : "可以使用 ffmpeg 来实现该功能。",
+        "content" : "可以使用 FFmpeg 来实现该功能。",
         "file"    : "tech8"
     },
     {
