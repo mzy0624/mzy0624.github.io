@@ -56,7 +56,10 @@
                         \STATE Get new expressions $\mathcal{S}_2$ by adding tree-based disturbance to $S$
                         \STATE $\mathcal{S}\gets\mathcal{S}_1\cup\mathcal{S}_2$
                         \FOR{$S'\in\mathcal{S}$}
-                            \STATE $y\gets 1$ if ${\rm result}(S')={\rm result}(S)$ else $y\gets 0$
+                            \STATE $y\gets 1$
+                            \IF{${\rm result}(S')\ne {\rm result}(S)$}
+                                \STATE $y\gets 0$
+                            \ENDIF
                             \STATE $\mathcal{D}'\gets\mathcal{D}'\cup\{(P,S',y)\}$
                         \ENDFOR
                     \ENDFOR

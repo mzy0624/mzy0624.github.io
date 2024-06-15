@@ -554,7 +554,7 @@ th {
     padding: 0.5em;
     margin: 1em 0;
     overflow: auto;
-    font-size: 0.9em; /* 代码块字体大小略微小于正常文字 */
+    font-size: 0.9em;
 }
 
 .code-container pre {
@@ -565,8 +565,8 @@ th {
 }
 
 code {
-    border-radius: 4px; /* 圆角边框 */
-    font-family: Consolas, "Courier New", monospace; /* 字体，选择等宽字体 */
-    font-size: 0.9em; /* 字体大小，略微小于正常文字 */
-    overflow-x: auto; /* 水平滚动条，处理长行代码 */
+    border-radius: 4px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.9em; 
+    overflow-x: auto;
 }
