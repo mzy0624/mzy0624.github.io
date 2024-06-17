@@ -1,5 +1,11 @@
 [
     {
+        "date"    : "2024.06.17",
+        "title"   : "🖧 如何进行内网穿透",
+        "content" : "可以使用 <a href=\"https://www.zerotier.com/\" target=\"_blank\">ZeroTier</a> 来实现",
+        "file"    : "tech9"
+    },
+    {
         "date"    : "2024.05.25",
         "title"   : "🎛️ 如何用提取 / 替换视频的左右声道",
         "content" : "可以使用 FFmpeg 来实现该功能。",

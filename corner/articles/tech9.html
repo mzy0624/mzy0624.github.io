@@ -1,0 +1,17 @@
+<p>在同一子网下的两台电脑（以 Ubuntu 为例）可以通过 ssh 相互连接，但是在不同子网下就需要进行内网穿透，可以使用 <a href="https://www.zerotier.com/" target="_blank">ZeroTier</a> 来实现。</p>
+<p>首先在两台电脑上安装 ZeroTier：</p>
+<div class="code-container"><pre><code>curl -s https://install.zerotier.com | sudo bash</code></pre></div>
+<p>然后在 ZeroTier 官网注册账号，然后进入<a href="https://my.zerotier.com/network" target="_blank">网络列表</a>创建一个网络（使用默认选项就可以了），创建后会得到一个网络 ID，比方说 ID 是 20020624，那么就让两台电脑都加入到这个网络中：</p>
+<div class="code-container"><pre><code>sudo zerotier-cli join 20020624
+# 若加入成功会显示 200 join OK，可以使用如下命令查看当前连接的网络
+sudo zerotier-cli listnetworks
+</code></pre></div>
+<p>由于创建网络时有一个默认选项是 Private，所以新加入的设备需要在 ZeroTier 的控制台授权（点击 Auth 下面的方框打钩即可），而且可以看到 ZeroTier 给该设备分配的 IP 地址，比如 1.2.3.4（另一台设备也是一样的操作）。然后启动 ZeroTier 服务：</p>
+<div class="code-container"><pre><code>sudo systemctl start zerotier-one.service
+# 开机自启动
+sudo systemctl enable zerotier-one.service
+</code></pre></div>
+<p>当两台设备都连接到该网络下并保持运行 ZeroTier 服务时，即使它们不在同一子网下，也可以相互访问了：</p>
+<div class="code-container"><pre><code>ssh user@1.2.3.4</code></pre></div>
+<p>如果要断开当前加入的网络，可以使用：</p>
+<div class="code-container"><pre><code>sudo zerotier-cli leave 20020624</code></pre></div>
