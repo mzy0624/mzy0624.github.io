@@ -1,5 +1,11 @@
 [
     {
+        "date"    : "2024.06.17",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2303.06689\" target=\"_blank\">Self-planning Code Generation with Large Language Models</a> 阅读笔记",
+        "content" : "大模型在面对复杂的代码生成需求时性能不好，而人类通常会将复杂问题分解为简单的子问题然后一步一步解决，所以作者提出了 Self-Planning 方法来模拟这一行为，该方法包含 Planning（规划）和 Implementation（实现）两个步骤。",
+        "file"    : "study20"
+    },
+    {
         "date"    : "2024.06,15",
         "title"   :"📝 论文 <a href=\"https://openreview.net/forum?id=Gj3zN9zs4v\" target=\"_blank\">LEVER: Learning to Verify Language-to-Code Generation with Execution</a> 阅读笔记",
         "content" : "用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
@@ -8,7 +14,7 @@
     {
         "date"    : "2024.06.14",
         "title"   :"📝 论文 <a href=\"https://arxiv.org/abs/2109.03034\" target=\"_blank\">Generate & Rank: A Multi-task Framework for Math Word Problems</a> 阅读笔记",
-        "content" : "不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了一个 Generate & Rank 框架来解决这个问题。",
+        "content" : "不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了 Generate & Rank 来解决这个问题。",
         "file"    : "study18"
     },
     {

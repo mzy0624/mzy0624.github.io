@@ -1,0 +1,29 @@
+<h1>解决了什么问题</h1>
+<p>大模型在代码生成领域表现得还不错，但是需求一旦复杂，大模型的性能就会下降不少。而人类在解决复杂问题时通常会将其分解为更简单的子问题然后一步一步解决，所以作者提出了 Self-Planning 方法，该方法包含两个步骤：Planning（规划）和 Implementation（实现）。在 Planning 步骤中，大模型从自然语言需求出发，结合少量的 prompts，规划出简洁的步骤；而在 Implementation 阶段，大模型在前面生成的步骤的指导下逐步生成代码。</p>
+<!-- <p>“分解成子问题然后一步一步解决” 很容易让人想到 CoT (Chain-of-Thought)，但是不太能直接应用 CoT，因为从根本上讲，CoT 和代码都是对解决方案的描述，只是形式不同：CoT 是自然语言而代码是编程语言。</p> -->
+<h1>Planning</h1>
+<p>规划步骤中，大模型基于 few-shot prompting 将问题分解为更简洁的子问题，其中 prompt $C$ 设计了 $k$ 个相连的样例：$C\triangleq\langle x_1^e\cdot y_1^e\rangle\ \|\ \langle x_2^e\cdot y_2^e\rangle\ \|\ \cdots\ \|\ \langle x_k^e\cdot y_k^e\rangle$，其中 $\langle x_i^e\cdot y_i^e\rangle$ 由样例问题 $x_i^e$ 和它的规划方案 $y^e_i$ 组成，且方案 $y^e_i=\{q_{ij}\}_{j=1}^n$ 由若干个子问题组成。在推理阶段，用于测试的问题 $x$ 会被直接拼接在 prompt 后面然后丢到大模型中，大模型随后输出规划 $y$。</p>
+<h1>Implementation</h1>
+<p>将问题 $x$ 和其规划 $y$ 拼接后输入到大模型中，大模型输出最终代码 $z$。</p>
+<h1>形式化</h1>
+<p>
+    Planning 和 Implementation 步骤可以形式化为：
+    $$P(z\mid x,C)=\sum_{\hat{y}}P(z\mid\hat{y},x,C)P(\hat{y}\mid x,C)\propto P(z\mid y,x,C)P(y\mid x,C)$$
+    其中 $\hat{y}$ 是任何可能的规划，且 $y$ 代表大模型生成的规划（文章使用概率最高的那一个）。由于条件独立性假设，可以简化 $P(z\mid y,x,C)=P(z\mid y,x)$，于是：
+    $$P(z\mid x,C)\triangleq P(z\mid y,x)\cdot P(y\mid x,C)$$
+    前一项代表 Implementation 步骤，后一项代表 Planning 步骤。
+</p>
+<h1>Crafting prompts for Self-Planning</h1>
+<p>作者准备了 $k$ 个样例问题，并且按照以下准则为其制定了规划：</p>
+<ol>
+    <li>规划以编号列表的形式组织，列表中的每一项代表一个步骤；</li>
+    <li>每一个步骤都代表一个单一、易于实现的子问题，这些子问题被表述为以动词开头的祈使句，重点关注每一步所需的动作；</li>
+    <li>步骤应简明扼要，避免过于详细的实施细节；</li>
+    <li>规划按照步骤顺序执行，但对于更复杂的结构，规划可以包含分支（包括循环）。</li>
+</ol>
+<h1>一个例子</h1>
+<div style="text-align: center;">
+    <img src="./files/study20/1.png" width="90%"/>
+</div>
+<h1>个人看法</h1>
+<p>难怪还没中。</p>
