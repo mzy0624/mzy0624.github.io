@@ -2,13 +2,13 @@
     {
         "date"    : "2024.06,15",
         "title"   :"📝 论文 <a href=\"https://openreview.net/forum?id=Gj3zN9zs4v\" target=\"_blank\">LEVER: Learning to Verify Language-to-Code Generation with Execution</a> 阅读笔记",
-        "content" : "还没看完，看完再写",
+        "content" : "用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
         "file"    : "study19"
     },
     {
         "date"    : "2024.06.14",
         "title"   :"📝 论文 <a href=\"https://arxiv.org/abs/2109.03034\" target=\"_blank\">Generate & Rank: A Multi-task Framework for Math Word Problems</a> 阅读笔记",
-        "content" : "作者提出了一个 Generate & Rank 框架来解决 Math Word Problem (MWP)。",
+        "content" : "不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了一个 Generate & Rank 框架来解决这个问题。",
         "file"    : "study18"
     },
     {

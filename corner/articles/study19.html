@@ -8,7 +8,7 @@
     设 $x$ 为自然语言输入，生成模型 $P(y\mid x)$ 生成代码 $y$，随后 $y$ 被执行，执行结果为 $\mathcal{E}(y)$，将它们拼接后输入到验证器中，验证器给出一个分数 $P_\theta(v\mid x,y,\mathcal{E}(y))$，它衡量了 $x$ 和 $y$ 匹配的可能性。然后将验证分数和 LLM 的生成概率结合，得到重排概率：
     $$P_R(y,v_{=1}\mid x)=P_{\rm LM}(y\mid x)\cdot P_\theta(v_{=1}\mid x,y,\mathcal{E}(y))$$
     因为不同的代码可能含有相同的语义，所以作者将执行结果相同的代码的得分合并：
-    $$R(x,y)=R(\mathcal{E}(y),v_{=1}\mid x)=\sum_{y'\in S,\mathcal{E}(y)=\mathcal{E}(y')}P_R(y,v_{=1}\mid x)$$
+    $$R(x,y)=\sum_{y'\in S\atop\mathcal{E}(y)=\mathcal{E}(y')}P_R(y',v_{=1}\mid x)$$
     这样就减轻了对代码表面形式的依赖，而更加关注执行结果。
 </p>
 <h2>验证器的训练</h2>
