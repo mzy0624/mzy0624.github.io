@@ -30,8 +30,8 @@ fetch('articles/top.txt').then(
 
 let titles = {
     'study'   : '📚 学习科研',
-    'tech'    : '🛠️ 技术相关',
     'life'    : '🕒 生活 P 事',
+    'tech'    : '🛠️ 技术相关',
     'mood'    : '🤔 心情随想',
     'hobbies' : '🧩 兴趣爱好',
 };
