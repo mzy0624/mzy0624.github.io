@@ -42,7 +42,6 @@ function full_article(file, title, date) {
     });
 }
 
-
 function article_json_parser(json) {
     let date    = new Div(json.date,    [['class', 'date']]);
     let title   = new Div(json.title,   [['class', 'title']]);
