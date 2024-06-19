@@ -16,7 +16,7 @@
 
     <li>
         教师模型和学生模型之间的蒸馏损失 $\mathcal{L}_{\rm distillation}$：
-        $$\mathcal{L}_{\rm distillation}=t^2\times{\rm CrossEntropy}\left(p^{(t)},\ q^{(t)}\right)=t^2\sum_{i=1}^Np_i^{(t)}\log q_i^{(t)}$$
+        $$\mathcal{L}_{\rm distillation}=t^2\times{\rm CrossEntropy}\left(p^{(t)},\ q^{(t)}\right)=-t^2\sum_{i=1}^Np_i^{(t)}\log q_i^{(t)}$$
     </li>
 </ul>
 <hr>
