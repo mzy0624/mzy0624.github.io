@@ -36,20 +36,21 @@
 
 <p>感觉这个版本原文写的有点乱，举个例子，图中共有四份代码 $x_1\sim x_4$ 和五份测试用例 $y_1\sim y_5$。</p>
 
-<div>
-    <img src="files/study5/2.png" width="40%" style="float: left; margin: 0 5%"/>
-    <p>
-        容易算出：
-        $$
-            \begin{array}{ll}
-            pass(x_1)=\{y_1,y_2,y_3\}&same(x_1)=\{x_1,x_2\}\\
-            pass(x_2)=\{y_1,y_2,y_3\}&same(x_2)=\{x_1,x_2\}\\
-            pass(x_3)=\{y_2,y_3,y_4,y_5\}&same(x_3)=\{x_3\}\\
-            pass(x_4)=\{y_1,y_3\}&same(x_4)=\{x_4\}
-            \end{array}
-        $$
-    </p>
-</div><br>
+<div style="text-align: center">
+    <img src="files/study5/2.png" width="60%"/>
+</div>
+
+<p>
+    容易算出：
+    $$
+        \begin{array}{ll}
+        pass(x_1)=\{y_1,y_2,y_3\}&same(x_1)=\{x_1,x_2\}\\
+        pass(x_2)=\{y_1,y_2,y_3\}&same(x_2)=\{x_1,x_2\}\\
+        pass(x_3)=\{y_2,y_3,y_4,y_5\}&same(x_3)=\{x_3\}\\
+        pass(x_4)=\{y_1,y_3\}&same(x_4)=\{x_4\}
+        \end{array}
+    $$
+</p>
 
 <p>然后可以计算得到各对的得分，例如 $f(x_1,y_1)=6,f(x_3,y_2)=4$。</p>
 
