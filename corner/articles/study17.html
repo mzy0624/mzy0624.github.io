@@ -7,7 +7,7 @@
     贪心算法一定会得到比之前更优的策略，因为：
     $$Q_{\pi^*}(s,a)=\max_{a'}Q_{\pi}(s,a')\geqslant Q_{\pi}(s,a)$$
 </p>
-<p>设 $A$ 为动作空间，$s$ 为当前状态，$\epsilon$-greedy 其实就是以 $1-\epsilon$ 的概率贪心，否则在动作空间中随机选取动作：</p>
+<p>设 $A$ 为动作空间，$s$ 为当前状态，$\epsilon$-greedy 就是以 $1-\epsilon$ 的概率贪心，否则在动作空间中随机选取动作：</p>
 <div style="width: 70%">
     <pre id="epsilon-greedy" class="pseudocode">
         \begin{algorithm}
@@ -29,8 +29,8 @@
 <p>
     在时刻 $s$ 下，$Q$-Learning 算法首先从 $Q$ 中用行为策略（例如 $\epsilon$-greedy）选取并执行动作 $a$，观察奖励 $r$ 和新的状态 $s'$，再更新 $Q$：
     \begin{align*}
-        Q(s,a)=&\ Q(s,a)+\alpha(r+\gamma\max_{a'}Q(s',a')-Q(s,a))\\
-              =&\ (1-\alpha)Q(s,a)+\alpha(r+\gamma\max_{a'}Q(s',a'))
+        Q(s,a)=&\ Q(s,a)+\alpha\left(r+\gamma\max_{a'}Q(s',a')-Q(s,a)\right)\\
+              =&\ (1-\alpha)Q(s,a)+\alpha\left(r+\gamma\max_{a'}Q(s',a')\right)
     \end{align*}
 </p>
 <div style="width: 70%">
