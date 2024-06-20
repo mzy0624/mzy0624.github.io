@@ -43,24 +43,17 @@ let audio = new BaseElement('audio', '', [['src', 'files/music.mp3']]);
 let music_name = new Small('');
 let play_pause_button = new Button('▶️', [['style', 'background: transparent; border: none']]);
 let progress = new BaseElement('input', '', [['type', 'range'], ['disabled', 'true'], ['value', '0']]);
-let cur_time = new BaseElement('span', '0:00 ');
-let total_time = new BaseElement('span', ' 0:00')
-let cur_lyric  = new Para('', [['style', 'margin: 0 10px']]);
-let next_lyric = new Para('', [['style', 'margin: 0 10px']]);
+let cur_time = new BaseElement('span', '0:00',   [['style', 'font-size: 14px; margin-right: 2px']]);
+let total_time = new BaseElement('span', '0:00', [['style', 'font-size: 14px; margin-left:  2px']])
+let cur_lyric  = new Para('', [['style', 'margin: 0 10px; font-size: 10px']]);
+let next_lyric = new Para('', [['style', 'margin: 0 10px; font-size: 10px']]);
 
-let music_container = new Div([
+let music_player = new Div([
+    audio, music_name, 
+    new Div([play_pause_button, cur_time, progress, total_time], [['class', 'music_controller']]),
     new Div([cur_lyric, next_lyric], [['class', 'lyrics']]),
-    new Div([
-        audio, music_name, 
-        new Div([
-            play_pause_button, 
-            cur_time, 
-            progress, 
-            total_time
-        ], [['class', 'music_controller']])
-    ], [['class', 'music_player']])
-], [['class', 'masthead-right']]);
-append_elem('masthead', music_container);
+], [['class', 'music_player']])
+append_elem('masthead', music_player);
 
 let is_seeking = false;
 play_pause_button.elem.addEventListener('click', () => {

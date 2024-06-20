@@ -313,7 +313,7 @@ th {
 .masthead {
     position: relative;
     border-bottom: 1px solid #cdcdcd;
-    padding: 1em 1em 1em;
+    padding: 1em;
     font-size: 20px;
     font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
     display: flex;
@@ -321,17 +321,9 @@ th {
     align-items: center;
 }
 
-.masthead-left, .masthead-right {
+.masthead-left {
     display: flex;
     align-items: center;
-}
-
-.masthead-left > * {
-    margin-right: 10px;
-}
-
-.masthead-right > * {
-    margin-left: 10px;
 }
 
 .masthead small {
@@ -586,18 +578,9 @@ code {
     overflow-x: auto;
 }
 
-.music_container {
-    display: flex;
-    align-items: flex-start;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
 .music_player {
     text-align: center;
-    margin-right: 20px;
+    margin: -8px 20px -8px 0;
 }
 
 .music_controller {
