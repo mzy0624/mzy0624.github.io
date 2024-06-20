@@ -92,9 +92,13 @@ function addAttributes(attributes, _attributes) {
 }
 
 class BaseElement {
-    constructor(tagName, attributes=[]) {
+    constructor(tagName, contents='', attributes=[]) {
         // create element
         this.elem = document.createElement(tagName);
+        // contents
+        if (contents != '') {
+            this.append(contents);
+        }
         // set attributes
         attributes.forEach(attr => this.elem.setAttribute(attr[0], attr[1]));
     }
@@ -129,8 +133,8 @@ class BaseElement {
         }
     }
 
-    cover_innerhtml(content) {
-        this.elem.innerHTML = content;
+    cover_innerhtml(contents) {
+        this.elem.innerHTML = contents;
     }
 
     toString() {
@@ -154,61 +158,61 @@ function append_elem(target, ...elems) {
 
 class Hr extends BaseElement {
     constructor() {
-        super('hr', []);
+        super('hr');
     }
 }
 
 class Br extends BaseElement {
     constructor() {
-        super('br', []);
+        super('br');
+    }
+}
+
+class Button extends BaseElement {
+    constructor(contents='', attributes=[]) {
+        super('button', contents, attributes);
     }
 }
 
 class Center extends BaseElement {
     constructor(contents='', attributes=[]) {
-        super('center', attributes);
-        this.append(contents);
+        super('center', contents, attributes);
     }
 }
 
 class Img extends BaseElement {
     constructor(src, attributes=[]) {
-        super('img', [['src', src], ...attributes]);
+        super('img', '', [['src', src], ...attributes]);
     }
 }
 
 class Head extends BaseElement {
     constructor(contents='', h=1, attributes=[]) {
-        super(`h${h}`, attributes);
-        this.append(contents);
+        super(`h${h}`, contents, attributes);
     }
 }
 
 class Anchor extends BaseElement {
     constructor(url, content, attributes=[], target="_blank") {
-        super('a', [['href', url], ['target', target], ...attributes]);
-        this.append(content);
+        super('a', content, [['href', url], ['target', target], ...attributes]);
     }
 }
 
 class Para extends BaseElement {
     constructor(contents='', attributes=[]) {
-        super('p', attributes);
-        this.append(contents);
+        super('p', contents, attributes);
     }
 }
 
 class Small extends BaseElement {
     constructor(contents='', attributes=[]) {
-        super('small', attributes);
-        this.append(contents);
+        super('small', contents, attributes);
     }
 }
 
 class Div extends BaseElement {
     constructor(contents='', attributes=[]) {
-        super('div', attributes);
-        this.append(contents);
+        super('div', contents, attributes);
     }
 }
 
@@ -218,8 +222,7 @@ class Li extends BaseElement {
      * new Li(contents:String)
      */
     constructor(contents='', attributes=[]) {
-        super('li', attributes);
-        this.append(contents);
+        super('li', contents, attributes);
     }
 }
 
@@ -228,7 +231,7 @@ class List extends BaseElement {
      * (Un)Ordered List <ul> or <ol>
     */
     constructor(type, contents, attributes) {
-        super(type, attributes);
+        super(type, '', attributes);
         if (!Array.isArray(contents)) {
             contents = [contents];
         }
@@ -260,8 +263,7 @@ class Th extends BaseElement {
     // Table Header <th>
     constructor(contents, attributes=[]) {
         // attributes = addAttribute(attributes, ['style', 'vertical-align: top']);
-        super('th', attributes);
-        this.append(contents);
+        super('th', contents, attributes);
     }
 }
 
@@ -269,8 +271,7 @@ class Td extends BaseElement {
     // Table Datacell <td>
     constructor(contents, attributes=[]) {
         // attributes = addAttribute(attributes, ['style', 'vertical-align: top']);
-        super('td', attributes);
-        this.append(contents);
+        super('td', contents, attributes);
     }
 }
 
@@ -281,7 +282,7 @@ class Tr extends BaseElement {
         new Tr([[td1, attr1], [td2, attr2]]) or mixed
     */ 
     constructor(contents, attributes=[], data_type=Td) { // data_type: Td or Th
-        super('tr', attributes);
+        super('tr', '', attributes);
         this.append(contents.map(data => 
             Array.isArray(data) ? 
             new data_type(data[0], attributes=data[1]) : 
@@ -293,7 +294,7 @@ class Tr extends BaseElement {
 class Tbody extends BaseElement {
     // Table Body
     constructor(contents, attributes=[], has_header=false) {
-        super('tbody', attributes);
+        super('tbody', '', attributes);
         if (has_header == true) {
             this.append(new Tr(contents[0], [], Th));
             contents = contents.slice(1);
@@ -316,7 +317,7 @@ class Table extends BaseElement {
      * where attrs is the attributes of this data
      */
     constructor(contents, attributes=[], has_header=false) {
-        super('table', attributes);
+        super('table', '', attributes);
         this.append(new Tbody(contents, attributes, has_header=has_header));
     }
 }

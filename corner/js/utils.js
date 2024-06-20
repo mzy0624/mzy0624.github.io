@@ -27,7 +27,7 @@ function full_article(file, title, date) {
     fetch(`articles/${file}.html`).then(
         response => response.text()
     ).then(data => {
-        let close = new BaseElement('span', [['class', 'close-btn'], ['onclick', `close_popup('${file}')`]]);
+        let close = new BaseElement('span', '', [['class', 'close-btn'], ['onclick', `close_popup('${file}')`]]);
         let article = new Div(data, [['class', 'popup-content; full-article']]);
         // let article = new Div(marked.parse(data), [['class', 'popup-content; full-article']]);
         let full = new Div(
@@ -61,8 +61,7 @@ function article_json_parser(json) {
             full_article(file, new_title, new_date);
             button_attributes.push(['onclick', `open_popup('${file}')`]);
         }
-        let button = new BaseElement('button', button_attributes);
-        button.append(button_content);
+        let button = new Button(button_content, button_attributes);
         article.push(button);
     }
     return article;
@@ -91,7 +90,7 @@ function scroll_to_top(time=0.3) {
 }
 
 function add_large_image(target, img) {
-    let button = new BaseElement('button', [['class', 'readmore']]);
+    let button = new Button('', [['class', 'readmore']]);
     button.cover_innerhtml('查看大图');
     img = new Div(
         new Img(img, [['width', '65%']]), 
