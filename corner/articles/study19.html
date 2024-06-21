@@ -38,7 +38,7 @@
         \end{algorithm}
     </pre>
 </div>
-<script>pseudocode.renderElement(document.getElementById("create_data"));</script>
+<script>render_pseudocode('create_data', reset=true);</script>
 <p>
     得到数据集后，对于输入 $x$，训练验证器的目标是最小化负对数似然：
     $$\mathcal{L}_{\theta}(x)=-\dfrac{1}{|\hat{D}_x|}\sum_{(y,z,v)\in\hat{D}_x}\log P_\theta(v\mid x,y,z)$$

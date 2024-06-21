@@ -36,6 +36,12 @@ let titles = {
     'hobbies' : '🧩 兴趣爱好',
 };
 
+document.addEventListener('DOMContentLoaded', function() {
+    MathJax.startup.promise.then(() => {
+        MathJax.typeset();
+    });
+});
+
 for (let item in titles) {
     fetch(`articles/${item}.json`).then(
         response => response.json()
@@ -59,7 +65,8 @@ for (let item in titles) {
             }
             scroll_to_top();
         });
-        append_elem(item, head, article, count, button, new Hr());
+        let _item = append_elem(item, head, article, count, button, new Hr());
+        MathJax.typesetPromise([_item]);    // Process MathJax manually
     });
 }
 

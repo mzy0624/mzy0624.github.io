@@ -153,7 +153,8 @@ function append_elem(target, ...elems) {
         else {
             target.append(elem);
         }
-    })
+    });
+    return target;
 }
 
 class Hr extends BaseElement {
