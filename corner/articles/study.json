@@ -1,5 +1,11 @@
 [
     {
+        "date"    : "2024.06.21",
+        "title"   : "♟️ 博弈论笔记 1：完全信息静态博弈",
+        "content" : "完全信息指的是每一参与者的收益函数在所有参与者之间是共同知识，而静态指的是各方同时行动。",
+        "file"    : "study21"
+    },
+    {
         "date"    : "2024.06.17",
         "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2303.06689\" target=\"_blank\">Self-planning Code Generation with Large Language Models</a> 阅读笔记",
         "content" : "大模型在面对复杂的代码生成需求时性能不好，而人类通常会将复杂问题分解为简单的子问题然后一步一步解决，所以作者提出了 Self-Planning 方法来模拟这一行为，该方法包含 Planning（规划）和 Implementation（实现）两个步骤。",
