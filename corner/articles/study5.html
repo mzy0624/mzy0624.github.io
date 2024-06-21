@@ -23,11 +23,10 @@
 <p>在获得代码集合 $\mathcal{X}$ 和测试用例集合 $\mathcal{Y}$ 后，要从 $\mathcal{X}$ 中选择出最佳的代码 $\hat{x}$：</p>
 
 <ol>
-    <li>首先从集合 $\mathcal{D}=\mathcal{X}\times\mathcal{Y}$ 中随机采样一个对 $(x,y)$，如果代码 $x$ 能通过测试用例 $y$ 的话，那么计算两个集合：
-        $$
-        pass(x)=\{y\in\mathcal{Y}\mid x\text{ 通过测试用例 }y\}\\
-        same(x)=\{x\in\mathcal{X}\mid x\text{ 和 }x'\text{通过相同的测试用例}\}
-        $$
+    <li>
+        首先从集合 $\mathcal{D}=\mathcal{X}\times\mathcal{Y}$ 中随机采样一个对 $(x,y)$，如果代码 $x$ 能通过测试用例 $y$ 的话，那么计算两个集合：
+        $$pass(x)=\{y\in\mathcal{Y}\mid x\text{ 通过测试用例 }y\}$$
+        $$same(x)=\{x\in\mathcal{X}\mid x\text{ 和 }x'\text{通过相同的测试用例}\}$$
     </li>
     <li>然后再计算 $(x,y)$ 的一致集 (Consensus Set) $S=same(x)\times pass(x)$。$S$ 中的每一个对 $(x',y')$ 都和 $(x,y)$ 达成一致。</li>
     <li>计算 $(x,y)$ 的得分 $f(x,y)=|S|，这个得分度量了代码的正确性：越多的对和 $(x,y)$ 一致，代码越可能正确。</li>
@@ -37,19 +36,17 @@
 <p>感觉这个版本原文写的有点乱，举个例子，图中共有四份代码 $x_1\sim x_4$ 和五份测试用例 $y_1\sim y_5$。</p>
 
 <div style="text-align: center">
-    <img src="files/study5/2.png" width="50%"/>
+    <img src="files/study5/2.png" width="45%"/>
 </div>
 
 <p>
     容易算出：
-    $$
-        \begin{array}{ll}
+    $$\begin{array}{ll}
         pass(x_1)=\{y_1,y_2,y_3\}&same(x_1)=\{x_1,x_2\}\\
         pass(x_2)=\{y_1,y_2,y_3\}&same(x_2)=\{x_1,x_2\}\\
         pass(x_3)=\{y_2,y_3,y_4,y_5\}&same(x_3)=\{x_3\}\\
         pass(x_4)=\{y_1,y_3\}&same(x_4)=\{x_4\}
-        \end{array}
-    $$
+    \end{array}$$
 </p>
 
 <p>然后可以计算得到各对的得分，例如 $f(x_1,y_1)=6,f(x_3,y_2)=4$。</p>

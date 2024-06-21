@@ -1,9 +1,7 @@
 <p>
     知识蒸馏中，设教师模型和学生模型的 logits 分别为 $v,\ z$，并设：
-    $$
-        p^{(t)}={\rm softmax}(v/t)\\
-        q^{(t)}={\rm softmax}(z/t)
-    $$
+    $$p^{(t)}={\rm softmax}(v/t)$$
+    $$q^{(t)}={\rm softmax}(z/t)$$
 </p>
 
 <p>其中 $t$ 是温度参数，以分类任务为例，目标函数有两部分：</p>
