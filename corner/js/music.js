@@ -49,7 +49,7 @@ let cur_lyric  = new Para('', [['style', 'margin: 0 10px; font-size: 10px']]);
 let next_lyric = new Para('', [['style', 'margin: 0 10px; font-size: 10px']]);
 
 let music_player = new Div([
-    audio, music_name, 
+    audio, music_name,
     new Div([play_pause_button, cur_time, progress, total_time], [['class', 'music_controller']]),
     new Div([cur_lyric, next_lyric], [['class', 'lyrics']]),
 ], [['class', 'music_player']])

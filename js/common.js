@@ -241,7 +241,7 @@ class List extends BaseElement {
 }
 
 class Ul extends List {
-    /** 
+    /**
      * Unordered List <ul><li>...</li>...</ul>
      * new Ul(contents:String, [li1, li2, ...]/li)
      * */
@@ -251,7 +251,7 @@ class Ul extends List {
 }
 
 class Ol extends List {
-    /** 
+    /**
      * Ordered List <ol><li>...</li>...</ol>
      * new Ol(contents:String, [li1, li2, ...]/li)
      * */
@@ -281,12 +281,12 @@ class Tr extends BaseElement {
        Table Row <tr>
         new Tr([td1, td2, ...]) or
         new Tr([[td1, attr1], [td2, attr2]]) or mixed
-    */ 
+    */
     constructor(contents, attributes=[], data_type=Td) { // data_type: Td or Th
         super('tr', '', attributes);
-        this.append(contents.map(data => 
-            Array.isArray(data) ? 
-            new data_type(data[0], attributes=data[1]) : 
+        this.append(contents.map(data =>
+            Array.isArray(data) ?
+            new data_type(data[0], attributes=data[1]) :
             new data_type(data)
         ));
     }
@@ -313,8 +313,8 @@ class Table extends BaseElement {
      *                           // ...
      *     [data5, data6, ...]   // rown
      * ])
-     * 
-     * A data may be a string, or an array: [td, attrs], 
+     *
+     * A data may be a string, or an array: [td, attrs],
      * where attrs is the attributes of this data
      */
     constructor(contents, attributes=[], has_header=false) {

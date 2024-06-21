@@ -18,7 +18,7 @@ let Skills = new Ul([
     new SH('LaTeX',      '2019', [`My first encounter with LaTeX was in ${getAnchor('ps')} class, where homework needs to be done in LaTeX.`/*, 'How do you pronounce LaTeX?'*/]),
     new SH('Vim',        '2020'),
     new SH('Linux',      '2020', [`Especially ${icons('ubuntu')} Ubuntu (installation, use and repair).`, `"Linux" should be pronounced as /'liniks/ or /'linэks/.`]),
-    new SH('Python',     '2021', [`I can write Machine Learning codes by using some popular frameworks especially ${icons('PyTorch')} PyTorch.`]), 
+    new SH('Python',     '2021', [`I can write Machine Learning codes by using some popular frameworks especially ${icons('PyTorch')} PyTorch.`]),
     new SH('Octave',     '2021', [`Think of it as a shrunken version of ${icons('matlab')} MATLAB.`]),
     new SH('HTML',       '2023', [`With a little ${icons('CSS')} CSS.`]),
     new SH('JavaScript', '2023'),
@@ -28,7 +28,7 @@ let Skills = new Ul([
 let Hobbies = new Ul([
     new SH('Table Tennis', 'primary school', [
         `Favorite player: <big>${icons('China')}</big> Ma Long.`,
-        'Play Style: Right-hand, Handshake Grip, Offensive.', 
+        'Play Style: Right-hand, Handshake Grip, Offensive.',
         new Span('Racket Configurations', [
             `Blade: ${getAnchor('fzd')}.<br>
              Rubber: ${getAnchor('neo')} (Forehand); ${getAnchor('d09c')} (Backhand).`,
@@ -52,7 +52,7 @@ let address = `<address>Zi-Yu Mao<br>
                163 Xianlin Avenue, Qixia District, Nanjing 210023, China.</address>`;
                
 let correspondence = new Ul([
-    ['Laboratory', lab], 
+    ['Laboratory', lab],
     ['Mail Address', address]
 ].map(item => `<strong>${item[0]}</strong><br><small>${item[1]}</small>`));
 
@@ -68,7 +68,7 @@ let main_items = {
     // 'Awards and Honors':    new Ul(['QAQ']),
     'Teaching Assistants':  TAs,
     'Skills and Hobbies':   new Table([[
-                                [Skills,  [['style', 'vertical-align: top']]], 
+                                [Skills,  [['style', 'vertical-align: top']]],
                                 [Hobbies, [['style', 'vertical-align: top']]]
                             ]]),
     'Correspondence':       correspondence
@@ -80,10 +80,10 @@ let avatar = new Div(
 );
 
 let socials = new Small([
-    getAnchor('github',   [['style', 'text-decoration: none'], ['title', 'GitHub']]),   
+    getAnchor('github',   [['style', 'text-decoration: none'], ['title', 'GitHub']]),
     getAnchor('zhihu',    [['style', 'text-decoration: none'], ['title', 'Zhihu']]),
-    getAnchor('bilibili', [['style', 'text-decoration: none'], ['title', 'Bilibili']]), 
-    getAnchor('ins',      [['style', 'text-decoration: none'], ['title', 'Instagram']]) 
+    getAnchor('bilibili', [['style', 'text-decoration: none'], ['title', 'Bilibili']]),
+    getAnchor('ins',      [['style', 'text-decoration: none'], ['title', 'Instagram']])
 ]);
 
 let lamda_nju = new Div([getAnchor('lamdalogo'), new Br(), getAnchor('njulogo')]);

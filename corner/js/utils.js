@@ -46,9 +46,9 @@ function full_article(file, title, date) {
         // let article = new Div(marked.parse(data), [['class', 'popup-content; full-article']]);
         let full = new Div(
             new Div(
-                [title, close, date, new Br(), new Hr(), article], 
+                [title, close, date, new Br(), new Hr(), article],
                 [['class', 'popup'], ['onclick', 'event.stopPropagation();']]
-            ), 
+            ),
             [['class', 'overlay'], ['id', file], ['onclick', `close_popup('${file}')`]]
         );
         append_elem(document.body, full);
@@ -98,11 +98,11 @@ function scroll_to_top(time=0.3) {
         function(){
             if (window.scrollY != 0) {
                 window.scrollBy(0, scroll_step);
-            } 
+            }
             else {
                 clearInterval(scroll_interval);
             }
-        }, 
+        },
         1000 / 60
     );
 }
@@ -111,7 +111,7 @@ function add_large_image(target, img) {
     let button = new Button('', [['class', 'readmore']]);
     button.cover_innerhtml('查看大图');
     img = new Div(
-        new Img(img, [['width', '65%']]), 
+        new Img(img, [['width', '65%']]),
         [['class', 'image-container'], ['style', 'display:none; text-align:center']]
     );
     button.elem.addEventListener('click', function() {
