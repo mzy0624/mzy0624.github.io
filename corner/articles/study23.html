@@ -1,0 +1,129 @@
+<h1>完全信息动态博弈的定义</h1>
+<p>“动态” 指的是玩家轮流做决策，也叫扩展式博弈 (Extensive Game)，特点是每一步没有收益，只有最后一步才有收益，相较于静态博弈，动态博弈多了玩家的序列信息，以及每个点上的策略集。动态博弈的例子有尼姆游戏、下棋等。</p>
+<p>
+    对于玩家集合 $N$，策略集合为 $A$，历史集为 $H$，历史集是 “策略的序列” 构成的集合，性质有：
+    <ol>
+        <li>$\varnothing\in H$，表示博弈树的根结点；</li>
+        <li>若策略序列 $a^1a^2\cdots a^k\in H$ 且 $k>s$，那么 $a^1a^2\cdots a^s\in H$；</li>
+        <li>若无穷策略序列 $(a^k)_{k=1}^{\infty}$ 满足 $\forall k,a^1a^2\cdots a^k\in H$，则 $(a^k)_{k=1}^{\infty}\in H$；</li>
+        <li>每一条历史序列都对应博弈树上其末端到达的结点；</li>
+        <li>在完全信息动态博弈中，历史集的大小等于博弈树的结点数；</li>
+        <li>最终历史 (Terminal History) $a^1a^2\cdots a^k\in H$ 要么满足 $k$ 为 $\infty$，要么满足 $\forall a^{k+1}\in A,a^1a^2\cdots a^{k+1}\notin H$；</li>
+        <li>最终历史集 $Z$ 即为所有最终历史的集合，在这些结点上是收益。</li>
+    </ol>
+    博弈玩家函数 (Player Function) $P$ 定义为：
+    <ol>
+        <li>$P:H\ \backslash Z\to N$，给每一个非终结历史分配一个玩家；</li>
+        <li>$P(h)$ 表示在历史 $h$ 后轮到哪个玩家做决策。</li>
+    </ol>
+    则完全信息动态博弈可以形式化为：
+    $$G=\{N,H,P,\{u_i\}_{i=1}^{|N|}\}$$
+</p>
+<h1>例子：Entry Game</h1>
+<p>一家公司 $G$ 试图进入一个市场，该市场的另一家公司 $B$ 可以选择对立 ($F$) 或者合作 ($C$)，这样可以画出一颗博弈树：</p>
+<style>
+    .node {
+        fill: black;
+        stroke: black;
+        stroke-width: 2;
+    }
+    .text {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-anchor: middle;
+    }
+</style>
+
+<div style="text-align: center; margin-top: -2em;">
+    <svg width="400" height="300">
+        <!-- Lines -->
+        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
+        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
+        <line x1="250" y1="150" x2="150" y2="250" class="node" />
+        <line x1="250" y1="150" x2="350" y2="250" class="node" />
+        
+        <!-- Circles -->
+        <circle cx="150" cy="50"  r="4" class="hollow-node" />
+        <circle cx=" 50" cy="150" r="4" class="node" />
+        <circle cx="250" cy="150" r="4" class="node" />
+        <circle cx="150" cy="250" r="4" class="node" />
+        <circle cx="350" cy="250" r="4" class="node" />
+        
+        <!-- Text -->
+        <text x="80"  y="100" class="text">Out</text>
+        <text x="220" y="100" class="text">In</text>
+
+        <!-- Formulas -->
+        <g>
+            <foreignObject x="150" y="20"  width="30"  height="30">$G$</foreignObject>
+            <foreignObject x="0"   y="150" width="100" height="100">$0,20$</foreignObject>
+            <foreignObject x="250" y="120" width="30"  height="30">$B$</foreignObject>
+            <foreignObject x="170" y="180" width="30"  height="30">$F$</foreignObject>
+            <foreignObject x="300" y="180" width="30"  height="30">$C$</foreignObject>
+            <foreignObject x="100" y="250" width="100" height="100">$-5,0$</foreignObject>
+            <foreignObject x="300" y="250" width="100" height="100">$10,10$</foreignObject>
+        </g>
+    </svg>
+</div>
+<p>
+    博弈树由结点和边组成，对应博弈玩家、策略和收益。其中非叶子结点代表博弈玩家，表示此时哪个玩家做出决策，每个非叶子结点有且仅有一个博弈玩家；而叶子结点代表每个玩家在此时的收益；边表示策略。该博弈树可以被形式化为 $G=\{N,H,P,\{u_i\}_{i=1}^{|N|}\}$，其中：
+    <ul>
+        <li>$N=\{G,B\}$</li>
+        <li>$H=\{\varnothing,\text{Out},\text{In},(\text{In},F),(\text{In},C)\}$</li>
+        <li>$P(\varnothing)=G,P(\text{In})=B$</li>
+        <li>$u(\text{Out})=(0,20), u((\text{In},F))=(-5,0),u((\text{In},C))=(10,10)$</li>
+    </ul>
+</p>
+<hr>
+
+<h1>动态博弈的纯策略</h1>
+<p>
+    给定 $G$，玩家 $i$ 的纯策略为：
+    $$\times_{h\in H}\{a^s\mid (h,a^s)\in H,P(h)=i\}$$
+    比如上面的博弈树中，$G$ 的纯策略有：$\{\text{Out},\text{In}\}$，$B$ 的纯策略有：$\{F,C\}$。这个例子太过简单，如果把上面的结点 $B$ 换成 $G$，那么 $G$ 的纯策略就有：
+    $$\{\text{Out},\text{In}\}\times\{F,C\}=\{(\text{Out},F),(\text{Out},C),(\text{In},F),(\text{In},C)\}$$
+    其实就是找到玩家对应的所有结点，每个结点的所有出边都对应一个策略的集合，这些集合的笛卡尔积就是该玩家的纯策略。
+</p>
+<hr>
+
+<h1>动态博弈的纳什均衡</h1>
+<p>动态博弈和静态博弈的纳什均衡定义是一样的，求解动态博弈的纳什均衡的方法：<b>诱导静态博弈</b>。动态博弈可以转化为静态博弈，根据每个玩家的纯策略组合，得到相应的收益，从而计算诱导收益矩阵，例如上面的博弈树对应的诱导收益矩阵为：</p>
+<div id="study23-table-1"></div>
+<p>然后就可以通过静态博弈的方法求解动态博弈的纳什均衡，但是这样求出来的纳什均衡的有些策略是不可信的，因为纯策略的定义会使得部分纯策略是不可能出现的，例如上面例子中的 $(\text{Out},C)$，所以为了避免这些不可信的解，需要找出另一种均衡，让所有均衡都是可信的，即<b>子博弈完美均衡</b>。</p>
+<h2>子博弈 (Subgame)</h2>
+<p>由一个动态博弈的第一阶段以后得任意阶段开始的后续博弈阶段构成的，包含初始信息集和进行博弈所需要的全部信息，能自成一个博弈的原博弈的一部分，称为原动态博弈的一个子博弈。</p>
+<h2>子博弈完美均衡 (Subgame Perfect Equilibrium)</h2>
+<p>如果一个纳什均衡在每个子博弈中都是纳什均衡，那么它就是子博弈完美均衡。可以证明，每一个完全信息动态博弈都有子博弈完美均衡。</p>
+<h2>求解子博弈完美均衡 —— 后向归纳</h2>
+<p>从最末端的非叶子结点（即最后的子博弈）开始，计算纳什均衡（即对于该非叶子结点的玩家求最优收益），用这个收益代替这个子博弈的根结点，然后重复上述步骤直到根结点，例如下面的博弈树：</p>
+<div style="text-align: center; margin-top: -2em;">
+    <svg width="400" height="150">
+        <!-- Lines -->
+        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
+        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
+        <line x1="250" y1="150" x2="150" y2="250" class="node" />
+        <line x1="250" y1="150" x2="350" y2="250" class="node" />
+        
+        <!-- Circles -->
+        <circle cx="200" cy="50"  r="4" class="node" />
+        <circle cx="100" cy="90"  r="4" class="node" />
+        <circle cx="50"  cy="110" r="4" class="node" />
+        <circle cx="150" cy="110" r="4" class="node" />
+        <circle cx="300" cy="90"  r="4" class="node" />
+        <circle cx="250" cy="110" r="4" class="node" />
+        <circle cx="350" cy="110" r="4" class="node" />
+        <circle cx="325" cy="130" r="4" class="node" />
+        <circle cx="375" cy="130"  r="4" class="node" />
+        
+        <!-- Text -->
+        <text x="80"  y="100" class="text">Out</text>
+        <text x="220" y="100" class="text">In</text>
+    </svg>
+</div>
+<script>
+    append_elem("study23-table-1", create_game_table(
+        [['$0,20$','$0,20$'], ['$-5,0$', '$10,10$']],
+        [['Out', 'In'], ['$F$', '$C$']],
+        ['$G$','$B$']
+    ))
+</script>

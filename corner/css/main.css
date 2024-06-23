@@ -264,17 +264,18 @@ body:hover .visually-hidden button {
     background: inherit;
 }
 
-.table-with-border td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-    vertical-align: middle;
-}
 
 .table-with-border {
     border-collapse: collapse;
     border: 2px solid black;
     margin: 0 auto;
+}
+
+.table-with-border td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .table-with-border th {
@@ -290,6 +291,17 @@ table {
     /* font-size: .9em; */
     /* border-collapse: collapse; */
     /* border: 1px solid #bdc1c4 */
+}
+
+.game-table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.game-table td {
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
 }
 
 thead {

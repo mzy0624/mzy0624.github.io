@@ -28,6 +28,7 @@ let URLs = {
     'Rozena'    : [`Rozena`,                                                            'https://www.butterfly-global.com/cn/products/detail/06020.html'],
     'skl'       : ['State Key Laboratory for Novel Software Technology',                'https://keysoftlab.nju.edu.cn'],
     'smail'     : [`${icons('nju')} maozy@smail.nju.edu.cn`,                            'mailto:maozy@smail.nju.edu.cn'],
+    'yinhe'     : ['Yinhe MC-2',                                                        'http://www.yinhe1986.cn/prod_view.aspx?TypeId=678&Id=750'],
     'zhihu'     : [`${icons('zhihu')}  `,                                               'https://www.zhihu.com/people/mzy0624'],
     'zhouzh'    : ['Zhi-Hua Zhou',                                                      'https://cs.nju.edu.cn/zhouzh/index.htm'],
     '5X'        : [`Hurricane Long 5X`,                                                 'http://www.dhs-sports.com/malong/89d3c98d-55d1-5bc1-3472-918d14e86045.shtml'],

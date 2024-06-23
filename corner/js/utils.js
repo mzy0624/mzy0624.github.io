@@ -134,3 +134,43 @@ function render_pseudocode(id, reset=false) {
     }
     pseudocode.renderElement(document.getElementById(id), option);
 }
+
+function create_game_table(U, A=[], name=[], mixed=false) {
+    function strategy(i, j, mixed=false) {
+        let s = `\$a_{${i}${j + 1}}`;
+        if (mixed) {
+            s += `, p_{${i}${j + 1}}\$`;
+        }
+        else {
+            s += '$';
+        }
+        return s;
+    }
+    // Two players
+    U = U.map(u => u.map(String));
+    let shape = [U.length, U[0].length];
+    if (A.length == 0) {
+        [1, 2].forEach(i => A.push(Array.from({ length : shape[i - 1] }, (_, j) => strategy(i, j, mixed))));
+    }
+    if (name.length == 0) {
+        [1, 2].forEach(i => name.push(`Player ${i}`));
+    }
+    let blank = ['', [['style', 'border: none;']]];
+    let table = [];
+    table.push([blank, blank, [name[1], [
+        ['colspan', shape[1]], 
+        ['style', 'border: none; padding: 0']
+    ]]]);
+    table.push([blank, blank].concat(A[1].map(a => [a, blank[1]])));
+    for (let i = 0; i < shape[0]; i++) {
+        let _ = [];
+        if (i == 0) {
+            _.push([name[0], [
+                ['rowspan', shape[0]],
+                ['style', 'border: none; vertical-align: middle; padding: 0']
+            ]]);
+        }
+        table.push(_.concat([[A[0][i], blank[1]]].concat(U[i])));
+    }
+    return new Table(table, [['class', 'game-table']]);
+}

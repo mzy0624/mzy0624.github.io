@@ -18,7 +18,7 @@ let Skills = new Ul([
     new SH('LaTeX',      '2019', [`My first encounter with LaTeX was in ${getAnchor('ps')} class, where homework needs to be done in LaTeX.`/*, 'How do you pronounce LaTeX?'*/]),
     new SH('Vim',        '2020'),
     new SH('Linux',      '2020', [`Especially ${icons('ubuntu')} Ubuntu (installation, use and repair).`, `"Linux" should be pronounced as /'liniks/ or /'linэks/.`]),
-    new SH('Python',     '2021', [`I can write Machine Learning codes by using some popular frameworks especially ${icons('PyTorch')} PyTorch.`]),
+    new SH('Python',     '2021'),
     new SH('Octave',     '2021', [`Think of it as a shrunken version of ${icons('matlab')} MATLAB.`]),
     new SH('HTML',       '2023', [`With a little ${icons('CSS')} CSS.`]),
     new SH('JavaScript', '2023'),
@@ -32,8 +32,7 @@ let Hobbies = new Ul([
         new Span('Racket Configurations', [
             `Blade: ${getAnchor('fzd')}.<br>
              Rubber: ${getAnchor('neo')} (Forehand); ${getAnchor('d09c')} (Backhand).`,
-            `Blade: ${getAnchor('5X')}.<br>
-             Rubber: ${getAnchor('H3')} (Forehand); ${getAnchor('Rozena')} (Backhand).`,
+            `Previously used: ${getAnchor('5X')}, ${getAnchor('yinhe')}.`,
         ]),
         // 裁判
         // 2021 南大教职工比赛 (2021.11.26) 2022 南大教职工比赛 (2022.12) 2023 南大教职工比赛 (2023.12.10)
