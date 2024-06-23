@@ -20,14 +20,25 @@
     $$G=\{N,H,P,\{u_i\}_{i=1}^{|N|}\}$$
 </p>
 <h1>例子：Entry Game</h1>
-<p>一家公司 $G$ 试图进入一个市场，该市场的另一家公司 $B$ 可以选择对立 ($F$) 或者合作 ($C$)，这样可以画出一颗博弈树：</p>
+<p>公司 G 试图进入某市场，该市场的另一家公司 B 可以选择对立 (F) 或者合作 (C)，这样可以画出一颗博弈树：</p>
 <style>
     .node {
         fill: black;
         stroke: black;
         stroke-width: 2;
     }
+    .red-node {
+        fill: red;
+        stroke: red;
+        stroke-width: 2;
+    }
     .text {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-anchor: middle;
+    }
+    .red-text {
+        color: red;
         font-size: 20px;
         font-family: Arial, sans-serif;
         text-anchor: middle;
@@ -36,42 +47,36 @@
 
 <div style="text-align: center; margin-top: -2em;">
     <svg width="400" height="300">
-        <!-- Lines -->
-        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
-        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
-        <line x1="250" y1="150" x2="150" y2="250" class="node" />
-        <line x1="250" y1="150" x2="350" y2="250" class="node" />
-        
-        <!-- Circles -->
-        <circle cx="150" cy="50"  r="4" class="hollow-node" />
-        <circle cx=" 50" cy="150" r="4" class="node" />
-        <circle cx="250" cy="150" r="4" class="node" />
-        <circle cx="150" cy="250" r="4" class="node" />
-        <circle cx="350" cy="250" r="4" class="node" />
-        
-        <!-- Text -->
-        <text x="80"  y="100" class="text">Out</text>
-        <text x="220" y="100" class="text">In</text>
+        <!-- Circles & Texts -->
+        <circle cx="150" cy="50"  r="4" class="node" /> <!-- G -->
+        <text    x="150"  y="40"  class="text">G</text>
+        <circle cx="50"  cy="150" r="4" class="node" /> <!-- 0, 20 -->
+        <text    x="50"   y="180" class="text">(0, 20)</text>
+        <circle cx="250" cy="150" r="4" class="node" /> <!-- B -->
+        <text    x="260"  y="140" class="text">B</text>
+        <circle cx="150" cy="250" r="4" class="node" /> <!-- -5, 0 -->
+        <text    x="150"  y="280" class="text">(-5, 0)</text>
+        <circle cx="350" cy="250" r="4" class="node" /> <!-- 10, 10 -->
+        <text    x="350"  y="280" class="text">(10, 10)</text>
 
-        <!-- Formulas -->
-        <g>
-            <foreignObject x="150" y="20"  width="30"  height="30">$G$</foreignObject>
-            <foreignObject x="0"   y="150" width="100" height="100">$0,20$</foreignObject>
-            <foreignObject x="250" y="120" width="30"  height="30">$B$</foreignObject>
-            <foreignObject x="170" y="180" width="30"  height="30">$F$</foreignObject>
-            <foreignObject x="300" y="180" width="30"  height="30">$C$</foreignObject>
-            <foreignObject x="100" y="250" width="100" height="100">$-5,0$</foreignObject>
-            <foreignObject x="300" y="250" width="100" height="100">$10,10$</foreignObject>
-        </g>
+        <!-- Lines & Texts -->
+        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
+        <text  x="80"   y="100" class="text">Out</text>
+        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
+        <text  x="220"  y="100" class="text">In</text>
+        <line x1="250" y1="150" x2="150" y2="250" class="node" />
+        <text  x="180"  y="200" class="text">F</text>
+        <line x1="250" y1="150" x2="350" y2="250" class="node" />
+        <text  x="320"  y="200" class="text">C</text>
     </svg>
 </div>
 <p>
     博弈树由结点和边组成，对应博弈玩家、策略和收益。其中非叶子结点代表博弈玩家，表示此时哪个玩家做出决策，每个非叶子结点有且仅有一个博弈玩家；而叶子结点代表每个玩家在此时的收益；边表示策略。该博弈树可以被形式化为 $G=\{N,H,P,\{u_i\}_{i=1}^{|N|}\}$，其中：
     <ul>
-        <li>$N=\{G,B\}$</li>
-        <li>$H=\{\varnothing,\text{Out},\text{In},(\text{In},F),(\text{In},C)\}$</li>
-        <li>$P(\varnothing)=G,P(\text{In})=B$</li>
-        <li>$u(\text{Out})=(0,20), u((\text{In},F))=(-5,0),u((\text{In},C))=(10,10)$</li>
+        <li>$N=\{{\rm G,B}\}$</li>
+        <li>$H=\{\varnothing,\text{Out, In, (In, F), (In, C)}\}$</li>
+        <li>$P(\varnothing)={\rm G},P({\rm In})={\rm B}$</li>
+        <li>$u({\rm Out})=(0,20), u(({\rm In, F}))=(-5,0),u(({\rm In,C}))=(10,10)$</li>
     </ul>
 </p>
 <hr>
@@ -80,16 +85,69 @@
 <p>
     给定 $G$，玩家 $i$ 的纯策略为：
     $$\times_{h\in H}\{a^s\mid (h,a^s)\in H,P(h)=i\}$$
-    比如上面的博弈树中，$G$ 的纯策略有：$\{\text{Out},\text{In}\}$，$B$ 的纯策略有：$\{F,C\}$。这个例子太过简单，如果把上面的结点 $B$ 换成 $G$，那么 $G$ 的纯策略就有：
-    $$\{\text{Out},\text{In}\}\times\{F,C\}=\{(\text{Out},F),(\text{Out},C),(\text{In},F),(\text{In},C)\}$$
-    其实就是找到玩家对应的所有结点，每个结点的所有出边都对应一个策略的集合，这些集合的笛卡尔积就是该玩家的纯策略。
+    比如下面的博弈树中：
 </p>
+<div style="text-align: center; margin-top: -2em;">
+    <svg width="600" height="400">
+        <!-- Circles & Texts -->
+        <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="270"  y="40"  class="text">1</text>
+        <circle cx="110" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="110"  y="140" class="text">2</text>
+        <circle cx="430" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="430"  y="140" class="text">2</text>
+        <circle cx="30"  cy="250" r="4" class="node"></circle>  <!-- (3, 8) -->
+        <text    x="30"   y="280" class="text">(3, 8)</text>
+        <circle cx="190" cy="250" r="4" class="node"></circle>  <!-- (8, 3) -->
+        <text    x="190"  y="280" class="text">(8, 3)</text>
+        <circle cx="350" cy="250" r="4" class="node"></circle>  <!-- (5, 5) -->
+        <text    x="350"  y="280" class="text">(5, 5)</text>
+        <circle cx="510" cy="250" r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="520"  y="240" class="text">1</text>
+        <circle cx="470" cy="350" r="4" class="node"></circle>  <!-- (2, 10) -->
+        <text    x="470"  y="380" class="text">(2, 10)</text>
+        <circle cx="550" cy="350" r="4" class="node"></circle>  <!-- (1, 10) -->
+        <text    x="550"  y="380" class="text">(1, 10)</text>
+
+        <!-- Lines & Texts -->
+        <line x1="270" y1="50"  x2="110" y2="150" class="node" /> <!-- A -->
+        <text  x="190"  y="90"  class="text">A</text>
+        <line x1="270" y1="50"  x2="430" y2="150" class="node" /> <!-- B --> 
+        <text  x="350"  y="90"  class="text">B</text>
+        <line x1="110" y1="150" x2="30"  y2="250" class="node" /> <!-- C --> 
+        <text  x="60"   y="200" class="text">C</text>
+        <line x1="110" y1="150" x2="190" y2="250" class="node" /> <!-- D --> 
+        <text  x="160"  y="200" class="text">D</text>
+        <line x1="430" y1="150" x2="350" y2="250" class="node" /> <!-- E --> 
+        <text  x="380"  y="200" class="text">E</text>
+        <line x1="430" y1="150" x2="510" y2="250" class="node" /> <!-- F --> 
+        <text  x="480"  y="200" class="text">F</text>
+        <line x1="510" y1="250" x2="470" y2="350" class="node" /> <!-- G --> 
+        <text  x="480"  y="300" class="text">G</text>
+        <line x1="510" y1="250" x2="550" y2="350" class="node" /> <!-- H --> 
+        <text  x="540"  y="300" class="text">H</text>
+    </svg>
+</div>
+<p>1 和 2 的纯策略分别为 $\rm \{A,B\}\times\{G,H\}$ 和 $\rm \{C,D\}\times\{E,F\}$。其实就是找到玩家对应的所有结点，每个结点的所有出边都对应一个策略的集合，这些集合的笛卡尔积就是该玩家的纯策略。</p>
 <hr>
 
 <h1>动态博弈的纳什均衡</h1>
 <p>动态博弈和静态博弈的纳什均衡定义是一样的，求解动态博弈的纳什均衡的方法：<b>诱导静态博弈</b>。动态博弈可以转化为静态博弈，根据每个玩家的纯策略组合，得到相应的收益，从而计算诱导收益矩阵，例如上面的博弈树对应的诱导收益矩阵为：</p>
 <div id="study23-table-1"></div>
-<p>然后就可以通过静态博弈的方法求解动态博弈的纳什均衡，但是这样求出来的纳什均衡的有些策略是不可信的，因为纯策略的定义会使得部分纯策略是不可能出现的，例如上面例子中的 $(\text{Out},C)$，所以为了避免这些不可信的解，需要找出另一种均衡，让所有均衡都是可信的，即<b>子博弈完美均衡</b>。</p>
+<script>
+    append_elem("study23-table-1", create_game_table(
+        [
+            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
+            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
+            ['5, 5', '2, 10', '5, 5', '2, 10'], 
+            ['5, 5', '1, 0',  '5, 5', '1, 0'], 
+        ],
+        [['AG', 'AH', 'BG', 'BH'], ['CE', 'CF', 'DE', 'DF']],
+        ['1','2']
+    ))
+</script>
+
+<p>然后就可以通过静态博弈的方法求解动态博弈的纳什均衡为 $\rm (AG,CF),(AH,CF),(BH,CE)$，但是这样求出来的纳什均衡的有些策略是不可信的，例如 AH 肯定不是纳什均衡，因为 AG 优于 AH。为了避免这些不可信的解，需要找出另一种均衡，让所有均衡都是可信的，即<b>子博弈完美均衡</b>。</p>
 <h2>子博弈 (Subgame)</h2>
 <p>由一个动态博弈的第一阶段以后得任意阶段开始的后续博弈阶段构成的，包含初始信息集和进行博弈所需要的全部信息，能自成一个博弈的原博弈的一部分，称为原动态博弈的一个子博弈。</p>
 <h2>子博弈完美均衡 (Subgame Perfect Equilibrium)</h2>
@@ -97,33 +155,60 @@
 <h2>求解子博弈完美均衡 —— 后向归纳</h2>
 <p>从最末端的非叶子结点（即最后的子博弈）开始，计算纳什均衡（即对于该非叶子结点的玩家求最优收益），用这个收益代替这个子博弈的根结点，然后重复上述步骤直到根结点，例如下面的博弈树：</p>
 <div style="text-align: center; margin-top: -2em;">
-    <svg width="400" height="150">
-        <!-- Lines -->
-        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
-        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
-        <line x1="250" y1="150" x2="150" y2="250" class="node" />
-        <line x1="250" y1="150" x2="350" y2="250" class="node" />
-        
-        <!-- Circles -->
-        <circle cx="200" cy="50"  r="4" class="node" />
-        <circle cx="100" cy="90"  r="4" class="node" />
-        <circle cx="50"  cy="110" r="4" class="node" />
-        <circle cx="150" cy="110" r="4" class="node" />
-        <circle cx="300" cy="90"  r="4" class="node" />
-        <circle cx="250" cy="110" r="4" class="node" />
-        <circle cx="350" cy="110" r="4" class="node" />
-        <circle cx="325" cy="130" r="4" class="node" />
-        <circle cx="375" cy="130"  r="4" class="node" />
-        
-        <!-- Text -->
-        <text x="80"  y="100" class="text">Out</text>
-        <text x="220" y="100" class="text">In</text>
+    <svg width="600" height="400">
+        <!-- Lines & Texts -->
+        <line x1="270" y1="50"  x2="110" y2="150" class="red-node" /> <!-- A -->
+        <text  x="190"  y="90"  class="text">A</text>
+        <line x1="270" y1="50"  x2="430" y2="150" class="node" /> <!-- B --> 
+        <text  x="350"  y="90"  class="text">B</text>
+        <line x1="110" y1="150" x2="30"  y2="250" class="red-node" /> <!-- C --> 
+        <text  x="60"   y="200" class="text">C</text>
+        <line x1="110" y1="150" x2="190" y2="250" class="node" /> <!-- D --> 
+        <text  x="160"  y="200" class="text">D</text>
+        <line x1="430" y1="150" x2="350" y2="250" class="node" /> <!-- E --> 
+        <text  x="380"  y="200" class="text">E</text>
+        <line x1="430" y1="150" x2="510" y2="250" class="red-node" /> <!-- F --> 
+        <text  x="480"  y="200" class="text">F</text>
+        <line x1="510" y1="250" x2="470" y2="350" class="red-node" /> <!-- G --> 
+        <text  x="480"  y="300" class="text">G</text>
+        <line x1="510" y1="250" x2="550" y2="350" class="node" /> <!-- H --> 
+        <text  x="540"  y="300" class="text">H</text>
+
+        <!-- Circles & Texts -->
+        <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="270"  y="40"  class="text">1</text>
+        <text    x="310"  y="50"  class="text">(3, 8)</text>
+        <circle cx="110" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="110"  y="140" class="text">2</text>
+        <text    x="70"   y="160" class="text">(3, 8)</text>
+        <circle cx="430" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="430"  y="140" class="text">2</text>
+        <text    x="470"  y="160" class="text">(2, 10)</text>
+        <circle cx="30"  cy="250" r="4" class="node"></circle>  <!-- (3, 8) -->
+        <text    x="30"   y="280" class="text">(3, 8)</text>
+        <circle cx="190" cy="250" r="4" class="node"></circle>  <!-- (8, 3) -->
+        <text    x="190"  y="280" class="text">(8, 3)</text>
+        <circle cx="350" cy="250" r="4" class="node"></circle>  <!-- (5, 5) -->
+        <text    x="350"  y="280" class="text">(5, 5)</text>
+        <circle cx="510" cy="250" r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="520"  y="240" class="text">1</text>
+        <text    x="550"  y="260" class="text">(2, 10)</text>
+        <circle cx="470" cy="350" r="4" class="node"></circle>  <!-- (2, 10) -->
+        <text    x="470"  y="380" class="text">(2, 10)</text>
+        <circle cx="550" cy="350" r="4" class="node"></circle>  <!-- (1, 10) -->
+        <text    x="550"  y="380" class="text">(1, 10)</text>
     </svg>
 </div>
-<script>
-    append_elem("study23-table-1", create_game_table(
-        [['$0,20$','$0,20$'], ['$-5,0$', '$10,10$']],
-        [['Out', 'In'], ['$F$', '$C$']],
-        ['$G$','$B$']
-    ))
-</script>
+<p>子博弈完美均衡为 $\rm (AG,CF)$，如果某个结点的多个分支被选中，则依次分析得到多个子博弈完美均衡。</p>
+<hr>
+
+<h1>One Deviation, Back Induction and Bargaining</h1>
+<p>先放着</p>
+<hr>
+
+<h1>Stackelberg Game -- Applications to Security</h1>
+
+<hr>
+
+<h1>Game Tree Search</h1>
+<hr>
