@@ -48,20 +48,20 @@
         text-anchor: middle;
     }
     .red-text {
-        color: red;
+        fill: red;
         font-size: 20px;
         font-family: Arial, sans-serif;
         text-anchor: middle;
     }
     .blue-text {
-        color: blue;
+        fill: blue;
         font-size: 20px;
         font-family: Arial, sans-serif;
         text-anchor: middle;
     }
 </style>
 
-<div style="text-align: center; margin-top: -2em;">
+<div style="text-align: center; margin-top: -1em;">
     <svg width="400" height="300">
         <!-- Circles & Texts -->
         <circle cx="150" cy="50"  r="4" class="node" /> <!-- G -->
@@ -103,7 +103,7 @@
     $$\times_{h\in H}\{a^s\mid (h,a^s)\in H,P(h)=i\}$$
     比如下面的博弈树中：
 </p>
-<div style="text-align: center; margin-top: -2em;">
+<div style="text-align: center; margin-top: -1em;">
     <svg width="600" height="400">
         <!-- Circles & Texts -->
         <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
@@ -170,7 +170,7 @@
 <p>如果一个纳什均衡在每个子博弈中都是纳什均衡，那么它就是子博弈完美均衡。可以证明，每一个完全信息动态博弈都有子博弈完美均衡。</p>
 <h2>求解子博弈完美均衡：后向归纳</h2>
 <p>从最末端的非叶子结点（即最后的子博弈）开始，计算纳什均衡（即对于该非叶子结点的玩家求最优收益），用这个收益代替这个子博弈的根结点，然后重复上述步骤直到根结点，例如下面的博弈树：</p>
-<div style="text-align: center; margin-top: -2em;">
+<div style="text-align: center; margin-top: -1em;">
     <svg width="600" height="400">
         <!-- Lines & Texts -->
         <line x1="270" y1="50"  x2="110" y2="150" class="red-node" /> <!-- A -->
@@ -220,7 +220,7 @@
 
 <h1>主从博弈 (Stackelberg Game)</h1>
 <p>Leader 先做决策，Follower 后做决策，如下面的收益矩阵：</p>
-<div id="study23-table-2" style="margin-top: -2em;"></div>
+<div id="study23-table-2" style="margin-top: -1em;"></div>
 <script>
     append_elem("study23-table-2", create_game_table(
         [
@@ -240,7 +240,7 @@
     $$\max_{p_1}p_1Lp_2^{\rm T}\quad {\rm s.t.}\ p_2=\mathop{\arg\max}_{p_2}p_1Rp_2^{\rm T}$$
     例如收益矩阵：
 </p>
-<div id="study23-table-3" style="margin-top: -2em;"></div>
+<div id="study23-table-3" style="margin-top: -1em;"></div>
 <script>append_elem("study23-table-3", create_game_table([['$1,1$', '$3,0$'], ['$0,0$', '$2,1$']]));</script>
 <p>
     易得：
@@ -264,5 +264,231 @@
 
 <h1>Game Tree Search</h1>
 <h2>Min-Max</h2>
-<h2>Evaluation Function</h2>
+<p>其实就是两个玩家 max 和 min，max 先做决策，然后轮流做决策直到博弈结束，例如下面的博弈树：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="150">
+        <!-- Lines & Texts -->
+        <line x1="250" y1="10"  x2="100" y2="60"  class="node" />
+        <line x1="100" y1="60"  x2="50"  y2="110" class="node" />
+        <line x1="100" y1="60"  x2="100" y2="110" class="node" />
+        <line x1="100" y1="60"  x2="150" y2="110" class="node" />
+        
+        <line x1="250" y1="10"  x2="250" y2="60"  class="node" />
+        <line x1="250" y1="60"  x2="200" y2="110" class="node" />
+        <line x1="250" y1="60"  x2="250" y2="110" class="node" />
+        <line x1="250" y1="60"  x2="300" y2="110" class="node" />
+        
+        <line x1="250" y1="10"  x2="400" y2="60"  class="node" />
+        <line x1="400" y1="60"  x2="350" y2="110" class="node" />
+        <line x1="400" y1="60"  x2="400" y2="110" class="node" />
+        <line x1="400" y1="60"  x2="450" y2="110" class="node" />
+        
+        <!-- Circles & Texts -->
+        <circle cx="250" cy="10"  r="4" class="red-node"></circle>
+        <circle cx="100" cy="60"  r="4" class="blue-node"></circle>
+        <circle cx="250" cy="60"  r="4" class="blue-node"></circle>
+        <circle cx="400" cy="60"  r="4" class="blue-node"></circle>
+
+        <circle cx="50"  cy="110" r="4" class="node"></circle>
+        <text    x="50"   y="140" class="text">3</text>
+        <circle cx="100" cy="110" r="4" class="node"></circle>
+        <text    x="100"  y="140" class="text">12</text>
+        <circle cx="150" cy="110" r="4" class="node"></circle>
+        <text    x="150"  y="140" class="text">8</text>
+        <circle cx="200" cy="110" r="4" class="node"></circle>
+        <text    x="200"  y="140" class="text">2</text>
+        <circle cx="250" cy="110" r="4" class="node"></circle>
+        <text    x="250"  y="140" class="text">4</text>
+        <circle cx="300" cy="110" r="4" class="node"></circle>
+        <text    x="300"  y="140" class="text">6</text>
+        <circle cx="350" cy="110" r="4" class="node"></circle>
+        <text    x="350"  y="140" class="text">14</text>
+        <circle cx="400" cy="110" r="4" class="node"></circle>
+        <text    x="400"  y="140" class="text">2</text>
+        <circle cx="450" cy="110" r="4" class="node"></circle>
+        <text    x="450"  y="140" class="text">5</text>
+   </svg>
+</div>
+<p>其中，红色节点代表 max，蓝色节点代表 min，黑色节点代表收益，自下而上分析，min 选择收益最小的，max 选择收益最大的，于是得到以下博弈树：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="180">
+        <!-- Lines & Texts -->
+        <line x1="250" y1="30"  x2="100" y2="80"  class="red-node" />
+        <line x1="100" y1="80"  x2="50"  y2="130" class="blue-node" />
+        <line x1="100" y1="80"  x2="100" y2="130" class="node" />
+        <line x1="100" y1="80"  x2="150" y2="130" class="node" />
+        
+        <line x1="250" y1="30"  x2="250" y2="80"  class="node" />
+        <line x1="250" y1="80"  x2="200" y2="130" class="blue-node" />
+        <line x1="250" y1="80"  x2="250" y2="130" class="node" />
+        <line x1="250" y1="80"  x2="300" y2="130" class="node" />
+        
+        <line x1="250" y1="30"  x2="400" y2="80"  class="node" />
+        <line x1="400" y1="80"  x2="350" y2="130" class="node" />
+        <line x1="400" y1="80"  x2="400" y2="130" class="blue-node" />
+        <line x1="400" y1="80"  x2="450" y2="130" class="node" />
+        
+        <!-- Circles & Texts -->
+        <circle cx="250" cy="30"  r="4" class="red-node"></circle>
+        <text    x="250"  y="20"  class="red-text">3</text>
+        <circle cx="100" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="80"   y="80"  class="red-text">3</text>
+        <circle cx="250" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="230"  y="80"  class="blue-text">2</text>
+        <circle cx="400" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="420"  y="80"  class="blue-text">2</text>
+
+        <circle cx="50"  cy="130" r="4" class="node"></circle>
+        <text    x="50"   y="160" class="blue-text">3</text>
+        <circle cx="100" cy="130" r="4" class="node"></circle>
+        <text    x="100"  y="160" class="text">12</text>
+        <circle cx="150" cy="130" r="4" class="node"></circle>
+        <text    x="150"  y="160" class="text">8</text>
+        <circle cx="200" cy="130" r="4" class="node"></circle>
+        <text    x="200"  y="160" class="blue-text">2</text>
+        <circle cx="250" cy="130" r="4" class="node"></circle>
+        <text    x="250"  y="160" class="text">4</text>
+        <circle cx="300" cy="130" r="4" class="node"></circle>
+        <text    x="300"  y="160" class="text">6</text>
+        <circle cx="350" cy="130" r="4" class="node"></circle>
+        <text    x="350"  y="160" class="text">14</text>
+        <circle cx="400" cy="130" r="4" class="node"></circle>
+        <text    x="400"  y="160" class="blue-text">2</text>
+        <circle cx="450" cy="130" r="4" class="node"></circle>
+        <text    x="450"  y="160" class="text">5</text>
+    </svg>
+</div>
+<p>Minimax 的伪代码可以写为：</p>
+<div style="width: 70%">
+    <pre id="min-max" class="pseudocode">
+        \begin{algorithm}
+            \caption{MIN-MAX}
+            \begin{algorithmic}
+                \FUNCTION{Max-Value}{$s$}
+                    \IF{Terminal-Test($s$)}
+                        \STATE\RETURN Utility$(s)$
+                    \ENDIF
+                    \STATE $v\gets -\infty$
+                    \FOR{$a\in{\rm Actions}(s)$}
+                        \STATE $v\gets\max(v,$ \CALL{Min-Value}{Result$(s,a)$})
+                    \ENDFOR
+                    \STATE\RETURN $v$
+                \ENDFUNCTION
+                \FUNCTION{Min-Value}{$s$}
+                    \IF{Terminal-Test($s$)}
+                        \STATE\RETURN Utility$(s)$
+                    \ENDIF
+                    \STATE $v\gets +\infty$
+                    \FOR{$a\in{\rm Actions}(s)$}
+                        \STATE $v\gets\min(v,$ \CALL{Max-Value}{Result$(s,a)$})
+                    \ENDFOR
+                    \STATE\RETURN $v$
+                \ENDFUNCTION
+                \FUNCTION{Min-Max}{$s$}
+                    \STATE\RETURN $\mathop{\arg\max}\limits_{a\in{\rm Actions}(s)}$ \CALL{Min-Value}{Result$(s,a)$}
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+
+<h2>评估函数 (Evaluation Function)</h2>
+<p>评估函数是用来评估当前状态对于一个玩家的好坏：它先为当前玩家评分，再为其对手评分，作差之后得到当前状态对于该玩家的好坏，其实就是上面博弈树叶子结点对应的值。</p>
 <h2>$\alpha$-$\beta$ 剪枝</h2>
+<p>如果一个状态被证明是不好的（不比已知的其他状态好），且对手可以导致该状态发生，那就没必要在对应的结点展开博弈树。例如在上面的博弈树中，采用 DFS 搜索博弈树时，先搜索最左边那棵子树，得到该结点的值为 3，再搜索中间的子树时，第一个叶子结点的值为 2，说明这个子树一定比左子树差，所以就没必要继续搜索，右子树中由于 14 先于 2 被搜索到，所以只有最后的 5 并没有被搜索。从而就可以得到如下的搜索路径（虚线代表该路径没有被搜索）：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="180">
+        <!-- Lines & Texts -->
+        <line x1="250" y1="30"  x2="100" y2="80"  class="red-node" />
+        <line x1="100" y1="80"  x2="50"  y2="130" class="blue-node" />
+        <line x1="100" y1="80"  x2="100" y2="130" class="node" />
+        <line x1="100" y1="80"  x2="150" y2="130" class="node" />
+        
+        <line x1="250" y1="30"  x2="250" y2="80"  class="node" />
+        <line x1="250" y1="80"  x2="200" y2="130" class="blue-node" />
+        <line x1="250" y1="80"  x2="250" y2="130" class="dash" />
+        <line x1="250" y1="80"  x2="300" y2="130" class="dash" />
+        
+        <line x1="250" y1="30"  x2="400" y2="80"  class="node" />
+        <line x1="400" y1="80"  x2="350" y2="130" class="node" />
+        <line x1="400" y1="80"  x2="400" y2="130" class="blue-node" />
+        <line x1="400" y1="80"  x2="450" y2="130" class="dash" />
+        
+        <!-- Circles & Texts -->
+        <circle cx="250" cy="30"  r="4" class="red-node"></circle>
+        <text    x="250"  y="20"  class="red-text">3</text>
+        <circle cx="100" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="80"   y="80"  class="red-text">3</text>
+        <circle cx="250" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="230"  y="80"  class="blue-text">2</text>
+        <circle cx="400" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="420"  y="80"  class="blue-text">2</text>
+
+        <circle cx="50"  cy="130" r="4" class="node"></circle>
+        <text    x="50"   y="160" class="blue-text">3</text>
+        <circle cx="100" cy="130" r="4" class="node"></circle>
+        <text    x="100"  y="160" class="text">12</text>
+        <circle cx="150" cy="130" r="4" class="node"></circle>
+        <text    x="150"  y="160" class="text">8</text>
+        <circle cx="200" cy="130" r="4" class="node"></circle>
+        <text    x="200"  y="160" class="blue-text">2</text>
+        <circle cx="250" cy="130" r="4" class="node"></circle>
+        <text    x="250"  y="160" class="text">4</text>
+        <circle cx="300" cy="130" r="4" class="node"></circle>
+        <text    x="300"  y="160" class="text">6</text>
+        <circle cx="350" cy="130" r="4" class="node"></circle>
+        <text    x="350"  y="160" class="text">14</text>
+        <circle cx="400" cy="130" r="4" class="node"></circle>
+        <text    x="400"  y="160" class="blue-text">2</text>
+        <circle cx="450" cy="130" r="4" class="node"></circle>
+        <text    x="450"  y="160" class="text">5</text>
+    </svg>
+</div>
+<p>TODO：解释一下alpha beta剪枝。</p>
+<!-- <p>$\alpha$-$\beta$ 剪枝其实就是有两个值 $\alpha=-\infty,\beta=+\infty$，然后用 DFS 传递这两个值，max 更新 $\alpha$ 而 min 更新 $\beta$，回溯时，若当前是 min 结点，则将 $\beta$ 的值传递：$\alpha=\max(\alpha,\beta)$，否则将 $\alpha$ 的值传递：$\beta=\min(\alpha,\beta)$，如果在某个结点处 $\alpha\geqslant\beta$，那么就剪枝不继续搜索。</p> -->
+<div style="width: 70%">
+    <pre id="alpha-beta" class="pseudocode">
+        \begin{algorithm}
+            \caption{$\alpha$-$\beta$-pruning}
+            \begin{algorithmic}
+                \FUNCTION{Max-Value}{$s,\alpha,\beta$}
+                    \IF{Terminal-Test($s$)}
+                        \STATE\RETURN Utility$(s)$
+                    \ENDIF
+                    \STATE $v\gets-\infty$
+                    \FOR{$a\in{\rm Actions}(s)$}
+                        \STATE $v\gets\max(v,$ \CALL{Min-Value}{${\rm Result}(s,a),\alpha,\beta$}$)$
+                        \IF{$v\geqslant\beta$}
+                            \STATE\RETURN $v$
+                        \ENDIF
+                        \STATE$\alpha\gets\max(\alpha,v)$
+                    \ENDFOR
+                    \STATE\RETURN $v$
+                \ENDFUNCTION
+                \FUNCTION{Min-Value}{$s,\alpha,\beta$}
+                    \IF{Terminal-Test($s$)}
+                        \STATE\RETURN Utility$(s)$
+                    \ENDIF
+                    \STATE $v\gets+\infty$
+                    \FOR{$a\in{\rm Actions}(s)$}
+                        \STATE $v\gets\min(v,$ \CALL{Max-Value}{${\rm Result}(s,a),\alpha,\beta$}$)$
+                        \IF{$v\leqslant\alpha$}
+                            \STATE\RETURN $v$
+                        \ENDIF
+                        \STATE$\beta\gets\min(\beta,v)$
+                    \ENDFOR
+                    \STATE\RETURN $v$
+                \ENDFUNCTION
+                
+                \FUNCTION{Alpha-Beta-Search}{$s$}
+                    \STATE $v\gets$ \CALL{Max-Value}{$s,-\infty,+\infty$}
+                    \STATE\RETURN the action in Actions$(s)$ with value $v$
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+<script>
+    render_pseudocode('min-max', reset=true);
+    render_pseudocode('alpha-beta');
+</script>
