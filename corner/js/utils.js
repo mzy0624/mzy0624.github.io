@@ -135,22 +135,18 @@ function render_pseudocode(id, reset=false) {
     pseudocode.renderElement(document.getElementById(id), option);
 }
 
-function create_game_table(U, A=[], name=[], mixed=false) {
-    function strategy(i, j, mixed=false) {
-        let s = `\$a_{${i}${j + 1}}`;
-        if (mixed) {
-            s += `, p_{${i}${j + 1}}\$`;
-        }
-        else {
-            s += '$';
-        }
-        return s;
-    }
+function create_game_table(U, A=[], name=[], mixed=false, p=[]) {
     // Two players
     U = U.map(u => u.map(String));
     let shape = [U.length, U[0].length];
     if (A.length == 0) {
-        [1, 2].forEach(i => A.push(Array.from({ length : shape[i - 1] }, (_, j) => strategy(i, j, mixed))));
+        [1, 2].forEach(i => A.push(Array.from({ length : shape[i - 1] }, (_, j) => `\$a_{${i}${j + 1}}\$`)));
+    }
+    if (mixed) {
+        if (p.length == 0) {
+            [1, 2].forEach(i => p.push(Array.from({ length : shape[i - 1] }, (_, j) => `\$p_{${i}${j + 1}}\$`)));
+        }
+        A = A.map((a, i) => a.map((_, j) => _ + ' ' + p[i][j]));
     }
     if (name.length == 0) {
         [1, 2].forEach(i => name.push(`Player ${i}`));
