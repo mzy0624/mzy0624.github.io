@@ -16,8 +16,7 @@
         <li>$P:H\ \backslash Z\to N$，给每一个非终结历史分配一个玩家；</li>
         <li>$P(h)$ 表示在历史 $h$ 后轮到哪个玩家做决策。</li>
     </ol>
-    则完全信息动态博弈可以形式化为：
-    $$G=\{N,H,P,\{u_i\}_{i=1}^{|N|}\}$$
+    则完全信息动态博弈可以形式化为 $G=\{N,H,P,\{u_i\}\}$。
 </p>
 <h1>例子：Entry Game</h1>
 <p>公司 G 试图进入某市场，该市场的另一家公司 B 可以选择对立 (F) 或者合作 (C)，这样可以画出一颗博弈树：</p>
@@ -87,7 +86,7 @@
     </svg>
 </div>
 <p>
-    博弈树由结点和边组成，对应博弈玩家、策略和收益。其中非叶子结点代表博弈玩家，表示此时哪个玩家做出决策，每个非叶子结点有且仅有一个博弈玩家；而叶子结点代表每个玩家在此时的收益；边表示策略。该博弈树可以被形式化为 $G=\{N,H,P,\{u_i\}_{i=1}^{|N|}\}$，其中：
+    博弈树由结点和边组成，对应博弈玩家、策略和收益。其中非叶子结点代表博弈玩家，表示此时哪个玩家做出决策，每个非叶子结点有且仅有一个博弈玩家；而叶子结点代表每个玩家在此时的收益；边表示策略。该博弈树可以被形式化为：
     <ul>
         <li>$N=\{{\rm G,B}\}$</li>
         <li>$H=\{\varnothing,\text{Out, In, (In, F), (In, C)}\}$</li>
@@ -238,13 +237,20 @@
 <p>
     使用线性规划求解 Stackelberg Equilibrium：
     $$\max_{p_1}p_1Lp_2^{\rm T}\quad {\rm s.t.}\ p_2=\mathop{\arg\max}_{p_2}p_1Rp_2^{\rm T}$$
-    例如收益矩阵：
+    例如下面的收益矩阵：
 </p>
-<div id="study23-table-3" style="margin-top: -1em;"></div>
+<div style="text-align: center">
+    <div id="study23-table-3" style="display: inline-block;"></div>
+    <div style="display: inline-block; vertical-align: bottom;">
+        $$\implies\left\lbrace\begin{array}{l}
+            L=\begin{pmatrix}1&3\\0&2\end{pmatrix}\\
+            R=\begin{pmatrix}1&0\\0&1\end{pmatrix}
+        \end{array}\right.$$
+    </div>
+</div>
+<!-- <div id="study23-table-3" style="margin-top: -1em;"></div> -->
 <script>append_elem("study23-table-3", create_game_table([['$1,1$', '$3,0$'], ['$0,0$', '$2,1$']]));</script>
 <p>
-    易得：
-    $$L=\begin{pmatrix}1&3\\0&2\end{pmatrix},R=\begin{pmatrix}1&0\\0&1\end{pmatrix}$$
     若 $p_1=(p,1-p)$，则 $p_1L=(p,p+2),p_1R=(p,1-p)$：
     <ul>
         <li>
@@ -309,7 +315,7 @@
         <text    x="450"  y="140" class="text">5</text>
    </svg>
 </div>
-<p>其中，红色节点代表 max，蓝色节点代表 min，黑色节点代表收益，自下而上分析，min 选择收益最小的，max 选择收益最大的，于是得到以下博弈树：</p>
+<p>其中，红色、蓝色、黑色节点分别代表 max、min 和收益，自下而上分析，min 选择收益最小的，max 选择收益最大的，于是得到以下博弈树：</p>
 <div style="text-align: center; margin-top: -1em;">
     <svg width="500" height="180">
         <!-- Lines & Texts -->
@@ -358,40 +364,6 @@
         <text    x="450"  y="160" class="text">5</text>
     </svg>
 </div>
-<p>Minimax 的伪代码可以写为：</p>
-<div style="width: 70%">
-    <pre id="min-max" class="pseudocode">
-        \begin{algorithm}
-            \caption{MIN-MAX}
-            \begin{algorithmic}
-                \FUNCTION{Max-Value}{$s$}
-                    \IF{Terminal-Test($s$)}
-                        \STATE\RETURN Utility$(s)$
-                    \ENDIF
-                    \STATE $v\gets -\infty$
-                    \FOR{$a\in{\rm Actions}(s)$}
-                        \STATE $v\gets\max(v,$ \CALL{Min-Value}{Result$(s,a)$})
-                    \ENDFOR
-                    \STATE\RETURN $v$
-                \ENDFUNCTION
-                \FUNCTION{Min-Value}{$s$}
-                    \IF{Terminal-Test($s$)}
-                        \STATE\RETURN Utility$(s)$
-                    \ENDIF
-                    \STATE $v\gets +\infty$
-                    \FOR{$a\in{\rm Actions}(s)$}
-                        \STATE $v\gets\min(v,$ \CALL{Max-Value}{Result$(s,a)$})
-                    \ENDFOR
-                    \STATE\RETURN $v$
-                \ENDFUNCTION
-                \FUNCTION{Min-Max}{$s$}
-                    \STATE\RETURN $\mathop{\arg\max}\limits_{a\in{\rm Actions}(s)}$ \CALL{Min-Value}{Result$(s,a)$}
-                \ENDFUNCTION
-            \end{algorithmic}
-        \end{algorithm}
-    </pre>
-</div>
-
 <h2>评估函数 (Evaluation Function)</h2>
 <p>评估函数是用来评估当前状态对于一个玩家的好坏：它先为当前玩家评分，再为其对手评分，作差之后得到当前状态对于该玩家的好坏，其实就是上面博弈树叶子结点对应的值。</p>
 <h2>$\alpha$-$\beta$ 剪枝</h2>
@@ -444,51 +416,4 @@
         <text    x="450"  y="160" class="text">5</text>
     </svg>
 </div>
-<p>TODO：解释一下alpha beta剪枝。</p>
-<!-- <p>$\alpha$-$\beta$ 剪枝其实就是有两个值 $\alpha=-\infty,\beta=+\infty$，然后用 DFS 传递这两个值，max 更新 $\alpha$ 而 min 更新 $\beta$，回溯时，若当前是 min 结点，则将 $\beta$ 的值传递：$\alpha=\max(\alpha,\beta)$，否则将 $\alpha$ 的值传递：$\beta=\min(\alpha,\beta)$，如果在某个结点处 $\alpha\geqslant\beta$，那么就剪枝不继续搜索。</p> -->
-<div style="width: 70%">
-    <pre id="alpha-beta" class="pseudocode">
-        \begin{algorithm}
-            \caption{$\alpha$-$\beta$-pruning}
-            \begin{algorithmic}
-                \FUNCTION{Max-Value}{$s,\alpha,\beta$}
-                    \IF{Terminal-Test($s$)}
-                        \STATE\RETURN Utility$(s)$
-                    \ENDIF
-                    \STATE $v\gets-\infty$
-                    \FOR{$a\in{\rm Actions}(s)$}
-                        \STATE $v\gets\max(v,$ \CALL{Min-Value}{${\rm Result}(s,a),\alpha,\beta$}$)$
-                        \IF{$v\geqslant\beta$}
-                            \STATE\RETURN $v$
-                        \ENDIF
-                        \STATE$\alpha\gets\max(\alpha,v)$
-                    \ENDFOR
-                    \STATE\RETURN $v$
-                \ENDFUNCTION
-                \FUNCTION{Min-Value}{$s,\alpha,\beta$}
-                    \IF{Terminal-Test($s$)}
-                        \STATE\RETURN Utility$(s)$
-                    \ENDIF
-                    \STATE $v\gets+\infty$
-                    \FOR{$a\in{\rm Actions}(s)$}
-                        \STATE $v\gets\min(v,$ \CALL{Max-Value}{${\rm Result}(s,a),\alpha,\beta$}$)$
-                        \IF{$v\leqslant\alpha$}
-                            \STATE\RETURN $v$
-                        \ENDIF
-                        \STATE$\beta\gets\min(\beta,v)$
-                    \ENDFOR
-                    \STATE\RETURN $v$
-                \ENDFUNCTION
-                
-                \FUNCTION{Alpha-Beta-Search}{$s$}
-                    \STATE $v\gets$ \CALL{Max-Value}{$s,-\infty,+\infty$}
-                    \STATE\RETURN the action in Actions$(s)$ with value $v$
-                \ENDFUNCTION
-            \end{algorithmic}
-        \end{algorithm}
-    </pre>
-</div>
-<script>
-    render_pseudocode('min-max', reset=true);
-    render_pseudocode('alpha-beta');
-</script>
+<p>$\alpha$-$\beta$ 剪枝的具体流程（传递两个值 $\alpha,\beta$ 什么的）懒得写了，反正大致操作就是像上面这样的。</p>

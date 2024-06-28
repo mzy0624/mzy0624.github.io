@@ -128,7 +128,10 @@ function add_large_image(target, img) {
 }
 
 function render_pseudocode(id, reset=false) {
-    let option = { noEnd: true };
+    let option = { 
+        noEnd: true,
+        commentDelimiter: '▷'
+    };
     if (reset == true) {
         option['captionCount'] = 0;
     }

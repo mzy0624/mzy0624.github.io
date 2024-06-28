@@ -2,7 +2,7 @@
     {
         "date"    : "2024.06.21",
         "title"   : "🔣 把 网页的 MathJax 升级到 MathJax3 了",
-        "content" : "<a href=\"https://docs.mathjax.org/en/v3.2-latest/upgrading/whats-new-3.0.html\" target=\"_blank\">MathJax3</a> 比 <a href=\"https://docs.mathjax.org/en/latest/upgrading/earlier/whats-new-2.7.html\" target=\"_blank\">MathJax2</a> 快多了，然后顺便更新了一下 <a href=\"https://github.com/AtomicVar/pseudocode.js\" target=\"_blank\">pseudocode.js</a> 的相关调用，以及一些网页其他代码。"
+        "content" : "<a href=\"https://docs.mathjax.org/en/v3.2-latest/upgrading/whats-new-3.0.html\" target=\"_blank\">MathJax3</a> 比 <a href=\"https://docs.mathjax.org/en/latest/upgrading/earlier/whats-new-2.7.html\" target=\"_blank\">MathJax2</a> 快多了，然后顺便更新了一下 <a href=\"https://github.com/AtomicVar/pseudocode.js\" target=\"_blank\">pseudocode.js</a> 的相关调用，以及网页的一些其他代码。"
     },
     {
         "date"    : "2024.06.20",

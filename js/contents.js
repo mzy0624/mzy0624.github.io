@@ -4,7 +4,7 @@ let biography = new Ul([
 ]);
 
 let interests = new Ul([
-    `My research interests include <b>Machine Learning</b> and <b>Data Mining</b>.`
+    `My research interests include <b>Machine Learning</b> and <b>Data Mining</b>, especially <b>Software Mining</b>.`
 ]);
 
 let TAs = new Ul([
@@ -56,8 +56,8 @@ let correspondence = new Ul([
 ].map(item => `<strong>${item[0]}</strong><br><small>${item[1]}</small>`));
 
 let remarks = {
-    'Awards and Honors':    'During Ph.D.',
-    'Skills and Hobbies':   'Little of each but not much',
+    'Awards and Honors':  'During Ph.D.',
+    'Skills and Hobbies': 'Little of each but not much',
 }
 
 let main_items = {
@@ -110,7 +110,6 @@ let information_table = new Table([[
 ]]);
 
 append_elem('information', information_table);
-
 
 let page_items = document.getElementById('page_content');
 for (let item in main_items)

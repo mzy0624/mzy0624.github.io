@@ -58,7 +58,7 @@ append_elem('masthead', music_player);
 let is_seeking = false;
 play_pause_button.elem.addEventListener('click', () => {
     if (started == false) {
-        music_name.cover_innerhtml('七里香 - 周杰伦 (Jay Chou)');
+        music_name.cover_innerhtml('七里香 - 周杰伦');
         total_time.cover_innerhtml(format_time(audio.elem.duration));
         started = true;
         progress.elem.disabled = false;
@@ -117,7 +117,8 @@ function get_lyrics(time) {
         if (time >= lyricTimes[i]) {
             currentLyric = lyrics_list[lyricTimes[i]];
             nextLyric = lyrics_list[lyricTimes[i + 1]] || '';
-        } else {
+        } 
+        else {
             break;
         }
     }
