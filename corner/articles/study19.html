@@ -1,48 +1,37 @@
-<h1>解决了什么问题</h1>
-<p>之前的文章经常提到，代码生成任务的主流做法是根据输入从模型中采样多个输出，然后重排序后选出最可能正确的代码。在重排序阶段，很多方法都是基于测试用例，但是在很多时候测试用例不是那么好获得的，并且大多数方法并不能很好地捕捉执行结果的语义特征。</p>
-<p>于是作者提出了 LEVER (<u>Le</u>arning to <u>Ver</u>ify)。具体地说，作者训练了一个验证器 (verifier)，它基于自然语言输入、代码本身和执行结果来确定代码是否正确。通过将验证分数和 LLM 的生成概率相结合，并 marginalize 具有相同执行结果的代码（其实就是合并得分）来对候选代码重排序。</p>
-<!-- <p>考虑到微调大模型的计算开销，探索在参数不变的情况下改进大模型的方法是很有必要的。</p>
-<p>相比于那些仅依赖于执行一致性和错误修剪的方法相比，经过训练的 verifier 可以利用代码中丰富的语义特征来进行代码选择。</p> -->
-<h1>LEVER</h1>
+<h1>DQN 算法</h1>
 <p>
-    设 $x$ 为自然语言输入，生成模型 $P(y\mid x)$ 生成代码 $y$，随后 $y$ 被执行，执行结果为 $\mathcal{E}(y)$，将它们拼接后输入到验证器中，验证器给出一个分数 $P_\theta(v\mid x,y,\mathcal{E}(y))$，它衡量了 $x$ 和 $y$ 匹配的可能性。然后将验证分数和 LLM 的生成概率结合，得到重排概率：
-    $$P_R(y,v_{=1}\mid x)=P_{\rm LM}(y\mid x)\cdot P_\theta(v_{=1}\mid x,y,\mathcal{E}(y))$$
-    因为不同的代码可能含有相同的语义，所以作者将执行结果相同的代码的得分合并：
-    $$R(x,y)=\sum_{y'\in S\atop\mathcal{E}(y)=\mathcal{E}(y')}P_R(y',v_{=1}\mid x)$$
-    这样就减轻了对代码表面形式的依赖，而更加关注执行结果。
+    $Q$-Learning 算法不能处理连续状态 / 动作空间的情况，对于这种情况，可以使用函数来拟合 $Q$ 值，DQN 其实就是 $Q$-Learning 算法和神经网络的结合，它用一个神经网络 $Q_\phi$ 来拟合 $Q$ 函数，网络输入是状态 $s$ 和动作 $a$，输出是 $Q(s,a)$ 的近似值。根据 $Q$-Learning 算法的更新公式可知 $Q$ 网络的损失函数是：
+    $$\mathcal{L}_\phi=\dfrac{1}{2}\left(Q_\phi(s,a)-\left(r+\gamma\max_{a'}Q_\phi(s',a')\right)\right)^2$$
 </p>
-<h2>验证器的训练</h2>
-<p>一般数据集中的元素是三元组 $(x,y,z)$，其中 $z=\mathcal{E}(y)$ 为代码 $y$ 的执行结果，但是很多数据集都只包含执行结果而缺少代码。为了获取训练数据，对于每个输入 $x$，先采样 $n$ 个候选代码 $S=\{y_i\}_{i=1}^n$，然后对于每个 $y_i$，根据比较 $\mathcal{E}(y_i)$ 和 $z$ 来得到其标签 $v=\mathbb{I}(\mathcal{E}(y_i)=z)$，然后将所有的 $(y_i,\mathcal{E}(y_i),v)$ 加入 $x$ 对应的数据集中。对于含有 $y$ 的数据集，将其的标签设为 $1$ 并加入到 $x$ 对应的数据集中，这样就得到了新数据集。</p>
-<div style="width: 80%">
-    <pre id="create_data" class="pseudocode">
+<h2>Experience Replay（经验回放）</h2>
+<p>为了更好地将 $Q$-Learning 算法和神经网络结合，DQN 算法采用了经验回放方法，即维护一个回放缓存 (Replay Buffer)，将每次从环境中采样的 $(s,a,r,s')$ 存储到缓存中，训练 $Q$ 网络的时候再从缓存中随机采样若干数据来进行训练。</p>
+<h2>Target Network（目标网络）</h2>
+<p>DQN 算法的目标是让 $Q_\phi(s,a)$ 逼近 $r+\gamma\max_{a'}Q_\phi(s',a')$，由于目标函数本身就包含神经网络的输出，所以更新网络参数的同时目标函数也在改变，这会导致训练的不稳定。因此 DQN 算法采用了目标网络 $Q_{\phi'}$，用 $Q_{\phi'}$ 计算 TD 目标，每次更新的是 $Q_\phi$，而 $Q_{\phi'}$ 是定期基于 $Q_\phi$ 更新。</p>
+<div style="width: 90%">
+    <pre id="dqn" class="pseudocode">
         \begin{algorithm}
-            \caption{Create Data}
+            \caption{DQN}
             \begin{algorithmic}
-                \FUNCTION{CreateData}{$D_1,D_2,\cdots,D_N$}
-                    \STATE $\hat{D}\gets\varnothing$
-                    \FOR{$n=1\to N$}
-                        \FOR{$(x,*,z)\in D_n$}
-                            \STATE Sample $n$ unique code candidates $S=\{\hat{y}_i\}_{i=1}^n$ from $P_{\rm LM}(y\mid x)$
-                            \FOR{$\hat{y}\in S$}
-                                \STATE $\hat{z}\gets\mathcal{E}(\hat{y})$
-                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(\hat{y},\hat{z},\mathbb{I}(\hat{z}=z))\}$
-                            \ENDFOR
-                            \IF{$D_n$ contains the gold program $y$}
-                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(y,z,1)\}$
-                            \ENDIF
-                        \ENDFOR
+                \STATE Initialize parameter $\phi$ of $Q$ network
+                \STATE Initialize parameter $\phi'\gets\phi$ of target network
+                \STATE Initialize replay buffer $R$
+                \FOR{each episode}
+                    \STATE Get the initial state $s_1$
+                    \FOR{$t=1\to T$}
+                        \STATE Choose $a_t$ from $s_t$ using policy derived from $Q_\phi$ (e.g., $\epsilon$-greedy)
+                        \STATE Take action $a_t$, observe reward $r_t$ and next state $s_{t+1}$
+                        \STATE Push $(s_t,a_t,r_t,s_{t+1})$ to replay buffer $R$
+                        \IF{there is enough data in buffer $R$}
+                            \STATE Sample $\{(s_i,a_i,r_i,s_{i+1})\}_{i=1}^N$ from buffer $R$
+                            \STATE $\forall 1\leqslant i\leqslant N$, compute $y_i=r_i+\gamma\max_aQ_{\phi'}(s_{i+1},a)$ using target network
+                            \STATE Compute loss $L=\frac{1}{N}\sum_{i=1}^N\left(y_i-Q_{\phi}(s_i,a_i)\right)^2$
+                            \STATE Update $Q$ network: $\phi\gets\phi-\alpha\nabla_\phi L$
+                            \STATE Update target network: $\phi'\gets\tau\phi+(1-\tau)\phi'$ periodically
+                        \ENDIF
                     \ENDFOR
-                    \STATE\RETURN $\hat{D}$
-                \ENDFUNCTION
+                \ENDFOR
             \end{algorithmic}
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('create_data', reset=true);</script>
-<p>
-    得到数据集后，对于输入 $x$，训练验证器的目标是最小化负对数似然：
-    $$\mathcal{L}_{\theta}(x)=-\dfrac{1}{|\hat{D}_x|}\sum_{(y,z,v)\in\hat{D}_x}\log P_\theta(v\mid x,y,z)$$
-</p>
-<hr>
-<h1>个人看法</h1>
-<p>整个过程只比朴素做法多了一个 verifier，为什么 verifier 能够利用代码的语义呢？无非就是一个二分类，verifier 模型还要基于不同任务来选择，可扩展性很低。还有一个就是整个方法都基于代码的执行，但是对于有输入输出的代码，测试用例从哪来？这篇文章的实验部分有两个数据集是 SQL 代码，一个是 Math Word Problems 任务，还有一个是 Python 生成（在有测试用例的 MBPP 数据集上实验），如果对于 Python 这类的代码，要是没有测试用例，代码就执行不了，整个方法就瘫痪了，所以感觉很扯，凭什么能中啊？</p>
+<script>render_pseudocode('dqn', reset=true);</script>

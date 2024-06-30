@@ -1,59 +1,48 @@
-<h1>非完全信息动态博弈的定义</h1>
-<p>上篇文章提到，完全信息动态博弈定义为 $G=\{N,H,P,\{u_i\}\}$，而非完全信息动态博弈指的是玩家可能无法获取所有信息，定义信息集 $I$，则非完全信息动态博弈可以定义为 $G=\{N,H,P,I,\{u_i\}\}$。</p>
-<h2>信息集</h2>
-<p>若 $|N|=n$，则信息集定义为 $I=\{I_1,I_2,\cdots,I_n\}$，其中 $I_i$ 代表玩家 $i$ 所掌握的信息的分割 (partition)，即 $I_i$ 内的元素互不相交，且并集为全集。例如下面的博弈树，虚线代表玩家 $1$ 无法区分玩家 $2$ 选了 A 还是 B，所以玩家 $1$ 在该结点处的信息为 $\rm\{LA,LB\}$，玩家的信息集为 $I_1=\{\varnothing,\{{\rm LA,LB}\}\},I_2=\{\{{\rm L}\}\}$</p>
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="500" height="400">
-        <!-- Circles & Texts -->
-        <circle cx="310" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
-        <text    x="310"  y="40"  class="text">1</text>
-        <circle cx="150" cy="150" r="4" class="node"></circle>  <!-- 2 -->
-        <text    x="150"  y="140" class="text">2</text>
-        <circle cx="470" cy="150" r="4" class="node"></circle>  <!-- (2, 1) -->
-        <text    x="470"  y="180" class="text">(2, 1)</text>
-        <circle cx="70"  cy="250" r="4" class="node"></circle>
-        <circle cx="230" cy="250" r="4" class="node"></circle>
-        <circle cx="30"  cy="350" r="4" class="node"></circle>  <!-- (0, 0) -->
-        <text    x="30"   y="380" class="text">(0, 0)</text>
-        <circle cx="110" cy="350" r="4" class="node"></circle>  <!-- (1, 2) -->
-        <text    x="110"  y="380" class="text">(1, 2)</text>
-        <circle cx="190" cy="350" r="4" class="node"></circle>  <!-- (1, 2) -->
-        <text    x="190"  y="380" class="text">(1, 2)</text>
-        <circle cx="270" cy="350" r="4" class="node"></circle>  <!-- (0, 0) -->
-        <text    x="270"  y="380" class="text">(0, 0)</text>
-
-        <!-- Lines & Texts -->
-        <line x1="310" y1="50"  x2="150" y2="150" class="node" /> <!-- L -->
-        <text  x="230"  y="90"  class="text">L</text>
-        <line x1="310" y1="50"  x2="470" y2="150" class="node" /> <!-- R --> 
-        <text  x="390"  y="90"  class="text">R</text>
-        <line x1="150" y1="150" x2="70"  y2="250" class="node" /> <!-- A -->
-        <text  x="100"  y="200" class="text">A</text>
-        <line x1="150" y1="150" x2="230" y2="250" class="node" /> <!-- B -->
-        <text  x="200"  y="200" class="text">B</text>
-        <line x1="70"  y1="250" x2="30"  y2="350" class="node" /> <!-- a --> 
-        <text  x="40"   y="300" class="text">a</text>
-        <line x1="70"  y1="250" x2="110" y2="350" class="node" /> <!-- b --> 
-        <text  x="100"  y="300" class="text">b</text>
-        <line x1="230" y1="250" x2="190" y2="350" class="node" /> <!-- a --> 
-        <text  x="200"  y="300" class="text">a</text>
-        <line x1="230" y1="250" x2="270" y2="350" class="node" /> <!-- b --> 
-        <text  x="260"  y="300" class="text">b</text>
-        <line x1="70"  y1="250" x2="230" y2="250" class="dash" /> <!-- 1 -->
-        <text  x="150"  y="240" class="text">1</text>
-    </svg>
-</div>
-<h2>纯策略</h2>
+<h1>解决了什么问题</h1>
+<p>之前的文章经常提到，代码生成任务的主流做法是根据输入从模型中采样多个输出，然后重排序后选出最可能正确的代码。在重排序阶段，很多方法都是基于测试用例，但是在很多时候测试用例不是那么好获得的，并且大多数方法并不能很好地捕捉执行结果的语义特征。</p>
+<p>于是作者提出了 LEVER (<u>Le</u>arning to <u>Ver</u>ify)。具体地说，作者训练了一个验证器 (verifier)，它基于自然语言输入、代码本身和执行结果来确定代码是否正确。通过将验证分数和 LLM 的生成概率相结合，并 marginalize 具有相同执行结果的代码（其实就是合并得分）来对候选代码重排序。</p>
+<!-- <p>考虑到微调大模型的计算开销，探索在参数不变的情况下改进大模型的方法是很有必要的。</p>
+<p>相比于那些仅依赖于执行一致性和错误修剪的方法相比，经过训练的 verifier 可以利用代码中丰富的语义特征来进行代码选择。</p> -->
+<h1>LEVER</h1>
 <p>
-    玩家 $i$ 的纯策略为：$A(I_{i1})\times A(I_{i2})\times\cdots\times A(I_{im})$，其中 $A(I_{ij})$ 表示 $I_{ij}$ 中的策略，例如上面的博弈树：
-    $$I_1=\{I_{11},I_{12}\}=\{\varnothing,\{{\rm LA, LB}\}\},I_2=\{I_{21}\}=\{\{\rm L\}\}$$
-    $$\implies A(I_{11})=\{{\rm L,R}\},A(I_{12})=\{{\rm a,b}\},A(I_{21})=\{{\rm A,B}\}$$
-    所以玩家 $1$ 的纯策略为 $\{\rm La,Lb,Ra,Rb\}$。
+    设 $x$ 为自然语言输入，生成模型 $P(y\mid x)$ 生成代码 $y$，随后 $y$ 被执行，执行结果为 $\mathcal{E}(y)$，将它们拼接后输入到验证器中，验证器给出一个分数 $P_\theta(v\mid x,y,\mathcal{E}(y))$，它衡量了 $x$ 和 $y$ 匹配的可能性。然后将验证分数和 LLM 的生成概率结合，得到重排概率：
+    $$P_R(y,v_{=1}\mid x)=P_{\rm LM}(y\mid x)\cdot P_\theta(v_{=1}\mid x,y,\mathcal{E}(y))$$
+    因为不同的代码可能含有相同的语义，所以作者将执行结果相同的代码的得分合并：
+    $$R(x,y)=\sum_{y'\in S\atop\mathcal{E}(y)=\mathcal{E}(y')}P_R(y',v_{=1}\mid x)$$
+    这样就减轻了对代码表面形式的依赖，而更加关注执行结果。
 </p>
-<h2>完美回忆 (Perfect Recall)</h2>
-<p>一个动态博弈具有完美回忆当所有玩家都可以想起他之前做了什么决策。</p>
-<h2>行为策略 (Behavioral Strategy)</h2>
-<p>玩家 $i$ 的行为策略是 $A(I_{ik})$ 上针对不同点的概率分布 $\beta_{ik}(I_{ik})_{I_{ik}\in I_i}$，例如上面的博弈树中，$1$ 的行为策略可能为：$0.1$ 的概率选择 L、$0.3$ 的概率选择 a。在非完全信息博弈中，混合策略和行为策略可能会产生不同的均衡解。</p>
+<h2>验证器的训练</h2>
+<p>一般数据集中的元素是三元组 $(x,y,z)$，其中 $z=\mathcal{E}(y)$ 为代码 $y$ 的执行结果，但是很多数据集都只包含执行结果而缺少代码。为了获取训练数据，对于每个输入 $x$，先采样 $n$ 个候选代码 $S=\{y_i\}_{i=1}^n$，然后对于每个 $y_i$，根据比较 $\mathcal{E}(y_i)$ 和 $z$ 来得到其标签 $v=\mathbb{I}(\mathcal{E}(y_i)=z)$，然后将所有的 $(y_i,\mathcal{E}(y_i),v)$ 加入 $x$ 对应的数据集中。对于含有 $y$ 的数据集，将其的标签设为 $1$ 并加入到 $x$ 对应的数据集中，这样就得到了新数据集。</p>
+<div style="width: 80%">
+    <pre id="create_data" class="pseudocode">
+        \begin{algorithm}
+            \caption{Create Data}
+            \begin{algorithmic}
+                \FUNCTION{CreateData}{$D_1,D_2,\cdots,D_N$}
+                    \STATE $\hat{D}\gets\varnothing$
+                    \FOR{$n=1\to N$}
+                        \FOR{$(x,*,z)\in D_n$}
+                            \STATE Sample $n$ unique code candidates $S=\{\hat{y}_i\}_{i=1}^n$ from $P_{\rm LM}(y\mid x)$
+                            \FOR{$\hat{y}\in S$}
+                                \STATE $\hat{z}\gets\mathcal{E}(\hat{y})$
+                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(\hat{y},\hat{z},\mathbb{I}(\hat{z}=z))\}$
+                            \ENDFOR
+                            \IF{$D_n$ contains the gold program $y$}
+                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(y,z,1)\}$
+                            \ENDIF
+                        \ENDFOR
+                    \ENDFOR
+                    \STATE\RETURN $\hat{D}$
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+<script>render_pseudocode('create_data', reset=true);</script>
+<p>
+    得到数据集后，对于输入 $x$，训练验证器的目标是最小化负对数似然：
+    $$\mathcal{L}_{\theta}(x)=-\dfrac{1}{|\hat{D}_x|}\sum_{(y,z,v)\in\hat{D}_x}\log P_\theta(v\mid x,y,z)$$
+</p>
 <hr>
-<p>这章不想看了，反正这课及格就行 QAQ，等什么时候心情好再把这一部分补上吧哈哈哈。6 月 26 日补充：考完试了，这章就考了一道题，还好没看，但其他章考了几题不会做的，空了好几题，错了好几题 QAQ，不过无所谓了，能及格就行。</p>
-<!-- <p><b>定理</b>：在一个具有完美回忆的有限非完全信息动态博弈中：任何玩家的任何混合策略都可以被替换为一个等价的行为策略，反之亦然。</p> -->
+<h1>个人看法</h1>
+<p>整个过程只比朴素做法多了一个 verifier，为什么 verifier 能够利用代码的语义呢？无非就是一个二分类，verifier 模型还要基于不同任务来选择，可扩展性很低。还有一个就是整个方法都基于代码的执行，但是对于有输入输出的代码，测试用例从哪来？这篇文章的实验部分有两个数据集是 SQL 代码，一个是 Math Word Problems 任务，还有一个是 Python 生成（在有测试用例的 MBPP 数据集上实验），如果对于 Python 这类的代码，要是没有测试用例，代码就执行不了，整个方法就瘫痪了，所以感觉很扯，凭什么能中啊？</p>

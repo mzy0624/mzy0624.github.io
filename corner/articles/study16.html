@@ -1,3 +1,7 @@
+<h1>大模型中的强化学习</h1>
+<p>强化学习其实是 agent 和环境交互并从环境反馈中学习的过程：agent 在环境的某个状态 (state) 下采取某个动作 (action)，动作改变环境的状态，环境给予奖励 (reward)，然后 agent 根据奖励值来从环境中学习。</p>
+<p>而语言模型如何通过强化学习来训练，主要的问题还是在于状态和动作是什么。对于大模型，输入 prompt 后，大模型会输出序列 $y=\{y_t\}_{t=1}^T$，而实际上大模型是逐 token 输出的，即根据 prompt 和当前已输出的 token 来预测下一个 token。所以对于大模型，在时刻 $t$，状态就是 prompt 和 $y_{1:t-1}$ 的结合（$t=1$ 时刻就只有 prompt），动作就是决定下一个 token，即 $y_{t+1}$。</p>
+
 <h1>什么是 RLHF</h1>
 <p>基于人类反馈的强化学习 (RLHF) 在大语言模型的训练中起到了很重要的作用，目的是为了将大模型和人类偏好对齐，使得模型表现得更 “像” 人。RLHF 可以大致分为三个阶段：</p>
 <ol>
@@ -9,7 +13,13 @@
 
 <p>大致流程如图所示（图片引用于<a href="https://aws.amazon.com/what-is/reinforcement-learning-from-human-feedback" target="_blank">这个网站</a>）：</p>
 <div style="text-align: center; padding-bottom: 1em;"><img src="files/study16/1.png" style="width: 85%;" /></div>
+<p>整个过程中一共有四个模型：Actor Model、Critic Model、Reference Model 和 Reward Model，其中 Actor Model 就是我们想要学得的策略，它接收 prompt 作为输入，输出 response，TODO</p>
+<hr>
 
-<h1>大模型中的强化学习</h1>
-<p>强化学习其实是 agent 和环境交互并从环境反馈中学习的过程：agent 在环境的某个状态 (state) 下采取某个动作 (action)，动作改变环境的状态，环境给予奖励 (reward)，然后 agent 根据奖励值来从环境中学习。</p>
-<p>而语言模型如何通过强化学习来训练，主要的问题还是在于状态和动作是什么。对于大模型，输入 prompt 后，大模型会输出序列 $y=\{y_t\}_{t=1}^T$，而实际上大模型是逐 token 输出的，即根据 prompt 和当前已输出的 token 来预测下一个 token。所以对于大模型，在时刻 $t$，状态就是 prompt 和 $y_{1:t-1}$ 的结合（$t=1$ 时刻就只有 prompt），动作就是决定下一个 token，即 $y_{t+1}$。</p>
+<h1>有监督微调</h1>
+<p>这个阶段很简单，其实就是传统的 next token prediction 任务。</p>
+<hr>
+
+<h1>训练奖励模型</h1>
+<p>奖励模型 (Reward Model, RM) 的主要作用是给大模型的输出评分</p>
+

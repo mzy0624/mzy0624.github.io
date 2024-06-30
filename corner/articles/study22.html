@@ -1,77 +1,101 @@
-<h1>非完全信息静态博弈的定义</h1>
-<p>“非完全信息” 指的是玩家可能不知道其他玩家的收益，这种情况下，可以考虑玩家有一个隐藏的状态，在不同的状态下，收益矩阵不同，其他的非完全信息静态博弈都可以转化为这种模型。</p>
-<p>例如男生和女生决定去看球 ($B$) 还是看跳舞 ($D$)，如果两个人都知道对方喜欢自己，那么收益矩阵可能是下面左边的表格。但如果男生不知道女生是否喜欢自己，只知道女生有 $p$ 的概率喜欢自己，而女生知道自己是否喜欢男生，那么收益矩阵可能变为后两个表格。</p>
-<div style="text-align: center; margin-top: -1em;">
-    <div id="study22-table-1" style="display: inline-block; margin-right: 20px;"></div>
-    <div id="study22-table-2" style="display: inline-block; margin-right: 20px;"></div>
-    <div id="study22-table-3" style="display: inline-block"></div>
-</div>
+<h1>Proximal Policy Optimization (PPO)</h1>
 <p>
-    如果男生选择 $B$，因为女生知道自己是否喜欢男生，所以对于概率 $p$，女生会选择收益高的 $B$，而对于概率 $1-p$，女生会选择 $D$，从而此时男生的期望收益为：
-    $$U_1(B,(B,D))=2p+0(1-p)=2p$$
-    在<b>女生策略不变</b>的情况下，男生选择 $D$ 的期望收益为：
-    $$U_1(D,(B,D))=0\cdot p+1(1-p)=1-p$$
-    所以当 $2p\geqslant 1-p$ 即 $p\geqslant 1/3$ 时，$B$ 是男生的最优反应，此时 $(B,(B,D))$ 是该博弈的纳什均衡；同理当 $p\geqslant 2/3$ 时，$(D,(D,B))$ 是纳什均衡。
+    <a href="https://arxiv.org/abs/1707.06347" target="_blank">近端策略优化 (PPO)</a> 是目前非常流行的强化学习算法，由 OpenAI 在 2017 年提出。根据策略梯度的公式：
+    $$\nabla_\theta\bar{R}_\theta=\mathbb{E}_{(s,a)\sim\pi_\theta}\left[A_\theta(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]$$
+    可知每次更新 $\theta$ 会导致原来采样的数据不能用了，需要重新采样，这就使得训练速度非常慢，这是 on-policy 方法的通病。
 </p>
-<hr>
-<h1>形式化：贝叶斯博弈</h1>
+<h2>重要性采样 (Importance Sampling)</h2>
 <p>
-    静态博弈 $G=\{N,\{A_i\}_{i=1}^N,\{\Theta_i\}_{i=1}^N,\{u_i\}_{i=1}^N,p\}$ 是贝叶斯博弈，其中：
-    <ul>
-        <li>$\Theta_i$ 是玩家 $i$ 的状态集，是其私有信息，给定状态，收益是确定的；</li>
-        <li>$p=p(\theta_1,\cdots,\theta_N)$ 表示在 $\Theta_1\times\cdots\times\Theta_N$ 上的联合分布；</li>
-        <li>$a_i:\Theta_i\to A_i$ 为玩家 $i$ 的纯策略，表示其在所有状态下的策略选择 $a_i=(a_i(\theta_{i1}),\cdots,a_i(\theta_{in_i}))$；</li>
-        <li>$u_i:A_1\times\cdots\times A_N\times\Theta_1\times\cdots\times\Theta_N\to\mathbb{R}$ 为玩家 $i$ 的收益函数，$u_i(a_1,\cdots,a_N,\theta_1,\cdots,\theta_N)$ 表示在这些博弈结果和状态下玩家 $i$ 的收益。</li>
-    </ul>
-</p>
-<p>
-    一般来说，每个玩家的状态是独立的，即：
-    $$p(\theta_1,\cdots,\theta_N)=\prod_{i=1}^Np(\theta_i)$$
-    根据贝叶斯公式，有：
-    $$p(\theta_{-i}\mid\theta_i)=\dfrac{p(\theta_i,\theta_{-i})}{p(\theta_i)}$$
-    博弈结果 $(a_1,\cdots,a_N)$ 是纳什均衡，如果 $\forall 1\leqslant i\leqslant N,a_i'(\theta_i)\in A_i$，都有：
-    $$U_i(a_i(\theta_i),a_{-i})\geqslant U_i(a_i'(\theta_i),a_{-i})$$
-    <b>定理</b>：博弈结果 $(a_1,\cdots,a_N)$ 是纳什均衡，当且仅当 $\forall 1\leqslant i\leqslant N,\theta_i\in\Theta_i$，都有：
-    $$a_i(\theta_i)\in B_i(a_{-i},\theta_i)$$
-</p>
-<hr>
-
-<h1>例子：非完全信息古诺竞争</h1>
-<p>两家公司 $1$ 和 $2$ 生产同样的商品，这种商品可能的成本为 $c$ 或 $c'$，众所周知公司 $1$ 的成本为 $c$，但公司 $1$ 不知道公司 $2$ 的成本，它相信公司 $2$ 的成本为 $c$ 的概率为 $p$，其他假设和完全信息古诺竞争相同，两家公司同时进行产量决策。</p>
-<p>
-    容易得到，公司 $1$ 的期望收益为：
+    在分布 $p$ 下采样的目的就是求期望：
+    $$\mathbb{E}_p[f(x)]=\int p(x)f(x){\rm d}x$$
+    对于另一个分布 $q$：
+    $$\int p(x)f(x){\rm d}x=\int q(x)f(x)\dfrac{p(x)}{q(x)}{\rm d}x=\mathbb{E}_q\left[f(x)\dfrac{p(x)}{q(x)}\right]$$
+    其中 $p(x)/q(x)$ 称为重要性权重，这时候就可以用另一个策略 $\pi_{\theta'}$ 把策略梯度变成 off-policy 的：
     \begin{align*}
-        U_1(q_1,q_2,q_2',c,c')=&\ pq_1(a-q_1-q_2-c)+(1-p)q_1(a-q_1-q_2'-c)\\
-                              =&\ q_1(a-q_1-c)-q_1(pq_2+(1-p)q_2')
+        \nabla_\theta\bar{R}_\theta=&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{p_{\theta}(s,a)}{p_{\theta'}(s,a)}A_{\theta'}(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]\\
+                                   =&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{p_{\theta}(a\mid s)p_{\theta}(s)}{p_{\theta'}(a\mid s)p_{\theta'}(s)}A_{\theta'}(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]\\
     \end{align*}
-    公司 $2$ 成本为 $c^*$ 时的期望收益（其中 $c^*\in\{c,c'\}$）：
-    $$U_2(q_1,q_2^*,c^*)=q_2^*(a-q_1-q_2^*-c^*)$$
-    两家公司都想最大化期望收益，那么：
-    $$\dfrac{\partial U_1}{\partial q_1}=a-2q_1-c-pq_2-(1-p)q_2'$$
-    $$\dfrac{\partial U_2}{\partial q_2^*}=a-q_1-2q_2^*-c^*$$
-    令偏导为零，得到：
-    $$\left\lbrace\begin{array}{l}
-    2q_1=a-c-pq_2-(1-p)q_2'\\
-    2q_2=a-q_1-c\\
-    2q_2'=a-q_1-c'
-    \end{array}\right.$$
-    联立这三个方程即可解得纳什均衡解 $(q_1,(q_2,q_2'))$。
+    这里优势函数的下标是 $\theta'$ 而不是 $\theta$ 的原因是和环境互动的是 $\pi_{\theta'}$ 而不是 $\pi_\theta$。在两次策略更新之间，环境中状态的分布通常不会发生剧烈变化，$p_{\theta'}(s)$ 和 $p_\theta(s)$ 的差距可以忽略不计，所以：
+    \begin{align*}
+        \nabla_\theta\bar{R}_\theta\approx&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{p_{\theta}(a\mid s)\nabla_\theta\log p_\theta(a\mid s)}{p_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]\\
+                                   =&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{\nabla_\theta p_\theta(a\mid s)}{p_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]
+    \end{align*}
+    $p(a\mid s)$ 其实就是 $\pi(a\mid s)$，可以通过梯度去反推原来的目标函数：
+    $$J^{\theta'}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{\pi_{\theta}(a\mid s)}{\pi_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]$$
+    如何去选取 $\theta'$ 是一个问题，在 PPO 算法中，$\theta'$ 其实就是更新前的 $\theta$，所以 PPO 还是一个 on-policy 的算法。根据上面的推导，可以得到使用重要性采样后期望相同，但并不意味着方差相同：
+    \begin{align*}
+        {\rm Var}_q\left[f(x)\dfrac{p(x)}{q(x)}\right]=&\ \mathbb{E}_q\left[\left(f(x)\dfrac{p(x)}{q(x)}\right)^2\right]-\mathbb{E}_q^2\left[f(x)\dfrac{p(x)}{q(x)}\right]\\
+                                                      =&\ \mathbb{E}_p\left[f^2(x)\dfrac{p(x)}{q(x)}\right]-\mathbb{E}_p^2[f(x)]\\
+                                                      =&\ \mathbb{E}_p[f^2(x)]-\mathbb{E}^2_p[f(x)]+\mathbb{E}_p\left[f^2(x)\dfrac{p(x)-q(x)}{q(x)}\right]\\
+                                                      =&\ {\rm Var}_p[f(x)]+\mathbb{E}_p\left[f^2(x)\dfrac{p(x)-q(x)}{q(x)}\right]
+    \end{align*}
+    这就是 PPO 要解决的问题，具体来说 PPO 有两个版本：PPO-penalty 和 PPO-clip。
 </p>
 
-<script>
-    append_elem('study22-table-1', create_game_table(
-        [['1, 2', '0, 0'], ['0, 0', '2, 1']], 
-        [['$B$', '$D$'], ['$B$', '$D$']], 
-        ['Boy', 'Girl']
-    ));
-    append_elem('study22-table-2', create_game_table(
-        [['2, 1', '0, 0'], ['0, 0', '1, 2']], 
-        [['$B$', '$D$'], ['$B$', '$D$']], 
-        ['Boy', 'Girl $p$']
-    ));
-    append_elem('study22-table-3', create_game_table(
-        [['2, 0', '0, 2'], ['0, 1', '1, 0']], 
-        [['$B$', '$D$'], ['$B$', '$D$']], 
-        ['Boy', 'Girl $1-p$']
-    ));
-</script>
+<h2>PPO-penalty</h2>
+<p>
+    PPO-penalty 其实就是在目标函数中加了一个 KL 散度来限制两个分布之间的差距不要太大：
+    $$J^{\theta'}_{\rm PPO-penalty}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{\pi_{\theta}(a\mid s)}{\pi_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]-\beta{\rm KL}(\theta\ \|\ \theta')$$
+    其中 $\beta$ 是权重，可以使用自适应 KL 惩罚来动态调整权重：若 KL 散度大于某一个阈值就增加 $\beta$；若 KL 散度小于另一个阈值就减少 $\beta$，这两个参数都是自己设置的超参。简单地说，就是如果 KL 散度太大，说明后面这个惩罚没起到什么作用，那就增加它的权重；如果 KL 散度太小，说明惩罚太强了，就减少它的权重。
+</p>
+
+<h2>PPO-clip</h2>
+<p>
+    PPO-clip 使用了一个裁剪 (clip) 函数 ${\rm clip}(x,l,r)=\max(\min(a,r),l)$，其实就是把 $x$ 限定在区间 $[l,r]$ 中。为了简化，记：
+    $${\rm ratio}=\dfrac{\pi_{\theta}(a\mid s)}{\pi_{\theta'}(a\mid s)},\ {\rm clip\_ratio}={\rm clip}({\rm ratio},1-\epsilon,1+\epsilon)$$
+    则 PPO-clip 的目标函数可以写成：
+    $$J^{\theta'}_{\rm PPO-clip}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\Big[\min\Big({\rm ratio}\cdot A_{\theta'}(s,a),{\rm clip\_ratio}\cdot A_{\theta'}(s,a)\Big)\Big]$$
+    这其实就是在控制 $\pi_\theta(a\mid s)$ 和 $\pi_{\theta'}(a\mid s)$ 之间的差距不要太大。如果 $A_{\theta'}(s,a)>0$，说明在状态 $s$ 下动作 $a$ 的价值高于平均，那么最大化目标函数会导致 ${\rm ratio}$ 增大，但为了防止它们之间的差距过大，${\rm clip}$ 函数不会让其超过 $1+\epsilon$；反之类似。
+</p>
+
+
+<div style="width: 80%">
+    <pre id="PPO" class="pseudocode">
+        \begin{algorithm}
+            \caption{Proximal Policy Optimization (PPO) without Actor-Critic}
+            \begin{algorithmic}
+                \FUNCTION{GAE}{}
+                \ENDFUNCTION
+                \FUNCTION{PPO-Penalty}{}
+                \ENDFUNCTION
+                \FUNCTION{PPO-Clip}{}
+                    \STATE Compute new log probabilities $\log\pi_{\theta'}(a_t\mid s_t)$
+                    \STATE Compute clip$\_$ratio using the above formula
+                    \STATE Compute surrogate loss $\mathcal{L}^{CLIP} = \min(r_t(\theta') \hat{A}_t, \text{clip}(r_t(\theta'), 1 - \epsilon, 1 + \epsilon) \hat{A}_t)$
+                    \STATE Perform gradient descent on $\mathcal{L}^{CLIP}$ to update $\theta'$
+                \ENDFUNCTION
+                \FUNCTION{PPO}{$\pi_\theta,\alpha,\epsilon,\gamma,\lambda,N,K$}
+                    \FOR{each episode}
+                        \STATE Reset environment and initialize state $s_0$
+                        \STATE Initialize lists: states, actions, rewards, dones, log probabilities
+
+                        \FOR{$t=0\to T$}
+                            \STATE Sample action $a_t$ from $\pi_\theta(a_t\mid s_t)$ and execute $a_t$
+                            \STATE Observe reward $r_t$ and next state $s_{t+1}$
+                            \STATE Store $s_t,a_t,r_t,s_{t+1}$, and log probability $\log\pi_\theta(a_t\mid s_t)$
+                            \STATE $s_t\gets s_{t+1}$
+                            \IF{done}
+                                \STATE\BREAK
+                            \ENDIF
+                        \ENDFOR
+                        \STATE $R,A=$ \CALL{GAE}{}
+                        \STATE Compute returns and advantages using Generalized Advantage Estimation (GAE)
+                        \STATE \textit{(Details of GAE not included for brevity)}
+
+                        \FOR{$epoch=1\to K$}
+                            \FOR{each batch of size $N$}
+                                \STATE Compute new log probabilities $\log \pi_{\theta'}(a_t\mid s_t)$
+                                \STATE Compute probability ratio $r_t(\theta') = \dfrac{\pi_{\theta'}(a_t\mid s_t)}{\pi_\theta(a_t\mid s_t)}$
+                                \STATE Compute surrogate loss $\mathcal{L}^{CLIP} = \min(r_t(\theta') \hat{A}_t, \text{clip}(r_t(\theta'), 1 - \epsilon, 1 + \epsilon) \hat{A}_t)$
+                                \STATE Perform gradient descent on $\mathcal{L}^{CLIP}$ to update $\theta'$
+                            \ENDFOR
+                        \ENDFOR
+
+                        \STATE Update $\theta\gets\theta'$
+                    \ENDFOR
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+<script>render_pseudocode('PPO', reset=true);</script>

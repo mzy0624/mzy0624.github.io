@@ -1,419 +1,99 @@
-<h1>完全信息动态博弈的定义</h1>
-<p>“动态” 指的是玩家轮流做决策，也叫扩展式博弈 (Extensive Game)，特点是每一步没有收益，只有最后一步才有收益，相较于静态博弈，动态博弈多了玩家的序列信息，以及每个点上的策略集。动态博弈的例子有尼姆游戏、下棋等。</p>
-<p>
-    对于玩家集合 $N$，策略集合为 $A$，历史集为 $H$，历史集是 “策略的序列” 构成的集合，性质有：
-    <ol>
-        <li>$\varnothing\in H$，表示博弈树的根结点；</li>
-        <li>若策略序列 $a^1a^2\cdots a^k\in H$ 且 $k>s$，那么 $a^1a^2\cdots a^s\in H$；</li>
-        <li>若无穷策略序列 $(a^k)_{k=1}^{\infty}$ 满足 $\forall k,a^1a^2\cdots a^k\in H$，则 $(a^k)_{k=1}^{\infty}\in H$；</li>
-        <li>每一条历史序列都对应博弈树上其末端到达的结点；</li>
-        <li>在完全信息动态博弈中，历史集的大小等于博弈树的结点数；</li>
-        <li>最终历史 (Terminal History) $a^1a^2\cdots a^k\in H$ 要么满足 $k$ 为 $\infty$，要么满足 $\forall a^{k+1}\in A,a^1a^2\cdots a^{k+1}\notin H$；</li>
-        <li>最终历史集 $Z$ 即为所有最终历史的集合，在这些结点上是收益。</li>
-    </ol>
-    博弈玩家函数 (Player Function) $P$ 定义为：
-    <ol>
-        <li>$P:H\ \backslash Z\to N$，给每一个非终结历史分配一个玩家；</li>
-        <li>$P(h)$ 表示在历史 $h$ 后轮到哪个玩家做决策。</li>
-    </ol>
-    则完全信息动态博弈可以形式化为 $G=\{N,H,P,\{u_i\}\}$。
-</p>
-<h1>例子：Entry Game</h1>
-<p>公司 G 试图进入某市场，该市场的另一家公司 B 可以选择对立 (F) 或者合作 (C)，这样可以画出一颗博弈树：</p>
-<style>
-    .dash {
-        stroke: black;
-        stroke-width: 2;
-        stroke-dasharray: 10,5;
-    }
-    .node {
-        fill: black;
-        stroke: black;
-        stroke-width: 2;
-    }
-    .red-node {
-        fill: red;
-        stroke: red;
-        stroke-width: 2;
-    }
-    .blue-node {
-        fill: blue;
-        stroke: blue;
-        stroke-width: 2;
-    }
-    .text {
-        font-size: 20px;
-        font-family: Arial, sans-serif;
-        text-anchor: middle;
-    }
-    .red-text {
-        fill: red;
-        font-size: 20px;
-        font-family: Arial, sans-serif;
-        text-anchor: middle;
-    }
-    .blue-text {
-        fill: blue;
-        font-size: 20px;
-        font-family: Arial, sans-serif;
-        text-anchor: middle;
-    }
-</style>
+<h1>解决了什么问题</h1>
+<p>Math Word Problems（MWP，不知道怎么翻译合适）是 NLP 领域的一个重要任务，差不多可以理解成小学数学题，之前的做法基本上都是将其视作一个和普通 NLP 任务类似的生成任务。但作者指出 MWP 不只是一个生成任务，因为数学表达式和自然语言之间有一个很重要的不同：在数学表达式中，一个小错误就会导致整个表达式错误，而自然语言在这方面就表现得更鲁棒，但是以前的做法都没有考虑这一点。于是作者提出了一个新框架：Generate & Rank，其实就是在生成的基础上多了排序。该框架包含两部分：Generator 和 Ranker，其中给定数学问题，Generator 负责生成一些候选数学表达式，而 Ranker 负责讲这些表达式排序，从而选出最有可能正确的表达式。Generator 和 Ranker 都基于 <a href="https://aclanthology.org/2020.acl-main.703/" target="_blank">BART</a>，是编码器-解码器架构。下面有些地方跟原文不太一样，但只是表达方式不同，意思是一样的。</p>
+<hr>
 
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="400" height="300">
-        <!-- Circles & Texts -->
-        <circle cx="150" cy="50"  r="4" class="node" /> <!-- G -->
-        <text    x="150"  y="40"  class="text">G</text>
-        <circle cx="50"  cy="150" r="4" class="node" /> <!-- 0, 20 -->
-        <text    x="50"   y="180" class="text">(0, 20)</text>
-        <circle cx="250" cy="150" r="4" class="node" /> <!-- B -->
-        <text    x="260"  y="140" class="text">B</text>
-        <circle cx="150" cy="250" r="4" class="node" /> <!-- -5, 0 -->
-        <text    x="150"  y="280" class="text">(-5, 0)</text>
-        <circle cx="350" cy="250" r="4" class="node" /> <!-- 10, 10 -->
-        <text    x="350"  y="280" class="text">(10, 10)</text>
-
-        <!-- Lines & Texts -->
-        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
-        <text  x="80"   y="100" class="text">Out</text>
-        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
-        <text  x="220"  y="100" class="text">In</text>
-        <line x1="250" y1="150" x2="150" y2="250" class="node" />
-        <text  x="180"  y="200" class="text">F</text>
-        <line x1="250" y1="150" x2="350" y2="250" class="node" />
-        <text  x="320"  y="200" class="text">C</text>
-    </svg>
-</div>
+<h1>Generator</h1>
 <p>
-    博弈树由结点和边组成，对应博弈玩家、策略和收益。其中非叶子结点代表博弈玩家，表示此时哪个玩家做出决策，每个非叶子结点有且仅有一个博弈玩家；而叶子结点代表每个玩家在此时的收益；边表示策略。该博弈树可以被形式化为：
-    <ul>
-        <li>$N=\{{\rm G,B}\}$</li>
-        <li>$H=\{\varnothing,\text{Out, In, (In, F), (In, C)}\}$</li>
-        <li>$P(\varnothing)={\rm G},P({\rm In})={\rm B}$</li>
-        <li>$u({\rm Out})=(0,20), u(({\rm In, F}))=(-5,0),u(({\rm In,C}))=(10,10)$</li>
-    </ul>
+    给定训练集 $\mathcal{D}=\{(P_i,S_i)\}_{i=1}^N$，其中 $P=(x_1,x_2,\cdots,x_n)$ 为数学问题，$S=(s_1,s_2,\cdots,s_m)$ 为答案，Generator 最小化负对数似然：
+    $$J_{\rm GEN}=-\dfrac{1}{|\mathcal{D}|}\sum_{(P,S)\in\mathcal{D}}\log\Pr(S\mid P)$$
+    其中，条件概率以自回归的方式解码：
+    \begin{align*}
+        \Pr(S\mid P)=&\ \prod_{i=1}^m\Pr(s_i\mid P,S_{1:i-1})\\
+        \Pr(*\mid P,S_{1:i-1})=&\ {\rm softmax}({\rm FFN}(d_i))\\
+        d_i=&\ {\rm Dncoder}(R;S_{1:i-1})\\
+        R=&\ {\rm Encoder}(P)
+    \end{align*}
+    即把 $P$ 丢到编码器里，编码器的输出和已经生成的词丢到解码器里，再加一个全连接层得到候选词的分布。
 </p>
 <hr>
 
-<h1>动态博弈的纯策略</h1>
+<h1>Ranker</h1>
 <p>
-    给定 $G$，玩家 $i$ 的纯策略为：
-    $$\times_{h\in H}\{a^s\mid (h,a^s)\in H,P(h)=i\}$$
-    比如下面的博弈树中：
-</p>
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="600" height="400">
-        <!-- Circles & Texts -->
-        <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
-        <text    x="270"  y="40"  class="text">1</text>
-        <circle cx="110" cy="150" r="4" class="node"></circle>  <!-- 2 -->
-        <text    x="110"  y="140" class="text">2</text>
-        <circle cx="430" cy="150" r="4" class="node"></circle>  <!-- 2 -->
-        <text    x="430"  y="140" class="text">2</text>
-        <circle cx="30"  cy="250" r="4" class="node"></circle>  <!-- (3, 8) -->
-        <text    x="30"   y="280" class="text">(3, 8)</text>
-        <circle cx="190" cy="250" r="4" class="node"></circle>  <!-- (8, 3) -->
-        <text    x="190"  y="280" class="text">(8, 3)</text>
-        <circle cx="350" cy="250" r="4" class="node"></circle>  <!-- (5, 5) -->
-        <text    x="350"  y="280" class="text">(5, 5)</text>
-        <circle cx="510" cy="250" r="4" class="node"></circle>  <!-- 1 -->
-        <text    x="520"  y="240" class="text">1</text>
-        <circle cx="470" cy="350" r="4" class="node"></circle>  <!-- (2, 10) -->
-        <text    x="470"  y="380" class="text">(2, 10)</text>
-        <circle cx="550" cy="350" r="4" class="node"></circle>  <!-- (1, 10) -->
-        <text    x="550"  y="380" class="text">(1, 10)</text>
-
-        <!-- Lines & Texts -->
-        <line x1="270" y1="50"  x2="110" y2="150" class="node" /> <!-- A -->
-        <text  x="190"  y="90"  class="text">A</text>
-        <line x1="270" y1="50"  x2="430" y2="150" class="node" /> <!-- B --> 
-        <text  x="350"  y="90"  class="text">B</text>
-        <line x1="110" y1="150" x2="30"  y2="250" class="node" /> <!-- C --> 
-        <text  x="60"   y="200" class="text">C</text>
-        <line x1="110" y1="150" x2="190" y2="250" class="node" /> <!-- D --> 
-        <text  x="160"  y="200" class="text">D</text>
-        <line x1="430" y1="150" x2="350" y2="250" class="node" /> <!-- E --> 
-        <text  x="380"  y="200" class="text">E</text>
-        <line x1="430" y1="150" x2="510" y2="250" class="node" /> <!-- F --> 
-        <text  x="480"  y="200" class="text">F</text>
-        <line x1="510" y1="250" x2="470" y2="350" class="node" /> <!-- G --> 
-        <text  x="480"  y="300" class="text">G</text>
-        <line x1="510" y1="250" x2="550" y2="350" class="node" /> <!-- H --> 
-        <text  x="540"  y="300" class="text">H</text>
-    </svg>
-</div>
-<p>1 和 2 的纯策略分别为 $\rm \{A,B\}\times\{G,H\}$ 和 $\rm \{C,D\}\times\{E,F\}$。其实就是找到玩家对应的所有结点，每个结点的所有出边都对应一个策略的集合，这些集合的笛卡尔积就是该玩家的纯策略。</p>
-<hr>
-
-<h1>动态博弈的纳什均衡</h1>
-<p>动态博弈和静态博弈的纳什均衡定义是一样的，求解动态博弈的纳什均衡的方法：<b>诱导静态博弈</b>。动态博弈可以转化为静态博弈，根据每个玩家的纯策略组合，得到相应的收益，从而计算诱导收益矩阵，例如上面的博弈树对应的诱导收益矩阵为：</p>
-<div id="study23-table-1"></div>
-<script>
-    append_elem("study23-table-1", create_game_table(
-        [
-            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
-            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
-            ['5, 5', '2, 10', '5, 5', '2, 10'], 
-            ['5, 5', '1, 0',  '5, 5', '1, 0'], 
-        ],
-        [['AG', 'AH', 'BG', 'BH'], ['CE', 'CF', 'DE', 'DF']],
-        ['1','2']
-    ))
-</script>
-
-<p>然后就可以通过静态博弈的方法求解动态博弈的纳什均衡为 $\rm (AG,CF),(AH,CF),(BH,CE)$，但是这样求出来的纳什均衡的有些策略是不可信的，例如 AH 肯定不是纳什均衡，因为 AG 优于 AH。为了避免这些不可信的解，需要找出另一种均衡，让所有均衡都是可信的，即<b>子博弈完美均衡</b>。</p>
-<h2>子博弈 (Subgame)</h2>
-<p>由一个动态博弈的第一阶段以后得任意阶段开始的后续博弈阶段构成的，包含初始信息集和进行博弈所需要的全部信息，能自成一个博弈的原博弈的一部分，称为原动态博弈的一个子博弈。</p>
-<h2>子博弈完美均衡 (Subgame Perfect Equilibrium)</h2>
-<p>如果一个纳什均衡在每个子博弈中都是纳什均衡，那么它就是子博弈完美均衡。可以证明，每一个完全信息动态博弈都有子博弈完美均衡。</p>
-<h2>求解子博弈完美均衡：后向归纳</h2>
-<p>从最末端的非叶子结点（即最后的子博弈）开始，计算纳什均衡（即对于该非叶子结点的玩家求最优收益），用这个收益代替这个子博弈的根结点，然后重复上述步骤直到根结点，例如下面的博弈树：</p>
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="600" height="400">
-        <!-- Lines & Texts -->
-        <line x1="270" y1="50"  x2="110" y2="150" class="red-node" /> <!-- A -->
-        <text  x="190"  y="90"  class="text">A</text>
-        <line x1="270" y1="50"  x2="430" y2="150" class="node" /> <!-- B --> 
-        <text  x="350"  y="90"  class="text">B</text>
-        <line x1="110" y1="150" x2="30"  y2="250" class="red-node" /> <!-- C --> 
-        <text  x="60"   y="200" class="text">C</text>
-        <line x1="110" y1="150" x2="190" y2="250" class="node" /> <!-- D --> 
-        <text  x="160"  y="200" class="text">D</text>
-        <line x1="430" y1="150" x2="350" y2="250" class="node" /> <!-- E --> 
-        <text  x="380"  y="200" class="text">E</text>
-        <line x1="430" y1="150" x2="510" y2="250" class="red-node" /> <!-- F --> 
-        <text  x="480"  y="200" class="text">F</text>
-        <line x1="510" y1="250" x2="470" y2="350" class="red-node" /> <!-- G --> 
-        <text  x="480"  y="300" class="text">G</text>
-        <line x1="510" y1="250" x2="550" y2="350" class="node" /> <!-- H --> 
-        <text  x="540"  y="300" class="text">H</text>
-
-        <!-- Circles & Texts -->
-        <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
-        <text    x="270"  y="40"  class="text">1</text>
-        <text    x="310"  y="50"  class="text">(3, 8)</text>
-        <circle cx="110" cy="150" r="4" class="node"></circle>  <!-- 2 -->
-        <text    x="110"  y="140" class="text">2</text>
-        <text    x="70"   y="160" class="text">(3, 8)</text>
-        <circle cx="430" cy="150" r="4" class="node"></circle>  <!-- 2 -->
-        <text    x="430"  y="140" class="text">2</text>
-        <text    x="470"  y="160" class="text">(2, 10)</text>
-        <circle cx="30"  cy="250" r="4" class="node"></circle>  <!-- (3, 8) -->
-        <text    x="30"   y="280" class="text">(3, 8)</text>
-        <circle cx="190" cy="250" r="4" class="node"></circle>  <!-- (8, 3) -->
-        <text    x="190"  y="280" class="text">(8, 3)</text>
-        <circle cx="350" cy="250" r="4" class="node"></circle>  <!-- (5, 5) -->
-        <text    x="350"  y="280" class="text">(5, 5)</text>
-        <circle cx="510" cy="250" r="4" class="node"></circle>  <!-- 1 -->
-        <text    x="520"  y="240" class="text">1</text>
-        <text    x="550"  y="260" class="text">(2, 10)</text>
-        <circle cx="470" cy="350" r="4" class="node"></circle>  <!-- (2, 10) -->
-        <text    x="470"  y="380" class="text">(2, 10)</text>
-        <circle cx="550" cy="350" r="4" class="node"></circle>  <!-- (1, 10) -->
-        <text    x="550"  y="380" class="text">(1, 10)</text>
-    </svg>
-</div>
-<p>子博弈完美均衡为 $\rm (AG,CF)$，如果某个结点的多个分支被选中，则依次分析得到多个子博弈完美均衡。</p>
-<hr>
-
-<h1>主从博弈 (Stackelberg Game)</h1>
-<p>Leader 先做决策，Follower 后做决策，如下面的收益矩阵：</p>
-<div id="study23-table-2" style="margin-top: -1em;"></div>
-<script>
-    append_elem("study23-table-2", create_game_table(
-        [
-            ['$L_{11},R_{11}$', '$L_{12},R_{12}$', '$\\cdots$', '$L_{1n},R_{1n}$'], 
-            ['$L_{21},R_{21}$', '$L_{22},R_{22}$', '$\\cdots$', '$L_{2n},R_{2n}$'], 
-            ['$\\vdots$',       '$\\vdots$',       '$\\ddots$', '$\\vdots$'], 
-            ['$L_{m1},R_{m1}$', '$L_{m2},R_{m2}$', '$\\cdots$', '$L_{mn},R_{mn}$'], 
-        ],
-        [['$a_{11}$', '$a_{12}$', '$\\vdots$', '$a_{1m}$'], ['$a_{21}$', '$a_{22}$', '$\\cdots$', '$a_{2n}$']],
-        ['Leader','Follower'], 
-        true,
-        [['$p_{11}$', '$p_{12}$', '', '$p_{1m}$'], ['$p_{21}$', '$p_{22}$', '', '$p_{2n}$']],
-    ));
-</script>
-<p>
-    使用线性规划求解 Stackelberg Equilibrium：
-    $$\max_{p_1}p_1Lp_2^{\rm T}\quad {\rm s.t.}\ p_2=\mathop{\arg\max}_{p_2}p_1Rp_2^{\rm T}$$
-    例如下面的收益矩阵：
-</p>
-<div style="text-align: center">
-    <div id="study23-table-3" style="display: inline-block;"></div>
-    <div style="display: inline-block; vertical-align: bottom;">
-        $$\implies\left\lbrace\begin{array}{l}
-            L=\begin{pmatrix}1&3\\0&2\end{pmatrix}\\
-            R=\begin{pmatrix}1&0\\0&1\end{pmatrix}
-        \end{array}\right.$$
-    </div>
-</div>
-<!-- <div id="study23-table-3" style="margin-top: -1em;"></div> -->
-<script>append_elem("study23-table-3", create_game_table([['$1,1$', '$3,0$'], ['$0,0$', '$2,1$']]));</script>
-<p>
-    若 $p_1=(p,1-p)$，则 $p_1L=(p,p+2),p_1R=(p,1-p)$：
-    <ul>
-        <li>
-            当玩家 $2$ 选择 $a_{21}$，即 $p_2=(1,0)$ 时，优化目标为：
-            $$\max_{p}p\quad {\rm s.t.}\ (p,1-p)(1,0)^{\rm T}\geqslant (p,1-p)(0,1)^{\rm T}\implies p=1$$
-        </li>
-        <li>
-            当玩家 $2$ 选择 $a_{22}$ 即 $p_2=(0,1)$ 时，优化目标为：
-            $$\max_{p+2}p\quad {\rm s.t.}\ (p,1-p)(0,1)^{\rm T}\geqslant (p,1-p)(1,0)^{\rm T}\implies p=0.5$$
-        </li>
-    </ul>
-    古诺竞争中，若企业 $1$ 先决定产量，企业 $2$ 再决定，那么企业 $1$ 的目标为：
-    $$\max_{q_1}q_1(a-b(q_1+q_2)-c)\quad {\rm s.t.}\ q_2=\dfrac{a-c-bq_1}{2b}$$
-    代入解得 $q_1=\dfrac{a-c}{2b},q_2=\dfrac{a-c}{4b}$，即为该主从博弈的 Stackelberg 均衡。
+    Rank 可以看成一个二分类任务（$P$ 和 $S$ 是否匹配），根据 $P$ 和 $S$ 匹配的概率进行 rank。为了进行二分类，作者在解码器后面接了一个 MLP：
+    \begin{align*}
+        p=&\ {\rm softmax}({\rm MLP}(d))\\
+        d=&\ {\rm Decoder}(R;S)\\
+        R=&\ {\rm Encoder}(P)
+    \end{align*}
+    其实就是把 $P$ 丢到编码器里，编码器的输出和 $S$ 一起丢到解码器里，再加一层 MLP 作为分类层，然后计算分类损失（交叉熵）：
+    $$J_{\rm RANK}=-\dfrac{1}{|\mathcal{D}'|}\sum_{(P,S,y)\in\mathcal{D}'}\big(y\log p+(1-y)\log(1-p)\big)$$
+    其中 $\mathcal{D}'$ 为表达式库 (Expression Bank)，是三元组 $P,S,y$ 组成的集合，标签 $y$ 代表 $P$ 和 $S$ 是否匹配。
 </p>
 <hr>
 
-<h1>Game Tree Search</h1>
-<h2>Min-Max</h2>
-<p>其实就是两个玩家 max 和 min，max 先做决策，然后轮流做决策直到博弈结束，例如下面的博弈树：</p>
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="500" height="150">
-        <!-- Lines & Texts -->
-        <line x1="250" y1="10"  x2="100" y2="60"  class="node" />
-        <line x1="100" y1="60"  x2="50"  y2="110" class="node" />
-        <line x1="100" y1="60"  x2="100" y2="110" class="node" />
-        <line x1="100" y1="60"  x2="150" y2="110" class="node" />
-        
-        <line x1="250" y1="10"  x2="250" y2="60"  class="node" />
-        <line x1="250" y1="60"  x2="200" y2="110" class="node" />
-        <line x1="250" y1="60"  x2="250" y2="110" class="node" />
-        <line x1="250" y1="60"  x2="300" y2="110" class="node" />
-        
-        <line x1="250" y1="10"  x2="400" y2="60"  class="node" />
-        <line x1="400" y1="60"  x2="350" y2="110" class="node" />
-        <line x1="400" y1="60"  x2="400" y2="110" class="node" />
-        <line x1="400" y1="60"  x2="450" y2="110" class="node" />
-        
-        <!-- Circles & Texts -->
-        <circle cx="250" cy="10"  r="4" class="red-node"></circle>
-        <circle cx="100" cy="60"  r="4" class="blue-node"></circle>
-        <circle cx="250" cy="60"  r="4" class="blue-node"></circle>
-        <circle cx="400" cy="60"  r="4" class="blue-node"></circle>
-
-        <circle cx="50"  cy="110" r="4" class="node"></circle>
-        <text    x="50"   y="140" class="text">3</text>
-        <circle cx="100" cy="110" r="4" class="node"></circle>
-        <text    x="100"  y="140" class="text">12</text>
-        <circle cx="150" cy="110" r="4" class="node"></circle>
-        <text    x="150"  y="140" class="text">8</text>
-        <circle cx="200" cy="110" r="4" class="node"></circle>
-        <text    x="200"  y="140" class="text">2</text>
-        <circle cx="250" cy="110" r="4" class="node"></circle>
-        <text    x="250"  y="140" class="text">4</text>
-        <circle cx="300" cy="110" r="4" class="node"></circle>
-        <text    x="300"  y="140" class="text">6</text>
-        <circle cx="350" cy="110" r="4" class="node"></circle>
-        <text    x="350"  y="140" class="text">14</text>
-        <circle cx="400" cy="110" r="4" class="node"></circle>
-        <text    x="400"  y="140" class="text">2</text>
-        <circle cx="450" cy="110" r="4" class="node"></circle>
-        <text    x="450"  y="140" class="text">5</text>
-   </svg>
+<h1>Expression Bank</h1>
+<p>为了获得表达式库 $\mathcal{D}'$，作者提出了两种方法：</p>
+<h2>Model-based Generation</h2>
+<p>就是让 Generator 以 beam search 的方式搜索 top-$K$ 个表达式，根据生成的表达式的值是否等于 ground truth 的值来确定标签 $y$ 的值。</p>
+<h2>Tree-based Disturbance</h2>
+<p>就是将原表达式转化为 AST 的形式，然后做以下四种操作产生新表达式：</p>
+<ul>
+    <li>Expand：将叶子节点展开为新的子树；</li>
+    <li>Edit：随机修改某一个节点；</li>
+    <li>Delete：删去一个叶子结点或替换为其兄弟节点；</li>
+    <li>Swap：交换一个运算符节点的左右子树。</li>
+</ul>
+<p>然后同样根据表达式的值来确定标签 $y$ 的值。计算表达式库的伪代码可以写为：</p>
+<div style="width: 80%">
+    <pre id="exp_bank" class="pseudocode">
+        \begin{algorithm}
+            \caption{Expression Bank}
+            \begin{algorithmic}
+                \FUNCTION{ExpBank}{$\mathcal{D}$}
+                    \STATE $\mathcal{D}'\gets\{(P,S,1)\}_{(P,S)\in\mathcal{D}}$
+                    \FOR{$(P,S)\in\mathcal{D}$}
+                        \STATE Generate top-$K$ expressions $\mathcal{S}_1$ for $P$ with beam search
+                        \STATE Get new expressions $\mathcal{S}_2$ by adding tree-based disturbance to $S$
+                        \STATE $\mathcal{S}\gets\mathcal{S}_1\cup\mathcal{S}_2$
+                        \FOR{$S'\in\mathcal{S}$}
+                            \STATE $y\gets 1$
+                            \IF{${\rm result}(S')\ne {\rm result}(S)$}
+                                \STATE $y\gets 0$
+                            \ENDIF
+                            \STATE $\mathcal{D}'\gets\mathcal{D}'\cup\{(P,S',y)\}$
+                        \ENDFOR
+                    \ENDFOR
+                    \STATE\RETURN $\mathcal{D}'$
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
 </div>
-<p>其中，红色、蓝色、黑色节点分别代表 max、min 和收益，自下而上分析，min 选择收益最小的，max 选择收益最大的，于是得到以下博弈树：</p>
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="500" height="180">
-        <!-- Lines & Texts -->
-        <line x1="250" y1="30"  x2="100" y2="80"  class="red-node" />
-        <line x1="100" y1="80"  x2="50"  y2="130" class="blue-node" />
-        <line x1="100" y1="80"  x2="100" y2="130" class="node" />
-        <line x1="100" y1="80"  x2="150" y2="130" class="node" />
-        
-        <line x1="250" y1="30"  x2="250" y2="80"  class="node" />
-        <line x1="250" y1="80"  x2="200" y2="130" class="blue-node" />
-        <line x1="250" y1="80"  x2="250" y2="130" class="node" />
-        <line x1="250" y1="80"  x2="300" y2="130" class="node" />
-        
-        <line x1="250" y1="30"  x2="400" y2="80"  class="node" />
-        <line x1="400" y1="80"  x2="350" y2="130" class="node" />
-        <line x1="400" y1="80"  x2="400" y2="130" class="blue-node" />
-        <line x1="400" y1="80"  x2="450" y2="130" class="node" />
-        
-        <!-- Circles & Texts -->
-        <circle cx="250" cy="30"  r="4" class="red-node"></circle>
-        <text    x="250"  y="20"  class="red-text">3</text>
-        <circle cx="100" cy="80"  r="4" class="blue-node"></circle>
-        <text    x="80"   y="80"  class="red-text">3</text>
-        <circle cx="250" cy="80"  r="4" class="blue-node"></circle>
-        <text    x="230"  y="80"  class="blue-text">2</text>
-        <circle cx="400" cy="80"  r="4" class="blue-node"></circle>
-        <text    x="420"  y="80"  class="blue-text">2</text>
+<script>render_pseudocode('exp_bank', reset=true);</script>
+<hr>
 
-        <circle cx="50"  cy="130" r="4" class="node"></circle>
-        <text    x="50"   y="160" class="blue-text">3</text>
-        <circle cx="100" cy="130" r="4" class="node"></circle>
-        <text    x="100"  y="160" class="text">12</text>
-        <circle cx="150" cy="130" r="4" class="node"></circle>
-        <text    x="150"  y="160" class="text">8</text>
-        <circle cx="200" cy="130" r="4" class="node"></circle>
-        <text    x="200"  y="160" class="blue-text">2</text>
-        <circle cx="250" cy="130" r="4" class="node"></circle>
-        <text    x="250"  y="160" class="text">4</text>
-        <circle cx="300" cy="130" r="4" class="node"></circle>
-        <text    x="300"  y="160" class="text">6</text>
-        <circle cx="350" cy="130" r="4" class="node"></circle>
-        <text    x="350"  y="160" class="text">14</text>
-        <circle cx="400" cy="130" r="4" class="node"></circle>
-        <text    x="400"  y="160" class="blue-text">2</text>
-        <circle cx="450" cy="130" r="4" class="node"></circle>
-        <text    x="450"  y="160" class="text">5</text>
-    </svg>
+<h1>Generator 和 Ranker 的联合训练</h1>
+<p>对 Generator 在 $\mathcal{D}$ 上做微调后，会进行 Generator 和 Ranker 的联合训练，训练过程其实就是 “生成表达式库 $\mathcal{D}'$”、“在 $\mathcal{D}'$ 上以联合损失 $J_{\rm GEN}+J_{\rm RANK}$ 优化 Generator 和 Ranker” 的交替进行。</p>
+<div style="width: 80%">
+    <pre id="generate_and_rank" class="pseudocode">
+        \begin{algorithm}
+            \caption{Generate \& Rank}
+            \begin{algorithmic}
+                \FUNCTION{GenerateAndRank}{$\theta_e,\theta_d,\theta_v,\mathcal{D}$}
+                    \FOR{some epochs}
+                        \STATE Fine-tuning Encoder $\theta_e$ and Decoder $\theta_d$ on $\mathcal{D}$ with generation loss $J_{\rm GEN}$
+                    \ENDFOR
+                    \REPEAT
+                        \STATE $\mathcal{D}'\gets$ \CALL{ExpBank}{$\mathcal{D}$}
+                        \STATE Train $\theta_e,\theta_d,\theta_v$ with respect to the joint loss $J_{\rm GEN}+J_{\rm RANK}$ on $\mathcal{D}'$
+                    \UNTIL{done}
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
 </div>
-<h2>评估函数 (Evaluation Function)</h2>
-<p>评估函数是用来评估当前状态对于一个玩家的好坏：它先为当前玩家评分，再为其对手评分，作差之后得到当前状态对于该玩家的好坏，其实就是上面博弈树叶子结点对应的值。</p>
-<h2>$\alpha$-$\beta$ 剪枝</h2>
-<p>如果一个状态被证明是不好的（不比已知的其他状态好），且对手可以导致该状态发生，那就没必要在对应的结点展开博弈树。例如在上面的博弈树中，采用 DFS 搜索博弈树时，先搜索最左边那棵子树，得到该结点的值为 3，再搜索中间的子树时，第一个叶子结点的值为 2，说明这个子树一定比左子树差，所以就没必要继续搜索，右子树中由于 14 先于 2 被搜索到，所以只有最后的 5 并没有被搜索。从而就可以得到如下的搜索路径（虚线代表该路径没有被搜索）：</p>
-<div style="text-align: center; margin-top: -1em;">
-    <svg width="500" height="180">
-        <!-- Lines & Texts -->
-        <line x1="250" y1="30"  x2="100" y2="80"  class="red-node" />
-        <line x1="100" y1="80"  x2="50"  y2="130" class="blue-node" />
-        <line x1="100" y1="80"  x2="100" y2="130" class="node" />
-        <line x1="100" y1="80"  x2="150" y2="130" class="node" />
-        
-        <line x1="250" y1="30"  x2="250" y2="80"  class="node" />
-        <line x1="250" y1="80"  x2="200" y2="130" class="blue-node" />
-        <line x1="250" y1="80"  x2="250" y2="130" class="dash" />
-        <line x1="250" y1="80"  x2="300" y2="130" class="dash" />
-        
-        <line x1="250" y1="30"  x2="400" y2="80"  class="node" />
-        <line x1="400" y1="80"  x2="350" y2="130" class="node" />
-        <line x1="400" y1="80"  x2="400" y2="130" class="blue-node" />
-        <line x1="400" y1="80"  x2="450" y2="130" class="dash" />
-        
-        <!-- Circles & Texts -->
-        <circle cx="250" cy="30"  r="4" class="red-node"></circle>
-        <text    x="250"  y="20"  class="red-text">3</text>
-        <circle cx="100" cy="80"  r="4" class="blue-node"></circle>
-        <text    x="80"   y="80"  class="red-text">3</text>
-        <circle cx="250" cy="80"  r="4" class="blue-node"></circle>
-        <text    x="230"  y="80"  class="blue-text">2</text>
-        <circle cx="400" cy="80"  r="4" class="blue-node"></circle>
-        <text    x="420"  y="80"  class="blue-text">2</text>
+<script>render_pseudocode('generate_and_rank');</script>
+<hr>
 
-        <circle cx="50"  cy="130" r="4" class="node"></circle>
-        <text    x="50"   y="160" class="blue-text">3</text>
-        <circle cx="100" cy="130" r="4" class="node"></circle>
-        <text    x="100"  y="160" class="text">12</text>
-        <circle cx="150" cy="130" r="4" class="node"></circle>
-        <text    x="150"  y="160" class="text">8</text>
-        <circle cx="200" cy="130" r="4" class="node"></circle>
-        <text    x="200"  y="160" class="blue-text">2</text>
-        <circle cx="250" cy="130" r="4" class="node"></circle>
-        <text    x="250"  y="160" class="text">4</text>
-        <circle cx="300" cy="130" r="4" class="node"></circle>
-        <text    x="300"  y="160" class="text">6</text>
-        <circle cx="350" cy="130" r="4" class="node"></circle>
-        <text    x="350"  y="160" class="text">14</text>
-        <circle cx="400" cy="130" r="4" class="node"></circle>
-        <text    x="400"  y="160" class="blue-text">2</text>
-        <circle cx="450" cy="130" r="4" class="node"></circle>
-        <text    x="450"  y="160" class="text">5</text>
-    </svg>
-</div>
-<p>$\alpha$-$\beta$ 剪枝的具体流程（传递两个值 $\alpha,\beta$ 什么的）懒得写了，反正大致操作就是像上面这样的。</p>
+<h1>个人看法</h1>
+<p>论文要解决的问题是 “数学表达式中的小错误就会导致整个表达式错误”，为什么加了一个 Ranker 并使用联合损失来训练 Generator 和 Ranker 就可以解决这个问题？</p>

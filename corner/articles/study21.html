@@ -1,174 +1,26 @@
-<h1>完全信息静态博弈的定义</h1>
-<p>
-    在一个 $N$ 人的博弈中，玩家 $i$ 的策略空间为 $A_i$，收益函数为 $u_i:A_1\times\cdots\times A_n\to\mathbb{R}$，则：
-    <ul>
-        <li>“完全信息” 指的是收益函数在所有玩家之间是共同知识；</li>
-        <li>“静态” 指的是所有玩家同时做策略选择，并且所有玩家都知道对手的策略空间。</li>
-    </ul>
-    一个完全信息静态博弈可以形式化为：
-    $$G=\{N,\{A_i\}_{i=1}^N,\{u_i\}_{i=1}^N\}$$
-    此外，对于玩家 $i$，分别定义结果策略 $a$ 和对手策略 $a_{-i}$ 为：
-    $$a=(a_1,a_2,\cdots,a_n)$$
-    $$a_{-i}=(a_1,\cdots,a_{i-1},a_{i+1},\cdots,a_n)$$
-    从而有 $a=(a_i,a_{-i})$，静态博弈也叫策略式博弈 (Strategy Game)。
-</p>
-<hr>
-
-<h1>纳什均衡 (Nash Equilibrium)</h1>
-<p>
-    在博弈 $G=\{N,\{A_i\}_{i=1}^N,\{u_i\}_{i=1}^N\}$ 中，博弈结果 $a^*=(a_1^*,a_2^*,\cdots,a_n^*)$ 被称为是博弈 $G$ 的一个纳什均衡解，如果 $\forall 1\leqslant i\leqslant N$：
-    $$\forall a_i\in A_i,u_i(a_i^*,a_{-i}^*)\geqslant u_i(a_i,a_{-i}^*)$$
-    即 $a_i^*$ 是最优化问题 $\max_{a_i\in A_i}u_i(a_i,a_{-i}^*)$ 的解。
-</p>
-<h2>求解纳什均衡</h2>
-<p>
-    定义玩家 $i$ 关于对手策略 $a_{-i}$ 的最优反应为：
-    $$B_i(a_{-i})=\{a_i\in A_i\mid \forall a_i'\in A_i,u_i(a_i,a_{-i})\geqslant u_i(a_i',a_{-i})\}$$
-    同时满足所有玩家最优反应的博弈结果就是该博弈的纳什均衡解，即 $\forall 1\leqslant i\leqslant N,a_i^*\in B_i(a_{-i}^*)$。
-</p>
-<p>而对于左边的收益矩阵，可以使用标记法来确定纳什均衡：对于玩家 $1$，若玩家 $2$ 选择 $a_{21}$，则玩家 $1$ 的最优反应为 $B_1(a_{21})=\{a_{12}\}$，所以在 $(a_{12},a_{21})$ 标记玩家 $1$；同理还要在 $(a_{11},a_{22}),(a_{12},a_{22}),(a_{11},a_{23})$ 处标记玩家 $1$，得到中间的表格。然后对于玩家 $2$ 进行同样的操作，得到右边的表格。最终标记了所有玩家的 $(a_{11},a_{23})$ 就是该博弈的纳什均衡。如果不存在就要考虑其他方法，例如混合策略纳什均衡。</p>
-<div style="text-align: center;">
-    <div id="study21-table-1" style="display: inline-block; margin-right: 20px;"></div>
-    <div id="study21-table-2" style="display: inline-block; margin-right: 20px;"></div>
-    <div id="study21-table-3" style="display: inline-block"></div>
+<h1>Actor-Critic</h1>
+<p>Actor-Critic 方法融合了 Value-based 和 Policy-based，其中 Actor 需要根据策略采取让 Critic 满意的动作，Critic 需要准确估计出 Actor 所采取的动作的价值。假设 Actor 为 $\pi_\theta$，Critic 为 $V_\phi$，其中 $\theta$ 和 $\phi$ 为参数，则基础的 Actor-Critic 算法就是在 Policy Gradient 上的延伸：</p>
+<div style="width: 80%">
+    <pre id="actor-critic" class="pseudocode">
+        \begin{algorithm}
+            \caption{Actor-Critic Algorithm}
+            \caption{Actor-Critic}
+            \begin{algorithmic}
+                \FOR{$t=1\to T$}
+                    \STATE Sample action $a_t$ from $\pi_\theta(a_t\mid s_t)$ and execute it
+                    \STATE Observe reward $r_t$ and next state $s_{t+1}$
+                    
+                    \STATE Estimate value $V_\phi(s_t)$ and $V_\phi(s_{t+1})$
+                    \STATE Compute TD error: $\delta_t=r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
+                    \STATE $\phi\gets\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$
+                    
+                    \STATE Compute policy gradient: $\nabla_\theta J(\theta) = \delta_t \nabla_\theta \log \pi_\theta(a_t | s_t)$
+                    \STATE $\theta\gets\theta+\alpha_\theta\nabla_\theta J(\theta)$
+                    
+                    \STATE $s_t\gets s_{t+1}$
+                \ENDFOR
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
 </div>
-
-<hr>
-
-<h1>古诺模型</h1>
-<p>有 $N$ 个生产同质产品的企业，$q_i$ 表示企业 $i$ 的产量，市场总供给 $Q=\sum_{i=1}^nq_i$，市场价 $P(Q)=a-bQ$，企业 $i$ 生产 $q_i$ 的总成本 $C_i(q_i)=cq_i$，且生产每单位产品的边际成本为一个小于 $a$ 的常数 $c$，所有企业同时进行产量决策。</p>
-<p>
-    首先求解每个企业的最优反应，若企业的利润就是其收益，那么企业 $i$ 的收益为：
-    $$u_i(Q)=q_i(P(Q)-c)=q_i(a-bQ-c)$$
-    每个企业 $i$ 都想要最大化其收益 $u_i$，所以：
-    $$\dfrac{\partial u_i(Q)}{\partial q_i}=a-bQ-c-bq_i$$
-    令偏导为零，得到 $q_i=(a-bQ-c)/b$ 对所有企业 $i$ 都成立，那么所有企业的产量都相等，所以 $Q=Nq_i$，代入上式得到：
-    $$q_i=\dfrac{a-c}{(N+1)b}$$
-    所以古诺博弈的纳什均衡解即为：
-    $$\left(\dfrac{a-c}{(N+1)b},\dfrac{a-c}{(N+1)b},\cdots,\dfrac{a-c}{(N+1)b}\right)$$
-</p>
-<hr>
-
-<h1>混合策略 (Mixed Strategy)</h1>
-<h2>纯策略 (Pure Strategy)</h2>
-<p>玩家 $i$ 的策略空间为 $A_i=\{a_{i1},\cdots,a_{iK}\}$，则$a\in A_i$ 称为 $i$ 的纯策略。</p>
-<h2>混合策略</h2>
-<p>
-    混合策略就是给每个纯策略分配一个概率，$A_i$ 上的概率分布 $\Delta(A_i)$ 定义为：
-    $$\Delta(A_i)=\left\{p_i=(p_{i1},p_{i2},\cdots,p_{iK}),\forall 1\leqslant k\leqslant K,0\leqslant p_{ik}\leqslant 1,\sum_{k=1}^Kp_{ik}=1\right\}$$
-    则混合策略 $p_i=(p_{i1},p_{i2},\cdots,p_{iK})\in\Delta(A_i)$，其中 $p_{ik}$ 表示玩家 $i$ 选择策略 $a_{ik}$ 的概率。
-</p>
-<h2>期望收益</h2>
-<p>对于混合策略博弈结果 $p=(p_1,p_2,\cdots,p_n)$，玩家 $i$ 的期望收益为：$$U_i(p)=\sum_{a\in A}p(a)u_i(a)$$</p>
-<h2>混合策略博弈的形式化</h2>
-<p>混合策略博弈可以形式化为：$$G=\{N,\{\Delta(A_i)\}_{i=1}^N,\{U_i\}_{i=1}^N\}$$</p>
-<h2>混合策略纳什均衡</h2>
-<p>
-    混合策略博弈结果 $p=(p_1,p_2,\cdots,p_N)$ 是混合策略纳什均衡，如果 $\forall 1\leqslant i\leqslant N$：
-    $$\forall p_i'\in\Delta(A_i),u_i(p_i,p_{-i})\geqslant u_i(p_i',p_{-i})$$
-    类似地，玩家 $i$ 的最优反应可以定义为：
-    $$B_i(p_{-i})=\{p_i\in\Delta(A_i)\mid \forall p_i'\in \Delta(A_i),u_i(p_i,p_{-i})\geqslant u_i(p_i',p_{-i})\}$$
-    且 $p$ 是混合策略纳什均衡，如果 $\forall 1\leqslant i\leqslant N,p_i^*\in B_i(p_{-i}^*)$。
-</p>
-<h2>求解混合策略纳什均衡</h2>
-<p>
-    玩家 $i$ 选择任意一种纯策略的期望收益是相同的：对于下面的收益矩阵，对于玩家 $1$，选择 $a_{11}$ 的期望收益等于其选择 $a_{12}$ 的期望收益，于是：
-    $$\left\lbrace\begin{array}{ll}
-    2p_{11}+5p_{12}=4p_{11}+2p_{12}\\
-    p_{11}+p_{12}=1
-    \end{array}\right.\implies p_1=(0.6,0.4)$$
-    同理 $p_2=(0.75,0.25)$。所以 $p=\big((0.6,0.4),(0.75,0.25)\big)$ 就是一个混合策略纳什均衡。
-</p>
-<div id="study21-table-4"></div>
-<hr>
-
-<h1>占优策略 (Dominant Strategy)</h1>
-<p>
-    设 $a_i,a_i'\in A_i$ 是玩家 $i$ 的两种纯策略，定义：
-    <ul>
-        <li><b>严格占优于</b>：$a_i$ 严格占优于 $a_i'$ 如果：$$\forall a_{-i}\in A_{-i},u_i(a_i,a_{-i})>u_i(a'_i,a_{-i})$$</li>
-        <li><b>弱占优于</b>：$a_i$ 弱占优于 $a_i'$ 如果：$$\forall a_{-i}\in A_{-i},u_i(a_i,a_{-i})\geqslant u_i(a'_i,a_{-i})\ \&\ \exists a_{-i}\in A_{-i},u_i(a_i,a_{-i})>u_i(a'_i,a_{-i})$$</li>
-        <li><b>严格 / 弱占优策略</b>：$a_i$ 是严格 / 弱占优策略如果 $a_i$ 严格 / 弱占优于玩家 $i$ 的其他所有策略。</li>
-    </ul>
-</p>
-<h2>占优策略均衡</h2>
-<p>每个玩家的占优策略构成的博弈结果称为占优策略均衡，它属于纳什均衡，且它易求解但可能不存在。</p>
-<h2>被占优策略 (Dominated Strategy)</h2>
-<p>若纯策略 $a_i$ 严格 / 弱占优于 $a_i'$，则 $a_i'$ 被 $a_i$ 严格 / 弱占优。重复消除被占优策略可以求解占优策略均衡，且可以简化混合策略纳什均衡的求解（被严格占优的策略在混合策略纳什均衡中的概率为 $0$）。</p>
-<hr>
-
-<h1>二人零和博弈 (Two-Players Zero-Sum Game)</h1>
-<p>顾名思义，二人零和博弈只有两个玩家，zero-sum 的意思是 $\forall a\in A_1\times A_2,u_1(a)+u_2(a)=0$，即在任何博弈结果上，两个玩家的收益之和为零，这样在收益矩阵上就可以只记录一个玩家的收益。</p>
-<h2>最大化最小原则 (Max-Min)</h2>
-<p>
-    有了零和的约束，求解纳什均衡会更简洁，首先将收益矩阵都转化为 $u$ 的形式，即 $u_1=u,u_2=-u$，从而两个玩家的目标分别为：
-    $$\left\lbrace\begin{array}{ll}
-    \max\limits_{a_1\in A_1}\min\limits_{a_2\in A_2}u(a_1,a_2)\\
-    \max\limits_{a_2\in A_2}\min\limits_{a_1\in A_1}\left(-u(a_1,a_2)\right)
-    \end{array}\right.\implies\left\lbrace\begin{array}{ll}
-    \max\limits_{a_1\in A_1}\min\limits_{a_2\in A_2}u(a_1,a_2)\\
-    -\min\limits_{a_2\in A_2}\max\limits_{a_1\in A_1}u(a_1,a_2)
-    \end{array}\right.$$
-    而前面的负号不影响策略的取值，例如下面左边的收益矩阵：
-</p>
-<div style="text-align: center;">
-    <div id="study21-table-5" style="display: inline-block; margin-right: 20px;"></div>
-    <div id="study21-table-6" style="display: inline-block"></div>
-</div>
-<ul>
-    <li>对于玩家 $1$，有 $\max\limits_{a_1\in A_1}\min\limits_{a_2\in A_2}u(a_1,a_2)=\max\limits_{a_1\in A_1}\{1,1,3\}=3$，其中 $a_1=a_{13},a_2=a_{22}$；</li>
-    <li>对于玩家 $2$，有 $\min\limits_{a_2\in A_2}\max\limits_{a_1\in A_1}u(a_1,a_2)=\min\limits_{a_2\in A_2}\{4,6,6\}=4$，其中 $a_1=a_{13},a_2=a_{21}$。</li>
-</ul>
-<p><b>引理</b>：对于有限二人零和博弈，有：$$\min_{a_2\in A_2}\max_{a_1\in A_2}u(a_1,a_2)\geqslant\max_{a_1\in A_1}\min_{a_2\in A_2}u(a_1,a_2)$$</p>
-<h2>二人零和博弈的纳什均衡</h2>
-<p>
-    在一个二人零和博弈中，两个玩家分别选择了 $a_1^*,a_2^*$，其中：
-    $$a_1^*\in\mathop{\arg\max}_{a_1\in A_1}\min_{a_2\in A_2}u(a_1,a_2),\ a_2^*\in\mathop{\arg\min}_{a_2\in A_2}\max_{a_1\in A_1}u(a_1,a_2)$$
-    则 $a^*=(a_1^*,a_2^*)$ 是该博弈的一个纳什均衡当且仅当：
-    $$\max_{a_1\in A_1}\min_{a_2\in A_2}u(a_1,a_2)=\min_{a_2\in A_2}\max_{a_1\in A_1}u(a_1,a_2)$$
-    例如在上面右边的博弈中，$(a_{12},a_{22})$ 是纳什均衡，而左边的博弈中 $(a_{13},a_{21})$ 和 $(a_{13},a_{22})$ 都不是纳什均衡。
-</p>
-<h2>二人零和博弈的混合策略纳什均衡</h2>
-<p>
-    记 $A_1=\{a_{11},\cdots,a_{1m}\},A_2=\{a_{21},\cdots,a_{2n}\},\Delta_i=\Delta(A_i)$，且收益矩阵 $M\in\mathbb{R}^{m\times n},M_{ij}=u(a_{1i},a_{2j})$，对于混合策略 $p_1,p_2$，玩家 $1$ 的期望收益函数为：
-    $$U(p_1,p_2)=\sum_{i=1}^m\sum_{j=1}^np_{1i}p_{2j}u(a_{1i},a_{2j})=p_1Mp_2^{\rm T}$$
-    所以两个玩家的目标分别为：
-    $$\max_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}p_1Mp_2^{\rm T},\ \min_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}p_1Mp_2^{\rm T}$$
-    根据<a href="https://en.wikipedia.org/wiki/Minimax_theorem" target="_blank">定理</a>，有：
-    $$\max_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}p_1Mp_2^{\rm T}=\min_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}p_1Mp_2^{\rm T}$$
-    所以二人零和博弈的混合策略纳什均衡 $p^*=(p_1^*,p_2^*)$ 一定存在，其中：
-    $$p_1^*\in\mathop{\arg\max}_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}U(p_1,q_2),\ p_2^*\in\mathop{\arg\min}_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}U(p_1,p_2)$$
-</p>
-
-<script>
-    append_elem('study21-table-1', create_game_table([
-        ['2, 0',     '1, 1',     '4, 2'],
-        ['3, 1',     '1, 2',     '2, 3'],
-        ['1, 3',     '0, 2',     '3, 0'],
-    ]));
-    append_elem('study21-table-2', create_game_table([
-        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, 2'],
-        ['<u>3</u>, 1', '<u>1</u>, 2', '2, 3'],
-        ['1, 3',        '0, 2',        '3, 0'],
-    ]));
-    append_elem('study21-table-3', create_game_table([
-        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, <u>2</u>'],
-        ['<u>3</u>, 1', '<u>1</u>, 2', '2, <u>3</u>'],
-        ['1, <u>3</u>', '0, 2',        '3, 0'],
-    ]));
-    append_elem('study21-table-4', create_game_table([
-        ['1, 2', '0, 4'],
-        ['0, 5', '3, 2'],
-    ], [], [], mixed=true));
-    append_elem('study21-table-5', create_game_table([
-        [2, 6, 1],
-        [3, 1, 4],
-        [4, 3, 6]
-    ]));
-    append_elem('study21-table-6', create_game_table([
-        [1, 1, 8],
-        [5, 2, 4],
-        [7, 0, 0]
-    ]));
-    
-</script>
+<script>render_pseudocode('actor-critic', reset=true);</script>
