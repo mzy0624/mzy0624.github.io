@@ -1,9 +1,9 @@
 <h1>$Q$-Learning</h1>
 <p>
-    在状态 $s$ 下，$Q$-Learning 算法首先从 $Q$ 中用行为策略（例如 $\epsilon$-greedy）选取并执行动作 $a$，观察奖励 $r$ 和新的状态 $s'$，再更新 $Q$：
+    在 $t$ 时刻，状态为 $s_t$，$Q$-Learning 算法首先从 $Q$ 中用行为策略（例如 $\epsilon$-greedy）选取并执行动作 $a_t$，观察奖励 $r_t$ 和新的状态 $s_{t+1}$，再更新 $Q$：
     \begin{align*}
-        Q(s,a)=&\ Q(s,a)+\alpha\left(r+\gamma\max_{a'}Q(s',a')-Q(s,a)\right)\\
-              =&\ (1-\alpha)Q(s,a)+\alpha\left(r+\gamma\max_{a'}Q(s',a')\right)
+        Q(s_t,a_t)=&\ Q(s_t,a_t)+\alpha\left(r_t+\gamma\max_{a}Q(s_{t+1},a)-Q(s_t,a_t)\right)\\
+              =&\ (1-\alpha)Q(s_t,a_t)+\alpha\left(r_t+\gamma\max_{a}Q(s_{t+1},a)\right)
     \end{align*}
 </p>
 <div style="width: 70%">
@@ -11,12 +11,14 @@
         \begin{algorithm}
             \caption{$Q$-Learning}
             \begin{algorithmic}
-                \REPEAT
-                    \STATE Choose $a$ from $s$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-                    \STATE Take action $a$, observe reward $r$ and the next state $s'$
-                    \STATE $Q(s,a)\gets Q(s,a)+\alpha(r+\gamma\max_{a'}Q(s',a')-Q(s,a))$
-                    \STATE $s\gets s'$
-                \UNTIL{max iterations}
+                \FOR{$t=1\to T$}
+                    \STATE Choose $a_t$ from $s_t$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+                    \STATE Take action $a_t$, observe reward $r_t$ and the next state $s_{t+1}$
+                    \IF{done}
+                        \STATE\BREAK
+                    \ENDIF
+                    \STATE $Q(s_t,a_t)\gets Q(s_t,a_t)+\alpha(r_t+\gamma\max_{a}Q(s_{t+1},a)-Q(s_t,a_t))$
+                \ENDFOR
             \end{algorithmic}
         \end{algorithm}
     </pre>
@@ -26,10 +28,10 @@
 
 <h1>SARSA (State-Action-Reward-State-Action)</h1>
 <p>
-    在状态 $s$ 下，SARSA 算法首先基于 $\epsilon$-greedy 选取并执行动作 $a$，观察奖励 $r$ 和新的状态 $s'$。在新的状态下同样基于 $\epsilon$-greedy 选择并执行动作 $a'$，然后更新 $Q$：
+    在时刻 $t$，状态为 $s_t$，SARSA 算法首先基于 $\epsilon$-greedy 选取并执行动作 $a_t$，观察奖励 $r_t$ 和新的状态 $s_{t+1}$。在新的状态下同样基于 $\epsilon$-greedy 选择并执行动作 $a_{t+1}$，然后更新 $Q$：
     \begin{align*}
-        Q(s,a)=&\ Q(s,a)+\alpha(r+\gamma Q(s',a')-Q(s,t))\\
-              =&\ (1-\alpha)Q(s,a)+\alpha(r+\gamma Q(s',a'))
+        Q(s_t,a_t)=&\ Q(s_t,a_t)+\alpha(r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t))\\
+              =&\ (1-\alpha)Q(s_t,a_t)+\alpha(r_t+\gamma Q(s_{t+1},a_{t+1}))
     \end{align*}
 </p>
 <div style="width: 70%">
@@ -37,14 +39,15 @@
         \begin{algorithm}
             \caption{SARSA}
             \begin{algorithmic}
-                \STATE Choose $a$ from $s$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-                \REPEAT
-                    \STATE Take action $a$, observe reward $r$ and the next state $s'$
-                    \STATE Choose $a'$ from $s'$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-                    \STATE $Q(s,a)\gets Q(s,a)+\alpha(r+\gamma Q(s',a')-Q(s,a))$
-                    \STATE $s\gets s'$
-                    \STATE $a\gets a'$
-                \UNTIL{max iterations}
+                \STATE Choose $a_1$ from $s_1$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+                \FOR{$t=1\to T$}
+                    \STATE Take action $a_t$, observe reward $r_t$ and the next state $s_{t+1}$
+                    \STATE Choose $a_{t+1}$ from $s_{t+1}$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+                    \IF{done}
+                        \STATE\BREAK
+                    \ENDIF
+                    \STATE $Q(s_t,a_t)\gets Q(s_t,a_t)+\alpha(r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t))$
+                \ENDFOR
             \end{algorithmic}
         \end{algorithm}
     </pre>
@@ -54,7 +57,7 @@
 <hr>
 
 <h1>On-policy 和 Off-policy</h1>
-<p>On-policy 是同策略，即行为策略和目标策略相同，而 off-policy 是异策略，即行为策略和目标策略不同。行为策略 (behavior policy) 是采样数据并选取动作的策略，而目标策略 (target policy) 是使用这些数据来更新的策略。</p>
+<p>On-policy 是同策略，即行为策略和目标策略相同，off-policy 是异策略，即行为策略和目标策略不同。行为策略 (behavior policy) 是采样数据并选取动作的策略，而目标策略 (target policy) 是使用这些数据来更新的策略。</p>
 <p>很容易看出，$Q$-Learning 算法是 off-policy 的，因为它的行为策略 ($\epsilon$-greedy) 和目标策略（贪心）不一致；而 SARSA 是 on-policy 的（行为策略和目标策略都是 $\epsilon$-greedy）。</p>
 <!-- <p>On-policy 的优点有：</p>
 <ul>
