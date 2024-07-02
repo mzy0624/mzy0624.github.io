@@ -1,5 +1,9 @@
 <h1>Actor-Critic</h1>
 <p>Actor-Critic 方法融合了 Value-based 和 Policy-based，其中 Actor 需要根据策略采取让 Critic 满意的动作，Critic 需要准确估计出 Actor 所采取的动作的价值。假设 Actor 为 $\pi_\theta$，Critic 为 $V_\phi$，其中 $\theta$ 和 $\phi$ 为参数，则基础的 Actor-Critic 算法就是在 Policy Gradient 上的延伸：</p>
+<p>
+    在时刻 $t$，状态为 $s_t$，首先 Actor 根据策略 $\pi_\theta$ 选择动作 $a_t$ 并执行，然后观察奖励 $r_t$ 和新的状态 $s_{t+1}$；Critic 估计 $s_t$ 和 $s_{t+1}$ 的价值，分别为 $V_\phi(s_t)$ 和 $V_\phi(s_{t+1})$。此时计算 TD 损失：
+    $$\delta_t=r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$$
+</p>
 <div style="width: 80%">
     <pre id="actor-critic" class="pseudocode">
         \begin{algorithm}
@@ -24,3 +28,11 @@
     </pre>
 </div>
 <script>render_pseudocode('actor-critic', reset=true);</script>
+<hr>
+
+<h1>Advantage Actor-Critic (A2C)</h1>
+
+<hr>
+
+<h1>Asynchronous Advantage Actor-Critic (A3C)</h1>
+<hr>
