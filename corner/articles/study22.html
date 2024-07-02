@@ -2,7 +2,7 @@
 <p>
     <a href="https://arxiv.org/abs/1707.06347" target="_blank">近端策略优化 (PPO)</a> 是目前非常流行的强化学习算法，由 OpenAI 在 2017 年提出。根据策略梯度的公式：
     $$\nabla_\theta\bar{R}_\theta=\mathbb{E}_{(s,a)\sim\pi_\theta}\left[A_\theta(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]$$
-    可知每次更新 $\theta$ 会导致原来采样的数据不能用了，需要重新采样，这就使得训练速度非常慢，这是 on-policy 方法的通病。
+    可知每次更新 $\theta$ 会导致原来采样的数据不能用了，需要重新采样，这就使得训练速度非常慢，这是 on-policy 算法的通病。
 </p>
 <h2>重要性采样 (Importance Sampling)</h2>
 <p>
@@ -47,7 +47,7 @@
     $$J^{\theta'}_{\rm PPO-clip}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\Big[\min\Big({\rm ratio}\cdot A_{\theta'}(s,a),{\rm clip\_ratio}\cdot A_{\theta'}(s,a)\Big)\Big]$$
     这其实就是在控制 $\pi_\theta(a\mid s)$ 和 $\pi_{\theta'}(a\mid s)$ 之间的差距不要太大。如果 $A_{\theta'}(s,a)>0$，说明在状态 $s$ 下动作 $a$ 的价值高于平均，那么最大化目标函数会导致 ${\rm ratio}$ 增大，但为了防止它们之间的差距过大，${\rm clip}$ 函数不会让其超过 $1+\epsilon$；反之类似。
 </p>
-
+<!-- 
 
 <div style="width: 80%">
     <pre id="PPO" class="pseudocode">
@@ -98,4 +98,4 @@
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('PPO', reset=true);</script>
+<script>render_pseudocode('PPO', reset=true);</script> -->

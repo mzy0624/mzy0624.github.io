@@ -1,7 +1,7 @@
 <h1>策略梯度 (Policy Gradient, PG)</h1>
-<p>$Q$-Learning 和 SARSA 都属于 Value-based 方法，即基于值（$Q$-table）的方法。但是强化学习的训练数据分布不稳定，因为 Value-based 的方法需要根据当前策略来估计，而策略是不断更新的，因此各个状态的访问频率存在很大的差别。</p>
+<p>$Q$-Learning 和 SARSA 都属于 Value-based 算法，即基于值（$Q$-table）的算法。但是强化学习的训练数据分布不稳定，因为 Value-based 的算法需要根据当前策略来估计，而策略是不断更新的，因此各个状态的访问频率存在很大的差别。</p>
 <p>
-    策略梯度属于 Policy-based 方法，即基于策略的方法。对于以 $\theta$ 为参数的策略 $\pi_\theta$，假设 $\tau=\{s_t,a_t\}_{t=1}^T$ 为轨迹，$R(\tau)=\sum_{t=1}^T\gamma^{t-1}r_t$ 为 $\tau$ 的回报，策略梯度的目标是优化策略，使得期望回报 $\bar{R}_\theta=\sum_\tau R(\tau)p_\theta(\tau)$ 最大化：
+    策略梯度属于 Policy-based 算法，即基于策略的算法。对于以 $\theta$ 为参数的策略 $\pi_\theta$，假设 $\tau=\{s_t,a_t\}_{t=1}^T$ 为轨迹，$R(\tau)=\sum_{t=1}^T\gamma^{t-1}r_t$ 为 $\tau$ 的回报，策略梯度的目标是优化策略，使得期望回报 $\bar{R}_\theta=\sum_\tau R(\tau)p_\theta(\tau)$ 最大化：
     \begin{align*}
         \nabla_\theta\bar{R}_\theta=&\ \sum_{\tau\sim p_\theta(\tau)} R(\tau)\nabla_\theta p_\theta(\tau)\\
                                    =&\ \sum_{\tau\sim p_\theta(\tau)} R(\tau)p_\theta(\tau)\nabla_\theta\log p_\theta(\tau)\\

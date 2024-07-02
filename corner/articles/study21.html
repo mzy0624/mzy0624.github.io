@@ -1,8 +1,16 @@
 <h1>Actor-Critic</h1>
-<p>Actor-Critic 方法融合了 Value-based 和 Policy-based，其中 Actor 需要根据策略采取让 Critic 满意的动作，Critic 需要准确估计出 Actor 所采取的动作的价值。假设 Actor 为 $\pi_\theta$，Critic 为 $V_\phi$，其中 $\theta$ 和 $\phi$ 为参数，则基础的 Actor-Critic 算法就是在 Policy Gradient 上的延伸：</p>
+<p>Actor-Critic 算法融合了 Value-based 和 Policy-based，其中 Actor 需要根据策略采取让 Critic 满意的动作，Critic 需要准确估计出 Actor 所采取的动作的价值。假设 Actor 为 $\pi_\theta$，Critic 为 $V_\phi$，其中 $\theta$ 和 $\phi$ 为参数，则基础的 Actor-Critic 算法就是在 Policy Gradient 上的延伸：</p>
 <p>
-    在时刻 $t$，状态为 $s_t$，首先 Actor 根据策略 $\pi_\theta$ 选择动作 $a_t$ 并执行，然后观察奖励 $r_t$ 和新的状态 $s_{t+1}$；Critic 估计 $s_t$ 和 $s_{t+1}$ 的价值，分别为 $V_\phi(s_t)$ 和 $V_\phi(s_{t+1})$。此时计算 TD 损失：
+    在时刻 $t$，状态为 $s_t$，首先 Actor 根据策略 $\pi_\theta$ 选择动作 $a_t$ 并执行，然后观察奖励 $r_t$ 和新的状态 $s_{t+1}$；Critic 估计 $s_t$ 和 $s_{t+1}$ 的价值，分别为 $V_\phi(s_t)$ 和 $V_\phi(s_{t+1})$。此时计算时序差分 (Temporal Difference, TD) 损失：
     $$\delta_t=r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$$
+    Actor 用策略梯度的方式更新即可，而 Critic 类似目标网络，使用梯度下降更新：
+    $$\mathcal{L}_\theta=\delta_t\log p_\theta(a_t\mid s_t),\quad\mathcal{L}_\phi=\dfrac{1}{2}\delta_t^2$$
+    Critic 将 $r_t+\gamma V_\phi(s_{t+1})$ 作为 TD 目标，不会产生梯度，所以：
+    $$\nabla_\theta\mathcal{L}_\theta=\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t),\quad\nabla_\phi\mathcal{L}_\phi=-\delta_t\nabla_\phi V_\phi(s_t)$$
+    优于 Actor 和 Critic 分别采用梯度上升和梯度下降的方式更新，所以参数的更新为：
+    $$\theta\gets\theta+\alpha_\theta\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t)$$
+    $$\phi\gets\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$$
+    Reinforce 算法基于采样，只能在序列结束后进行更新，这同时也要求任务具有有限的步数，而 Actor-Critic 算法则可以在每一步之后都进行更新，并且不对任务的步数做限制。用 Python 实现了 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/PolicyBased/ActorCritic.py" target="_blank">Actor-Critic 算法</a>。
 </p>
 <div style="width: 80%">
     <pre id="actor-critic" class="pseudocode">
@@ -19,9 +27,7 @@
                     \STATE $\phi\gets\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$
                     
                     \STATE Compute policy gradient: $\nabla_\theta J(\theta) = \delta_t \nabla_\theta \log \pi_\theta(a_t | s_t)$
-                    \STATE $\theta\gets\theta+\alpha_\theta\nabla_\theta J(\theta)$
-                    
-                    \STATE $s_t\gets s_{t+1}$
+                    \STATE $\theta\gets\theta+\alpha_\theta\nabla_\theta J(\theta)$                    
                 \ENDFOR
             \end{algorithmic}
         \end{algorithm}
@@ -31,8 +37,13 @@
 <hr>
 
 <h1>Advantage Actor-Critic (A2C)</h1>
-
+<p>
+    优势函数 $A(s,a)=Q(s,a)-V(s)$ 衡量了动作 $a$ 在状态 $s$ 下相对于其他动作的价值，在 A2C 中，会使用优势函数来更新策略：
+    $$\mathcal{L}_\theta=A(s_t,a_t)\log p_\theta(a_t\mid s_t)$$
+    但实际上好多 A2C 的实现都是用 TD 损失 $\delta_t$ 来估计优势函数 $A(s_t,a_t)$ 的值。
+</p>
 <hr>
 
 <h1>Asynchronous Advantage Actor-Critic (A3C)</h1>
+<p>Te Be Done</p>
 <hr>
