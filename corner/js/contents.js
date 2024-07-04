@@ -1,80 +1,133 @@
-let avatar  = new Img('./files/avatar.png', [['class', 'avatar']]);
-let tooltip = new Button('❓', [['class', 'tooltip-btn']]);
-let meaning = new BaseElement('span', '因为到哪都喜欢呆在没人的角落', [['class', 'tooltip-text']]);
-tooltip.elem.addEventListener('mouseenter', function() { setAttributesForElement(meaning, {'style' : 'visibility: visible;'}); });
-tooltip.elem.addEventListener('mouseleave', function() { setAttributesForElement(meaning, {'style' : 'visibility: hidden;'});  });
-let masthead_left = new Div([
-    avatar,
-    new Div([
-        new Head(['Haibara AI 的角落', tooltip, meaning]),
-        new Small('记录一些乱七八糟的东西，你居然能找到这里 o(￣▽￣)=b')
-    ], [['style', 'padding-left: 1em']])
-], [['class', 'masthead-left']]);
-append_elem('masthead', masthead_left);
-
-// masthead_right is in 'music.js'
+let information = {
+    'study'   : { 'title' : '📚 学习科研' },
+    'life'    : { 'title' : '🕒 生活 P 事'},
+    'tech'    : { 'title' : '🛠️ 技术相关'},
+    'mood'    : { 'title' : '🤔 心情随想'},
+    'hobbies' : { 'title' : '🧩 兴趣爱好'}
+}
 
 fetch('articles/top.txt').then(
     response => response.text()
 ).then(data => {
     let title = new Head('🔝 置顶简介');
     let contents = new Ul(data.split('\n'));
-    let button = new Button('详细介绍 >', [['class', 'readmore'], ['onclick', 'open_popup("full-top")']]);
+    let button = new Button('详细介绍 >', {'class' : 'readmore', 'onclick' : 'open_popup("full-top")'});
     full_article(
         'full-top',
-        new Head(new Div('🪪 详细介绍', [['class', 'title']])),
-        new Small(new Div('2099.12.31',  [['class', 'date']]))
+        new Head(new Div('🪪 详细介绍', {'class' : 'title'})),
+        new Small(new Div('2099.12.31',  {'class' : 'date'}))
     );
     append_elem('top', title, contents, button, new Hr());
 });
 
-let titles = {
-    'study'   : '📚 学习科研',
-    'life'    : '🕒 生活 P 事',
-    'tech'    : '🛠️ 技术相关',
-    'mood'    : '🤔 心情随想',
-    'hobbies' : '🧩 兴趣爱好',
-};
+async function process_articles(data, articles) {
+    for (let i = 0; i < data.length; i++) {
+        let article = article_json_parser(data[i]);
+        if (i >= 5) {
+            article.elem.classList.add('hidden');
+        }
+        articles.push(article);
+    }
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    MathJax.startup.promise.then(() => {
-        MathJax.typeset();
+async function process_item(item) {
+    let info = information[item];
+    let response = await fetch(`articles/${item}.json`);
+    let data = await response.json();
+    let title = new Head(info['title'], 1, {'id' : `${item}-title`});
+    info['article_count'] = data.length;
+    info['page_count'] = Math.ceil(data.length / 5);
+    info['cur_page'] = 1;
+    let articles = [];
+    await process_articles(data, articles);
+    await MathJax.typesetPromise([append_elem(item, title, new Ul(articles), new Hr())]);
+}
+
+async function fetch_articles() {
+    document.addEventListener('DOMContentLoaded', function() {
+        MathJax.startup.promise.then(() => {
+            MathJax.typeset();
+        });
     });
-});
+    // Parallel
+    const promises = [];
+    for (let item in information) {
+        promises.push(process_item(item));
+    }
+    await Promise.all(promises);
+}
 
-for (let item in titles) {
-    fetch(`articles/${item}.json`).then(
-        response => response.json()
-    ).then(data => {
-        let head    = new Head(titles[item]);
-        let article = new Ul(data.map(article_json_parser));
-        let count   = new Small(data.length, [['class', 'article_count']]);
-        let button  = new Button('查看全部 > ', [['class', 'showall']]);
+async function main() {
+    await fetch_articles();
+    // Pages
+    function show_page(item, page) {
+        let page_count = information[item]['page_count'];
+        if (page == -1) {
+            page = page_count;
+        }
+        if (page < 1 || page > page_count) {
+            return;
+        }
+        let articles = document.querySelector(`#${item} ul`);
+        let cur_page = information[item]['cur_page'];
+        for (let i = 1; i <= 5; i++) {
+            try {
+                let article = articles.querySelector(`li:nth-child(${i + (cur_page - 1) * 5})`);
+                article.classList.add('hidden');
+            }
+            catch (e) {}
+            try {
+                let article = articles.querySelector(`li:nth-child(${i + (page - 1) * 5})`);
+                article.classList.remove('hidden');
+            }
+            catch (e) {}
+        }
+        let cur_page_div = document.getElementById(`${item}-cur-page`);
+        cur_page_div.innerHTML = page;
+        information[item]['cur_page'] = page;
+    }
+    function prev_page(item) {
+        let cur_page = information[item]['cur_page'];
+        show_page(item, cur_page - 1);
+    }
+    function next_page(item) {
+        let cur_page = information[item]['cur_page'];
+        show_page(item, cur_page + 1);
+    }
+    for (let item in information) {
+        let info = information[item];
+        let article_count = new Small(info['article_count'], {'class' : 'article_count'});
+        let page_count = new Small(info['page_count'], {'class' : 'page_count'});
+        let cur_page = new Small(info['cur_page'], {'id' : `${item}-cur-page`, 'class' : 'cur_page'});
+        let first = new Button('首页',  {'class' : 'page_button'});
+        let prev  = new Button('上一页', {'class' : 'page_button'});
+        let next  = new Button('下一页', {'class' : 'page_button'});
+        let last  = new Button('末页',  {'class' : 'page_button'});
+        first.elem.addEventListener('click', function() { show_page(item, 1); });
+        prev.elem.addEventListener('click', function() { prev_page(item); });
+        next.elem.addEventListener('click', function() { next_page(item); });
+        last.elem.addEventListener('click', function() { show_page(item, -1); });
+        append_elem(`${item}-title`, first, prev, cur_page, page_count, article_count, next, last);
+    }
+    // Large Images
+    document.querySelectorAll('.large_image').forEach(span => {
+        let button = new Button('查看大图', {'class' : 'readmore'});
+        let img = new Div(
+            new Img(span.id, {'width' : '65%'}),
+            {'class' : 'image-container', 'style' : ['display: none', 'text-align: center']}            
+        );
         button.elem.addEventListener('click', function() {
-            const divs = this.parentElement;
-            const ul = divs.querySelector('ul');
-            if (this.textContent[0] === '查') {
-                ul.querySelectorAll('li').forEach(li => li.style.display = 'list-item');
-                this.textContent = '返回首页';
-                other_divs_display(divs.id, 'none');
+            if (img.elem.style.display === 'none' || img.elem.style.display === '') {
+                img.elem.style.display = 'block';
+                button.cover_innerhtml('收起');
             }
             else {
-                ul.querySelectorAll('li:nth-child(n+6)').forEach(li => li.style.display = 'none');
-                this.textContent = '查看全部 >';
-                other_divs_display(divs.id, 'block');
+                img.elem.style.display = 'none';
+                button.cover_innerhtml('查看大图');
             }
-            scroll_to_top();
         });
-        let _item = append_elem(item, head, article, count, button, new Hr());
-        MathJax.typesetPromise([_item]);    // Process MathJax manually
+        append_elem(span, button, img);
     });
 }
 
-// only for large images that in json files
-setTimeout(function () {
-    Array.from(
-        document.getElementsByClassName('large_image')
-    ).forEach(
-        span => add_large_image(span, span.id)
-    );
-}, 1000);
+main();

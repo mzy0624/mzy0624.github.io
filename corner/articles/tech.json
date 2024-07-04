@@ -1,5 +1,10 @@
 [
     {
+        "date"    : "2024.07.04",
+        "title"   : "🆕 更新了网页代码",
+        "content" : "把原来的 “查看全部” 变成了分页，加强了对异步函数的支持，更改了歌词存储（使用了 .lrc 格式）。"
+    },
+    {
         "date"    : "2024.06.21",
         "title"   : "🔣 把 网页的 MathJax 升级到 MathJax3 了",
         "content" : "<a href=\"https://docs.mathjax.org/en/v3.2-latest/upgrading/whats-new-3.0.html\" target=\"_blank\">MathJax3</a> 比 <a href=\"https://docs.mathjax.org/en/latest/upgrading/earlier/whats-new-2.7.html\" target=\"_blank\">MathJax2</a> 快多了，然后顺便更新了一下 <a href=\"https://github.com/AtomicVar/pseudocode.js\" target=\"_blank\">pseudocode.js</a> 的相关调用，以及网页的一些其他代码。"

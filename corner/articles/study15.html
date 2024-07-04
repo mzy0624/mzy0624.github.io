@@ -18,7 +18,7 @@
             ['Books',          '4.5%',          '2.23',    '85GB'],
             ['ArXiv',          '2.5%',          '1.06',    '92GB'],
             ['StackExchange',  '2.0%',          '1.03',    '78GB'],
-        ], [['class', 'table-with-border']], has_header=true)
+        ], {'class' : 'table-with-border'}, has_header=true)
     );
 </script>
 <p>Tokenizer 使用 BytePair Encoding (BPE) 算法实现，整个数据集大约包含 1.4T tokens。对于大部分数据，每个 token 在训练期间只使用一次，除了 Wikipedia 和 Books 使用两个 epochs。</p>
@@ -64,7 +64,7 @@
     function multi_row_table(table) {
         return table.map(row => row.map(item => {
             if (Array.isArray(item)) { // [item, r]
-                return [item[0], [['rowspan', String(item[1])]]];
+                return [item[0], {'rowspan' : String(item[1])}];
             }
             return item;
         }));
@@ -81,7 +81,7 @@
             [                                                 '13B'],
             [                                                 '34B',                         ['Y', 2],              ['$1.5\\times 10^{-4}$', 2]],
             [                                                 '70B'],
-        ]), [['class', 'table-with-border']], has_header=true)
+        ]), {'class' : 'table-with-border'}, has_header=true)
     );
 </script>
 
@@ -111,7 +111,7 @@
             [                                                     'Code',                                 '10%',            '0.05',   '859GB'],
             [                                                     'Natural Language<br>related to code',  '10%',            '0.35',   '78GB'],
             [                                                     'Natural Language',                     '5%',             '0.00',   '3.5TB'],
-        ]), [['class', 'table-with-border']], has_header=true)
+        ]), {'class' : 'table-with-border'}, has_header=true)
     );
 </script>
 

@@ -520,22 +520,63 @@ th {
     border-bottom-color: #52adc8;
 }
 
-.flexible ul li:nth-child(n+6) {
-    display: none;
+.page_button {
+    display: inline-block;
+    font-size: 12px;
+    color: #444;
+    margin-left: 1em;
+    padding: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.page_button:hover {
+    background-color: #ffffff;
+    border-bottom-color: #52adc8;
 }
 
 .article_count {
     font-size: 12px;
-    margin-left: 1.5em;
+    font-weight: normal;
 }
 
 .article_count::before {
-    content: '共 ';
+    content: '(共 ';
 }
 
 .article_count::after {
-    content: ' 篇文章 ';
+    content: ' 篇)';
 }
+
+.cur_page {
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 1em;
+}
+
+.cur_page::before {
+    content: '第 ';
+}
+
+.cur_page::after {
+    content: ' / ';
+}
+
+.page_count {
+    font-size: 12px;
+    font-weight: normal;
+    margin-right: 1em;
+}
+
+.page_count::after {
+    content: ' 页';
+}
+
+.hidden {
+    display: none;
+}
+
 
 .tooltip-text {
     visibility: hidden;
@@ -603,7 +644,6 @@ code {
 
 .lyrics {
     font-size: 12px;
-    color: #9c9c9c;
     width: 210px;
     text-align: center;
 }

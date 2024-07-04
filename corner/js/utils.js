@@ -41,15 +41,18 @@ function full_article(file, title, date) {
     fetch(`articles/${file}.html`).then(
         response => response.text()
     ).then(data => {
-        let close = new BaseElement('span', '', [['class', 'close-btn'], ['onclick', `close_popup('${file}')`]]);
-        let article = new Div(data, [['class', 'popup-content; full-article']]);
+        let close = new BaseElement('span', '', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
+        let article = new Div(data, {'class' : ['popup-content', 'full-article']});
         // let article = new Div(marked.parse(data), [['class', 'popup-content; full-article']]);
         let full = new Div(
-            new Div(
-                [title, close, date, new Br(), new Hr(), article],
-                [['class', 'popup'], ['onclick', 'event.stopPropagation();']]
-            ),
-            [['class', 'overlay'], ['id', file], ['onclick', `close_popup('${file}')`]]
+            new Div([title, close, date, new Br(), new Hr(), article], {
+                'class' : 'popup', 
+                'onclick' : 'event.stopPropagation();'
+            }), {
+                'class' : 'overlay',
+                'id' : file,
+                'onclick' : `close_popup('${file}')`
+            }
         );
         append_elem(document.body, full);
         execute_scripts_sync(article.elem).then(() => {
@@ -58,73 +61,29 @@ function full_article(file, title, date) {
     });
 }
 
-
 function article_json_parser(json) {
-    let date    = new Div(json.date,    [['class', 'date']]);
-    let title   = new Div(json.title,   [['class', 'title']]);
-    let content = new Div(json.content, [['class', 'article']]);
-    // execute_scripts(content.elem);
+    let date    = new Div(json.date,    {'class' : 'date'});
+    let title   = new Div(json.title,   {'class' : 'title'});
+    let content = new Div(json.content, {'class' : 'article'});
     execute_scripts_sync(content.elem);
     let article = [date, title, content];
     if ("file" in json) {
         let file = json.file;
-        let button_attributes = [['class', 'readmore']];
+        let button_attributes = {'class' : 'readmore'};
         let button_content = '阅读全文 >';
         if (file.includes('http')) {    // url
             button_content = new Anchor(file, button_content);
         }
         else {
-            let new_title = new Head(new Div(json.title, [['class', 'title']]));
-            let new_date  = new Small(new Div(json.date,  [['class', 'date']]));
+            let new_title = new Head(new Div(json.title, {'class' : 'title'}));
+            let new_date  = new Small(new Div(json.date, {'class' : 'date'}));
             full_article(file, new_title, new_date);
-            button_attributes.push(['onclick', `open_popup('${file}')`]);
+            button_attributes['onclick'] = `open_popup('${file}')`;
         }
         let button = new Button(button_content, button_attributes);
         article.push(button);
     }
-    return article;
-}
-
-function other_divs_display(id, display) {
-    let other_divs = document.querySelectorAll(`.flexible:not(#${id})`);
-    let top_div = document.getElementById('top');
-    other_divs.forEach(div => div.style.display = display);
-    top_div.style.display = display;
-}
-
-function scroll_to_top(time=0.3) {
-    let scroll_step = -window.scrollY / (time * 60);
-    let scroll_interval = setInterval(
-        function(){
-            if (window.scrollY != 0) {
-                window.scrollBy(0, scroll_step);
-            }
-            else {
-                clearInterval(scroll_interval);
-            }
-        },
-        1000 / 60
-    );
-}
-
-function add_large_image(target, img) {
-    let button = new Button('', [['class', 'readmore']]);
-    button.cover_innerhtml('查看大图');
-    img = new Div(
-        new Img(img, [['width', '65%']]),
-        [['class', 'image-container'], ['style', 'display:none; text-align:center']]
-    );
-    button.elem.addEventListener('click', function() {
-        if (img.elem.style.display === 'none' || img.elem.style.display === '') {
-            img.elem.style.display = 'block';
-            button.cover_innerhtml('收起');
-        }
-        else {
-            img.elem.style.display = 'none';
-            button.cover_innerhtml('查看大图');
-        }
-    });
-    append_elem(target, button, img);
+    return new Li(article);
 }
 
 function render_pseudocode(id, reset=false) {
@@ -154,22 +113,22 @@ function create_game_table(U, A=[], name=[], mixed=false, p=[]) {
     if (name.length == 0) {
         [1, 2].forEach(i => name.push(`Player ${i}`));
     }
-    let blank = ['', [['style', 'border: none;']]];
+    let blank = ['', {'style' : 'border: none;'}];
     let table = [];
-    table.push([blank, blank, [name[1], [
-        ['colspan', shape[1]], 
-        ['style', 'border: none; padding: 0']
-    ]]]);
+    table.push([blank, blank, [name[1], {
+        'colspan' : shape[1], 
+        'style' : ['border: none', 'padding: 0']
+    }]]);
     table.push([blank, blank].concat(A[1].map(a => [a, blank[1]])));
     for (let i = 0; i < shape[0]; i++) {
         let _ = [];
         if (i == 0) {
-            _.push([name[0], [
-                ['rowspan', shape[0]],
-                ['style', 'border: none; vertical-align: middle; padding: 0']
-            ]]);
+            _.push([name[0], {
+                'rowspan' : shape[0],
+                'style' : ['border: none', 'vertical-align: middle', 'padding: 0']
+            }]);
         }
         table.push(_.concat([[A[0][i], blank[1]]].concat(U[i])));
     }
-    return new Table(table, [['class', 'game-table']]);
+    return new Table(table, {'class' : 'game-table'});
 }

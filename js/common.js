@@ -34,33 +34,17 @@ let URLs = {
     '5X'        : [`Hurricane Long 5X`,                                                 'http://www.dhs-sports.com/malong/89d3c98d-55d1-5bc1-3472-918d14e86045.shtml'],
 };
 
-function getAnchor(url, attributes=[]) {
+function getAnchor(url, attributes={}) {
     if (url in URLs) {
         return new Anchor(URLs[url][1], URLs[url][0], attributes);
     }
     return url;
 }
 
-function processSingleAttributeValue(value) {
-    if (Array.isArray(value)) {
-        // [k, v]
-        return `${value[0]}: ${value[1]};`;
-    }
-    return value;
-}
-
-function processAttributeValues(values) {
-    if (Array.isArray(values)) {
-        // [value1, value2, ...]
-        return values.map(processSingleAttributeValue).join(' ');
-    }
-    return processSingleAttributeValue(values);
-}
-
-function setAttributesForElement(element, attrMap) {
+function setAttributesForElement(element, attributes) {
     /*
-        attrMap = {
-            key1 : [value1-1, value1-2, ...],
+        attributes = {
+            key1 : [value1-1, value1-2, ...],   // => [values...].join('; ')
             // or
             key2 : value2
         }
@@ -68,32 +52,22 @@ function setAttributesForElement(element, attrMap) {
     if (element instanceof BaseElement) {
         element = element.elem;
     }
-    for (let name in attrMap) {
-        values = attrMap[name];
-        element.setAttribute(name, processAttributeValues(values));
-    }
+    Object.entries(attributes).forEach(
+        ([key, value]) => element.setAttribute(
+            key, 
+            Array.isArray(value) 
+                ? value.join('; ')  // e.g., key == 'style'
+                                    //       value == ['margin-top: 1em', 'color: red']
+                                    //       ==> 'margin-top: 1em; color: red'
+                : value             // e.g., key == 'target'
+                                    //       value == '_blank'
+        )
+    );
 }
 
-function addAttribute(attributes, attribute) {
-    for (let attr of attributes) {
-        if (attr[0] == attribute[0]) {
-            attr[1] += ';' + attribute[1];
-            return attributes;
-        }
-    }
-    attributes.push(attribute);
-    return attributes;
-}
-
-function addAttributes(attributes, _attributes) {
-    for (let attr of _attributes) {
-        attributes = addAttribute(attributes, attr);
-    }
-    return attributes;
-}
 
 class BaseElement {
-    constructor(tagName, contents='', attributes=[]) {
+    constructor(tagName, contents='', attributes={}) {
         // create element
         this.elem = document.createElement(tagName);
         // contents
@@ -101,7 +75,7 @@ class BaseElement {
             this.append(contents);
         }
         // set attributes
-        attributes.forEach(attr => this.elem.setAttribute(attr[0], attr[1]));
+        setAttributesForElement(this, attributes);
     }
 
     prepend(contents) {
@@ -171,49 +145,52 @@ class Br extends BaseElement {
 }
 
 class Button extends BaseElement {
-    constructor(contents='', attributes=[]) {
+    constructor(contents='', attributes={}) {
         super('button', contents, attributes);
     }
 }
 
 class Center extends BaseElement {
-    constructor(contents='', attributes=[]) {
+    constructor(contents='', attributes={}) {
         super('center', contents, attributes);
     }
 }
 
 class Img extends BaseElement {
-    constructor(src, attributes=[]) {
-        super('img', '', [['src', src], ...attributes]);
+    constructor(src, attributes={}) {
+        attributes['src'] = src;
+        super('img', '', attributes);
     }
 }
 
 class Head extends BaseElement {
-    constructor(contents='', h=1, attributes=[]) {
+    constructor(contents='', h=1, attributes={}) {
         super(`h${h}`, contents, attributes);
     }
 }
 
 class Anchor extends BaseElement {
-    constructor(url, content, attributes=[], target="_blank") {
-        super('a', content, [['href', url], ['target', target], ...attributes]);
+    constructor(url, content, attributes={}, target="_blank") {
+        attributes['href'] = url;
+        attributes['target'] = target;
+        super('a', content, attributes);
     }
 }
 
 class Para extends BaseElement {
-    constructor(contents='', attributes=[]) {
+    constructor(contents='', attributes={}) {
         super('p', contents, attributes);
     }
 }
 
 class Small extends BaseElement {
-    constructor(contents='', attributes=[]) {
+    constructor(contents='', attributes={}) {
         super('small', contents, attributes);
     }
 }
 
 class Div extends BaseElement {
-    constructor(contents='', attributes=[]) {
+    constructor(contents='', attributes={}) {
         super('div', contents, attributes);
     }
 }
@@ -223,7 +200,7 @@ class Li extends BaseElement {
      * List <li>
      * new Li(contents:String)
      */
-    constructor(contents='', attributes=[]) {
+    constructor(contents='', attributes={}) {
         super('li', contents, attributes);
     }
 }
@@ -234,10 +211,25 @@ class List extends BaseElement {
     */
     constructor(type, contents, attributes) {
         super(type, '', attributes);
+        /**
+         * object
+         * [li1, l2, ...]
+         * [
+         *  [li1, a1],
+         *  [li2, a2],
+         *  ...
+         * ]
+         */
         if (!Array.isArray(contents)) {
             contents = [contents];
         }
-        this.append(contents.map(list => new Li(list)));
+        this.append(contents.map(function(li) {
+            if (li instanceof Li) {
+                return li;
+            }
+            return new Li(li);
+        }))
+        // this.append(contents.map(li => li instanceof Li ? li : new Li(li)));
     }
 }
 
@@ -246,7 +238,7 @@ class Ul extends List {
      * Unordered List <ul><li>...</li>...</ul>
      * new Ul(contents:String, [li1, li2, ...]/li)
      * */
-    constructor(contents=[], attributes=[]) {
+    constructor(contents=[], attributes={}) {
         super('ul', contents, attributes);
     }
 }
@@ -256,23 +248,21 @@ class Ol extends List {
      * Ordered List <ol><li>...</li>...</ol>
      * new Ol(contents:String, [li1, li2, ...]/li)
      * */
-    constructor(contents=[], attributes=[]) {
+    constructor(contents=[], attributes={}) {
         super('ol', contents, attributes);
     }
 }
 
 class Th extends BaseElement {
     // Table Header <th>
-    constructor(contents, attributes=[]) {
-        // attributes = addAttribute(attributes, ['style', 'vertical-align: top']);
+    constructor(contents, attributes={}) {
         super('th', contents, attributes);
     }
 }
 
 class Td extends BaseElement {
     // Table Datacell <td>
-    constructor(contents, attributes=[]) {
-        // attributes = addAttribute(attributes, ['style', 'vertical-align: top']);
+    constructor(contents, attributes={}) {
         super('td', contents, attributes);
     }
 }
@@ -283,7 +273,7 @@ class Tr extends BaseElement {
         new Tr([td1, td2, ...]) or
         new Tr([[td1, attr1], [td2, attr2]]) or mixed
     */
-    constructor(contents, attributes=[], data_type=Td) { // data_type: Td or Th
+    constructor(contents, attributes={}, data_type=Td) { // data_type: Td or Th
         super('tr', '', attributes);
         this.append(contents.map(data =>
             Array.isArray(data) ?
@@ -295,7 +285,7 @@ class Tr extends BaseElement {
 
 class Tbody extends BaseElement {
     // Table Body
-    constructor(contents, attributes=[], has_header=false) {
+    constructor(contents, attributes={}, has_header=false) {
         super('tbody', '', attributes);
         if (has_header == true) {
             this.append(new Tr(contents[0], [], Th));
@@ -318,7 +308,7 @@ class Table extends BaseElement {
      * A data may be a string, or an array: [td, attrs],
      * where attrs is the attributes of this data
      */
-    constructor(contents, attributes=[], has_header=false) {
+    constructor(contents, attributes={}, has_header=false) {
         super('table', '', attributes);
         this.append(new Tbody(contents, attributes, has_header=has_header));
     }

@@ -2,7 +2,7 @@ class Span extends Div {
     /**
      * A button with a spanable list
      */
-    constructor(contents='', lists=[], attributes=[]) {
+    constructor(contents='', lists=[], attributes={}) {
         super(contents, attributes);
         this.lists = lists;
         if (contents != '') {
@@ -12,7 +12,7 @@ class Span extends Div {
     
     setSpan() {
         let lists = this.lists;
-        lists = new Ul(lists, [['class', 'hidden']]);
+        lists = new Ul(lists, {'class' : 'hidden'});
         let small = new Small(lists);
         if (this.lists.length > 0) {
             let button = this.getButton();
@@ -30,10 +30,10 @@ class Span extends Div {
         button.id = 'toggleButton';
         setAttributesForElement(button, {
             'style' : [
-                ['margin-left',     '5px'],
-                ['height',          '25px'],
-                ['vertical-align',  'middle'],
-                ['transition',      'all 0.3s']
+                'margin-left: 5px',
+                'height: 25px',
+                'vertical-align: middle',
+                'transition: all 0.3s'
             ],
             'viewBox' : '0 0 10 10',
         });

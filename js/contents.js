@@ -67,22 +67,22 @@ let main_items = {
     // 'Awards and Honors':    new Ul(['QAQ']),
     'Teaching Assistants':  TAs,
     'Skills and Hobbies':   new Table([[
-                                [Skills,  [['style', 'vertical-align: top']]],
-                                [Hobbies, [['style', 'vertical-align: top']]]
+                                [Skills,  {'style' : 'vertical-align: top'}],
+                                [Hobbies, {'style' : 'vertical-align: top'}]
                             ]]),
     'Correspondence':       correspondence
 }
 
 let avatar = new Div(
-    new Img('./images/avatar.png', [['width', '250']]),
-    [['style', 'position: relative;']]
+    new Img('./images/avatar.png', {'width' : '250'}),
+    {'style' : 'position: relative;'}
 );
 
 let socials = new Small([
-    getAnchor('github',   [['style', 'text-decoration: none'], ['title', 'GitHub']]),
-    getAnchor('zhihu',    [['style', 'text-decoration: none'], ['title', 'Zhihu']]),
-    getAnchor('bilibili', [['style', 'text-decoration: none'], ['title', 'Bilibili']]),
-    getAnchor('ins',      [['style', 'text-decoration: none'], ['title', 'Instagram']])
+    getAnchor('github',   {'style' : 'text-decoration: none', 'title' : 'GitHub'}),
+    getAnchor('zhihu',    {'style' : 'text-decoration: none', 'title' : 'Zhihu'}),
+    getAnchor('bilibili', {'style' : 'text-decoration: none', 'title' : 'Bilibili'}),
+    getAnchor('ins',      {'style' : 'text-decoration: none', 'title' : 'Instagram'})
 ]);
 
 let lamda_nju = new Div([getAnchor('lamdalogo'), new Br(), getAnchor('njulogo')]);
@@ -105,7 +105,7 @@ let information = new Div([
 
 let information_table = new Table([[
     avatar,
-    [information, [['style', 'padding: 0 2em']]],
+    [information, {'style' : 'padding: 0 2em'}],
     lamda_nju
 ]]);
 
