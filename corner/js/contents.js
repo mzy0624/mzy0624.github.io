@@ -6,19 +6,53 @@ let information = {
     'hobby' : { 'title' : '🧩 兴趣爱好'}
 }
 
-fetch('articles/top.txt').then(
-    response => response.text()
-).then(data => {
-    let title = new Head('🔝 置顶简介');
-    let contents = new Ul(data.split('\n'));
-    let button = new Button('详细介绍 >', {'class' : 'readmore', 'onclick' : 'open_popup("full-top")'});
-    full_article(
-        'full-top',
-        new Head(new Div('🪪 详细介绍', {'class' : 'title'})),
-        new Small(new Div('2099.12.31',  {'class' : 'date'}))
-    );
-    append_elem('top', title, contents, button, new Hr());
-});
+function full_article(file, title, date) {
+    fetch(`articles/${file}.html`).then(
+        response => response.text()
+    ).then(data => {
+        let close = new Span('❌', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
+        let article = new Div(data, {'class' : ['popup-content', 'full-article']});
+        let full = new Div(
+            new Div([title, close, date, new Br(), new Hr(), article], {
+                'class' : 'popup', 
+                'onclick' : 'event.stopPropagation();'
+            }), {
+                'class' : 'overlay',
+                'id' : file,
+                'onclick' : `close_popup('${file}')`
+            }
+        );
+        append_elem(document.body, full);
+        execute_scripts_sync(article.elem).then(() => {
+            MathJax.typesetPromise([title.elem, article.elem]); // 手动 typeset 新插入的内容
+        });
+    });
+}
+
+function article_json_parser(json) {
+    let date    = new Div(json.date,    {'class' : 'date'});
+    let title   = new Div(json.title,   {'class' : 'title'});
+    let content = new Div(json.content, {'class' : 'article'});
+    execute_scripts_sync(content.elem);
+    let article = [date, title, content];
+    if ("link" in json) {
+        article.push(new Button(
+            new Anchor(json.link, '跳转链接 >'),
+            {'class' : 'readmore'}
+        ));
+    }
+    if ("file" in json) {
+        let file = json.file;
+        let new_title = new Head(new Div(json.title, {'class' : 'title'}));
+        let new_date  = new Small(new Div(json.date, {'class' : 'date'}));
+        full_article(file, new_title, new_date);
+        article.push(new Button('阅读全文 >', {
+            'class' : 'readmore',
+            'onclick' : `open_popup('${file}')`
+        }));
+    }
+    return new Li(article);
+}
 
 async function process_articles(data, articles) {
     for (let i = 0; i < data.length; i++) {

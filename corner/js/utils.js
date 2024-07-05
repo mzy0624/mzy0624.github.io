@@ -37,55 +37,6 @@ function execute_scripts_sync(element) {
     return promise;
 }
 
-function full_article(file, title, date) {
-    fetch(`articles/${file}.html`).then(
-        response => response.text()
-    ).then(data => {
-        let close = new BaseElement('span', '', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
-        let article = new Div(data, {'class' : ['popup-content', 'full-article']});
-        // let article = new Div(marked.parse(data), [['class', 'popup-content; full-article']]);
-        let full = new Div(
-            new Div([title, close, date, new Br(), new Hr(), article], {
-                'class' : 'popup', 
-                'onclick' : 'event.stopPropagation();'
-            }), {
-                'class' : 'overlay',
-                'id' : file,
-                'onclick' : `close_popup('${file}')`
-            }
-        );
-        append_elem(document.body, full);
-        execute_scripts_sync(article.elem).then(() => {
-            MathJax.typesetPromise([title.elem, article.elem]); // 手动 typeset 新插入的内容
-        });
-    });
-}
-
-function article_json_parser(json) {
-    let date    = new Div(json.date,    {'class' : 'date'});
-    let title   = new Div(json.title,   {'class' : 'title'});
-    let content = new Div(json.content, {'class' : 'article'});
-    execute_scripts_sync(content.elem);
-    let article = [date, title, content];
-    if ("link" in json) {
-        article.push(new Button(
-            new Anchor(json.link, '跳转链接 >'),
-            {'class' : 'readmore'}
-        ));
-    }
-    if ("file" in json) {
-        let file = json.file;
-        let new_title = new Head(new Div(json.title, {'class' : 'title'}));
-        let new_date  = new Small(new Div(json.date, {'class' : 'date'}));
-        full_article(file, new_title, new_date);
-        article.push(new Button('阅读全文 >', {
-            'class' : 'readmore',
-            'onclick' : `open_popup('${file}')`
-        }));
-    }
-    return new Li(article);
-}
-
 function render_pseudocode(id, reset=false) {
     let option = { 
         noEnd: true,

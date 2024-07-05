@@ -1,16 +1,11 @@
-class Span extends Div {
-    /**
-     * A button with a spanable list
-     */
+class Expand extends Div {
     constructor(contents='', lists=[], attributes={}) {
         super(contents, attributes);
         this.lists = lists;
-        if (contents != '') {
-            this.setSpan();
-        }
+        this.expand();
     }
     
-    setSpan() {
+    expand() {
         let lists = this.lists;
         lists = new Ul(lists, {'class' : 'hidden'});
         let small = new Small(lists);
@@ -51,26 +46,14 @@ class Span extends Div {
     }
 }
 
-class SpanDiv extends Span {
-    constructor(contents, lists) {
-        super(lists);
-        this.prepend(contents);
-        this.setSpan();
-    }
-}
-
-class SH extends Span {
-    constructor(name, since='', list=[], nameCN='') {
-        super('', list);
-        this.prepend(`${icons(name)} ${nameCN ? nameCN : name} ${since != '' ? `<small>(since ${since})</small>` : ''}`);
-        this.setSpan();
+class SH extends Expand {
+    constructor(name, since='', list=[]) {
+        super(`${icons(name)} ${name} ${since != '' ? `<small>(since ${since})</small>` : ''}`, list);
     }
 };
 
-class TA extends Span {
+class TA extends Expand {
     constructor(name, list=[]) {
-        super('', list);
-        this.prepend(`${icons(name)} ${getAnchor(name)}`);
-        this.setSpan();
+        super(`${icons(name)} ${getAnchor(name)}`, list);
     }
 }

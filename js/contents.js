@@ -29,7 +29,7 @@ let Hobbies = new Ul([
     new SH('Table Tennis', 'primary school', [
         `Favorite player: <big>${icons('China')}</big> Ma Long.`,
         'Play Style: Right-hand, Handshake Grip, Offensive.',
-        new Span('Racket Configurations', [
+        new Expand('Racket Configurations', [
             `Blade: ${getAnchor('fzd')}.<br>
              Rubber: ${getAnchor('neo')} (Forehand); ${getAnchor('d09c')} (Backhand).`,
             `Previously used: ${getAnchor('5X')}, ${getAnchor('yinhe')}.`,

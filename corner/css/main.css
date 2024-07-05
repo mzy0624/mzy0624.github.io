@@ -498,10 +498,6 @@ th {
     cursor: pointer;
 }
 
-.close-btn::before {
-    content: '❌';
-}
-
 .showall {
     display: inline-block;
     font-size: 12px;

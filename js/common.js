@@ -189,6 +189,12 @@ class Small extends BaseElement {
     }
 }
 
+class Span extends BaseElement {
+    constructor(content='', attributes={}) {
+        super('span', content, attributes);
+    }
+}
+
 class Div extends BaseElement {
     constructor(contents='', attributes={}) {
         super('div', contents, attributes);
