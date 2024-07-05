@@ -47,23 +47,30 @@
     $$J^{\theta'}_{\rm PPO-clip}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\Big[\min\Big({\rm ratio}\cdot A_{\theta'}(s,a),{\rm clip\_ratio}\cdot A_{\theta'}(s,a)\Big)\Big]$$
     这其实就是在控制 $\pi_\theta(a\mid s)$ 和 $\pi_{\theta'}(a\mid s)$ 之间的差距不要太大。如果 $A_{\theta'}(s,a)>0$，说明在状态 $s$ 下动作 $a$ 的价值高于平均，那么最大化目标函数会导致 ${\rm ratio}$ 增大，但为了防止它们之间的差距过大，${\rm clip}$ 函数不会让其超过 $1+\epsilon$；反之类似。
 </p>
-<!-- 
 
 <div style="width: 80%">
     <pre id="PPO" class="pseudocode">
         \begin{algorithm}
-            \caption{Proximal Policy Optimization (PPO) without Actor-Critic}
+            \caption{PPO Actor-Critic Style}
             \begin{algorithmic}
+                \FOR{each episode}
+                    \FOR{${\rm actor}=1\to N$}
+                        \STATE Run policy $\pi_{\theta'}$ in environment for $T$ timesteps
+                        \STATE Compute advantage estimates $\hat{A}_1,\cdots,\hat{A}_T$
+                    \ENDFOR
+                    \STATE Optimize surrogate $L$ with respect to $\theta$, with $K$ epochs and minibatch size $M\leqslant NT$
+                    \STATE $\theta'\gets\theta$
+                \ENDFOR
                 \FUNCTION{GAE}{}
+                    \STATE $A_t\gets 0$
+                    \FOR{$t=T-1\to 0$}
+                        \STATE $\delta_t\gets r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
+                        \STATE $A_t\gets\delta_t+\gamma\lambda A_{t+1}$
+                        \STATE Store $A_t$ in advantages list
+                        \STATE $R_t\gets A_t+V_\phi(s_t)$
+                    \ENDFOR
                 \ENDFUNCTION
-                \FUNCTION{PPO-Penalty}{}
-                \ENDFUNCTION
-                \FUNCTION{PPO-Clip}{}
-                    \STATE Compute new log probabilities $\log\pi_{\theta'}(a_t\mid s_t)$
-                    \STATE Compute clip$\_$ratio using the above formula
-                    \STATE Compute surrogate loss $\mathcal{L}^{CLIP} = \min(r_t(\theta') \hat{A}_t, \text{clip}(r_t(\theta'), 1 - \epsilon, 1 + \epsilon) \hat{A}_t)$
-                    \STATE Perform gradient descent on $\mathcal{L}^{CLIP}$ to update $\theta'$
-                \ENDFUNCTION
+
                 \FUNCTION{PPO}{$\pi_\theta,\alpha,\epsilon,\gamma,\lambda,N,K$}
                     \FOR{each episode}
                         \STATE Reset environment and initialize state $s_0$
@@ -98,4 +105,4 @@
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('PPO', reset=true);</script> -->
+<script>render_pseudocode('PPO', reset=true);</script>

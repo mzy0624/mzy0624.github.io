@@ -67,21 +67,21 @@ function article_json_parser(json) {
     let content = new Div(json.content, {'class' : 'article'});
     execute_scripts_sync(content.elem);
     let article = [date, title, content];
+    if ("link" in json) {
+        article.push(new Button(
+            new Anchor(json.link, '跳转链接 >'),
+            {'class' : 'readmore'}
+        ));
+    }
     if ("file" in json) {
         let file = json.file;
-        let button_attributes = {'class' : 'readmore'};
-        let button_content = '阅读全文 >';
-        if (file.includes('http')) {    // url
-            button_content = new Anchor(file, button_content);
-        }
-        else {
-            let new_title = new Head(new Div(json.title, {'class' : 'title'}));
-            let new_date  = new Small(new Div(json.date, {'class' : 'date'}));
-            full_article(file, new_title, new_date);
-            button_attributes['onclick'] = `open_popup('${file}')`;
-        }
-        let button = new Button(button_content, button_attributes);
-        article.push(button);
+        let new_title = new Head(new Div(json.title, {'class' : 'title'}));
+        let new_date  = new Small(new Div(json.date, {'class' : 'date'}));
+        full_article(file, new_title, new_date);
+        article.push(new Button('阅读全文 >', {
+            'class' : 'readmore',
+            'onclick' : `open_popup('${file}')`
+        }));
     }
     return new Li(article);
 }

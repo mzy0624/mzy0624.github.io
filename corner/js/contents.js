@@ -1,9 +1,9 @@
 let information = {
-    'study'   : { 'title' : '📚 学习科研' },
-    'life'    : { 'title' : '🕒 生活 P 事'},
-    'tech'    : { 'title' : '🛠️ 技术相关'},
-    'mood'    : { 'title' : '🤔 心情随想'},
-    'hobbies' : { 'title' : '🧩 兴趣爱好'}
+    'study' : { 'title' : '📚 学习科研' },
+    'life'  : { 'title' : '🕒 生活 P 事'},
+    'tech'  : { 'title' : '🛠️ 技术相关'},
+    'mood'  : { 'title' : '🤔 心情随想'},
+    'hobby' : { 'title' : '🧩 兴趣爱好'}
 }
 
 fetch('articles/top.txt').then(

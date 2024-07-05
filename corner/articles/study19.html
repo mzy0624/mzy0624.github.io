@@ -3,12 +3,37 @@
     $Q$-Learning 算法不能处理连续状态 / 动作空间的情况，对于这种情况，可以使用函数来拟合 $Q$ 值，DQN 其实就是 $Q$-Learning 算法和神经网络的结合，它用一个神经网络 $Q_\phi$ 来拟合 $Q$ 函数，网络输入是状态 $s$ 和动作 $a$，输出是 $Q(s,a)$ 的近似值。根据 $Q$-Learning 算法的更新公式可知 $Q$ 网络的损失函数是：
     $$\mathcal{L}_\phi=\dfrac{1}{2}\left(Q_\phi(s,a)-\left(r+\gamma\max_{a'}Q_\phi(s',a')\right)\right)^2$$
 </p>
+<div style="width: 90%">
+    <pre id="dqn" class="pseudocode">
+        \begin{algorithm}
+            \caption{Vanilla DQN without Replay Buffer and Target Network}
+            \begin{algorithmic}
+                \STATE Initialize parameter $\phi$ of $Q$ network
+                \FOR{each episode}
+                    \STATE Get the initial state $s_1$
+                    \FOR{$t=1\to T$}
+                        \STATE Choose $a_t$ from $s_t$ using policy derived from $Q_\phi$ (e.g., $\epsilon$-greedy)
+                        \STATE Take action $a_t$, observe reward $r_t$ and next state $s_{t+1}$
+                        \STATE Compute target $y_t=r_t+\gamma\max_a Q_{\phi}(s_{t+1},a)$
+                        \STATE Compute loss $L=(y_t-Q_{\phi}(s_t, a_t))^2$
+                        \STATE Update $Q$ network: $\phi\gets\phi-\alpha\nabla_\phi L$
+                        \STATE Set $s_t \gets s_{t+1}$
+                        \IF{$s_{t+1}$ is terminal}
+                            \STATE\BREAK
+                        \ENDIF
+                    \ENDFOR
+                \ENDFOR
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+<script>render_pseudocode('dqn', reset=true);</script>
 <h2>Experience Replay（经验回放）</h2>
 <p>为了更好地将 $Q$-Learning 算法和神经网络结合，DQN 算法采用了经验回放算法，即维护一个回放缓存 (Replay Buffer)，将每次从环境中采样的 $(s,a,r,s')$ 存储到缓存中，训练 $Q$ 网络的时候再从缓存中随机采样若干数据来进行训练。</p>
 <h2>Target Network（目标网络）</h2>
 <p>DQN 算法的目标是让 $Q_\phi(s,a)$ 逼近 $r+\gamma\max_{a'}Q_\phi(s',a')$，由于目标函数本身就包含神经网络的输出，所以更新网络参数的同时目标函数也在改变，这会导致训练的不稳定。因此 DQN 算法采用了目标网络 $Q_{\phi'}$，用 $Q_{\phi'}$ 计算 TD 目标，每次更新的是 $Q_\phi$，而 $Q_{\phi'}$ 是定期基于 $Q_\phi$ 更新。</p>
 <div style="width: 90%">
-    <pre id="dqn" class="pseudocode">
+    <pre id="dqn2" class="pseudocode">
         \begin{algorithm}
             \caption{DQN}
             \begin{algorithmic}
@@ -20,13 +45,17 @@
                     \FOR{$t=1\to T$}
                         \STATE Choose $a_t$ from $s_t$ using policy derived from $Q_\phi$ (e.g., $\epsilon$-greedy)
                         \STATE Take action $a_t$, observe reward $r_t$ and next state $s_{t+1}$
-                        \STATE Push $(s_t,a_t,r_t,s_{t+1})$ to replay buffer $R$
+                        \STATE $d\gets 1$ if $s_t$ is terminal else $d\gets 0$
+                        \STATE Push $(s_t,a_t,r_t,s_{t+1},d)$ to replay buffer $R$
                         \IF{there is enough data in buffer $R$}
-                            \STATE Sample $\{(s_i,a_i,r_i,s_{i+1})\}_{i=1}^N$ from buffer $R$
-                            \STATE $\forall 1\leqslant i\leqslant N$, compute $y_i=r_i+\gamma\max_aQ_{\phi'}(s_{i+1},a)$ using target network
-                            \STATE Compute loss $L=\frac{1}{N}\sum_{i=1}^N\left(y_i-Q_{\phi}(s_i,a_i)\right)^2$
+                            \STATE Sample $\{(s_i,a_i,r_i,s_{i+1},d_i)\}_{i=1}^N$ from buffer $R$
+                            \STATE $\forall 1\leqslant i\leqslant N$, compute $y_i=r_i+\gamma(1-d_i)\max_aQ_{\phi'}(s_{i+1},a)$ using target network
+                            \STATE Compute loss $L=\frac{1}{N}\sum_{i=1}^N(y_i-Q_{\phi}(s_i,a_i))^2$
                             \STATE Update $Q$ network: $\phi\gets\phi-\alpha\nabla_\phi L$
                             \STATE Update target network: $\phi'\gets\tau\phi+(1-\tau)\phi'$ periodically
+                        \ENDIF
+                        \IF{$d$}
+                            \STATE\BREAK
                         \ENDIF
                     \ENDFOR
                 \ENDFOR
@@ -34,5 +63,5 @@
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('dqn', reset=true);</script>
-<p>用 Python 实现了 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/ValueBased/DQN/NaiveDQN.py" target="_blank">Naive DQN</a>（即没有 Replay Buffer 和 Target Network 的 DQN）和 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/ValueBased/DQN/DQN.py" target="_blank">DQN</a>，它们同样基于 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/ValueBased/Base.py" target="_blank">Base.py</a>。</p>
+<script>render_pseudocode('dqn2');</script>
+<p>用 Python 实现了 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/ValueBased/DQN/NaiveDQN.py" target="_blank">Vanilla DQN</a>（即没有 Replay Buffer 和 Target Network 的 DQN）和 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/ValueBased/DQN/DQN.py" target="_blank">DQN</a>，它们同样基于 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/ValueBased/Base.py" target="_blank">Base.py</a>。</p>
