@@ -5,29 +5,7 @@ let information = {
     'mood'  : { 'title' : '🤔 心情随想'},
     'hobby' : { 'title' : '🧩 兴趣爱好'}
 }
-
-function full_article(file, title, date) {
-    fetch(`articles/${file}.html`).then(
-        response => response.text()
-    ).then(data => {
-        let close = new Span('❌', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
-        let article = new Div(data, {'class' : ['popup-content', 'full-article']});
-        let full = new Div(
-            new Div([title, close, date, new Br(), new Hr(), article], {
-                'class' : 'popup', 
-                'onclick' : 'event.stopPropagation();'
-            }), {
-                'class' : 'overlay',
-                'id' : file,
-                'onclick' : `close_popup('${file}')`
-            }
-        );
-        append_elem(document.body, full);
-        execute_scripts_sync(article.elem).then(() => {
-            MathJax.typesetPromise([title.elem, article.elem]); // 手动 typeset 新插入的内容
-        });
-    });
-}
+let article_per_page = 5;
 
 function article_json_parser(json) {
     let date    = new Div(json.date,    {'class' : 'date'});
@@ -57,8 +35,8 @@ function article_json_parser(json) {
 async function process_articles(data, articles) {
     for (let i = 0; i < data.length; i++) {
         let article = article_json_parser(data[i]);
-        if (i >= 5) {
-            article.elem.classList.add('hidden');
+        if (i >= article_per_page) {
+            article.add_class('hidden');
         }
         articles.push(article);
     }
@@ -70,7 +48,7 @@ async function process_item(item) {
     let data = await response.json();
     let title = new Head(info['title'], 1, {'id' : `${item}-title`});
     info['article_count'] = data.length;
-    info['page_count'] = Math.ceil(data.length / 5);
+    info['page_count'] = Math.ceil(data.length / article_per_page);
     info['cur_page'] = 1;
     let articles = [];
     await process_articles(data, articles);
@@ -84,6 +62,7 @@ async function fetch_articles() {
         });
     });
     // Parallel
+    
     const promises = [];
     for (let item in information) {
         promises.push(process_item(item));
@@ -104,14 +83,14 @@ async function main() {
         }
         let articles = document.querySelector(`#${item} ul`);
         let cur_page = information[item]['cur_page'];
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= article_per_page; i++) {
             try {
-                let article = articles.querySelector(`li:nth-child(${i + (cur_page - 1) * 5})`);
+                let article = articles.querySelector(`li:nth-child(${i + (cur_page - 1) * article_per_page})`);
                 article.classList.add('hidden');
             }
             catch (e) {}
             try {
-                let article = articles.querySelector(`li:nth-child(${i + (page - 1) * 5})`);
+                let article = articles.querySelector(`li:nth-child(${i + (page - 1) * article_per_page})`);
                 article.classList.remove('hidden');
             }
             catch (e) {}
@@ -120,14 +99,17 @@ async function main() {
         cur_page_div.innerHTML = page;
         information[item]['cur_page'] = page;
     }
+
     function prev_page(item) {
         let cur_page = information[item]['cur_page'];
         show_page(item, cur_page - 1);
     }
+
     function next_page(item) {
         let cur_page = information[item]['cur_page'];
         show_page(item, cur_page + 1);
     }
+
     for (let item in information) {
         let info = information[item];
         let article_count = new Small(info['article_count'], {'class' : 'article_count'});
@@ -137,26 +119,30 @@ async function main() {
         let prev  = new Button('上一页', {'class' : 'page_button'});
         let next  = new Button('下一页', {'class' : 'page_button'});
         let last  = new Button('末页',  {'class' : 'page_button'});
-        first.elem.addEventListener('click', function() { show_page(item, 1); });
-        prev.elem.addEventListener('click', function() { prev_page(item); });
-        next.elem.addEventListener('click', function() { next_page(item); });
-        last.elem.addEventListener('click', function() { show_page(item, -1); });
+        first.add_event_listener('click', function() { show_page(item, 1); });
+        prev.add_event_listener('click', function() { prev_page(item); });
+        next.add_event_listener('click', function() { next_page(item); });
+        last.add_event_listener('click', function() { show_page(item, -1); });
         append_elem(`${item}-title`, first, prev, cur_page, page_count, article_count, next, last);
     }
+
     // Large Images
     document.querySelectorAll('.large_image').forEach(span => {
         let button = new Button('查看大图', {'class' : 'readmore'});
         let img = new Div(
             new Img(span.id, {'width' : '65%'}),
-            {'class' : 'image-container', 'style' : ['display: none', 'text-align: center']}            
+            {
+                'class' : 'image-container', 
+                'style' : ['display: none', 'text-align: center']
+            }
         );
-        button.elem.addEventListener('click', function() {
+        button.add_event_listener('click', function() {
             if (img.elem.style.display === 'none' || img.elem.style.display === '') {
-                img.elem.style.display = 'block';
+                set_attributes_for_element(img, {'style' : 'display: block'});
                 button.cover_innerhtml('收起');
             }
             else {
-                img.elem.style.display = 'none';
+                set_attributes_for_element(img, {'style' : 'display: none'});
                 button.cover_innerhtml('查看大图');
             }
         });

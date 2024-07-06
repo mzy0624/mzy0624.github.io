@@ -591,7 +591,7 @@ th {
 }
 
 .avatar {
-    width: 65px;
+    width: 95px;
     border-radius: 50%;
 }
 
@@ -642,4 +642,18 @@ code {
     font-size: 12px;
     width: 210px;
     text-align: center;
+}
+
+.rotate {
+    animation: rotateAnimation 30s linear infinite;
+    animation-play-state: paused;
+}
+
+@keyframes rotateAnimation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

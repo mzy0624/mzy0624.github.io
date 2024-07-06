@@ -37,6 +37,29 @@ function execute_scripts_sync(element) {
     return promise;
 }
 
+function full_article(file, title, date) {
+    fetch(`articles/${file}.html`).then(
+        response => response.text()
+    ).then(data => {
+        let close = new Span('❌', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
+        let article = new Div(data, {'class' : ['popup-content', 'full-article']});
+        let full = new Div(
+            new Div([title, close, date, new Br(), new Hr(), article], {
+                'class' : 'popup', 
+                'onclick' : 'event.stopPropagation();'
+            }), {
+                'class' : 'overlay',
+                'id' : file,
+                'onclick' : `close_popup('${file}')`
+            }
+        );
+        append_elem(document.body, full);
+        execute_scripts_sync(article.elem).then(() => {
+            MathJax.typesetPromise([title.elem, article.elem]); // 手动 typeset 新插入的内容
+        });
+    });
+}
+
 function render_pseudocode(id, reset=false) {
     let option = { 
         noEnd: true,

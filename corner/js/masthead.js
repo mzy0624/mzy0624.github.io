@@ -1,8 +1,8 @@
 let avatar  = new Img('./files/avatar.png', {'class' : 'avatar'});
 let tooltip = new Button('❓', {'class' : 'tooltip-btn'});
 let meaning = new Span('因为到哪都喜欢呆在没人的角落', {'class' : 'tooltip-text'});
-tooltip.elem.addEventListener('mouseenter', function() { setAttributesForElement(meaning, {'style' : 'visibility: visible;'}); });
-tooltip.elem.addEventListener('mouseleave', function() { setAttributesForElement(meaning, {'style' : 'visibility: hidden;'});  });
+tooltip.add_event_listener('mouseenter', function() { set_attributes_for_element(meaning, {'style' : 'visibility: visible;'}); });
+tooltip.add_event_listener('mouseleave', function() { set_attributes_for_element(meaning, {'style' : 'visibility: hidden;'});  });
 let masthead_left = new Div([
     avatar,
     new Div([

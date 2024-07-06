@@ -3,8 +3,8 @@ let song_count   = song_name.length;
 let cur_song     = 0;
 let started      = false;
 let audio        = new BaseElement('audio', '',  {'src' : 'files/musics/0.mp3'});
-let cover        = new Img('files/musics/0.png', {'id' : 'cover', 'class' : 'hidden', 'style' : 'height: 95px'});
-let music_name   = new Small('点击播放音乐',       {'style' : 'margin-bottom: -1em'});
+let cover        = new Img('files/musics/0.png', {'id' : 'cover', 'class' : 'hidden', 'style' : ['height: 95px', 'border-radius: 50%']});
+let music_name   = new Small('点击播放音乐');
 let prev_song    = new Button('⏪',              {'style' : 'background: transparent; border: none'})
 let play_pause   = new Button('▶️',               {'style' : 'background: transparent; border: none'});
 let next_song    = new Button('⏩',              {'style' : 'background: transparent; border: none'});
@@ -18,7 +18,7 @@ let lyrics       = [];
 let music_player = new Table([[
     cover, new Div([
         audio, music_name,
-        new Div([prev_song, play_pause, next_song]),
+        new Div([prev_song, play_pause, next_song], {'style' : 'margin-top: -6px'}),
         new Div([cur_time, progress, total_time], {'class' : 'music_controller'}),
         new Div([cur_lyric, next_lyric], {'class' : 'lyrics'})
     ], {'class' : 'music_player'})
@@ -28,6 +28,8 @@ append_elem('masthead', music_player);
 function change_song() {
     audio.elem.src = `files/musics/${cur_song}.mp3`;
     cover.elem.src = `files/musics/${cur_song}.png`;
+    cover.remove_class('rotate');
+    setTimeout(() => { cover.add_class('rotate'); }, 1);   // A small timeout is needed
     music_name.cover_innerhtml(song_name[cur_song]);
     play_pause.cover_innerhtml('⏸️');
     cur_time.cover_innerhtml('0:00');
@@ -35,28 +37,26 @@ function change_song() {
     progress.elem.value = 0;
     cur_lyric.cover_innerhtml('');
     next_lyric.cover_innerhtml('');
-    fetch(`files/musics/${cur_song}.lrc`).then(
-        response => response.text()
-    ).then(
-        data => parse_lrc(data)
-    );
-    audio.elem.addEventListener('loadedmetadata', () => {
+    fetch(`files/musics/${cur_song}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
+    audio.add_event_listener('loadedmetadata', () => {
         total_time.cover_innerhtml(format_time(audio.elem.duration));
     });
     audio.elem.play();
 }
 
 function initialize() {
-    cover.elem.classList.remove('hidden');
+    cover.remove_class('hidden');
+    cover.add_class('rotate');
     music_name.cover_innerhtml(song_name[cur_song]);
     total_time.cover_innerhtml(format_time(audio.elem.duration));
+    cur_lyric.cover_innerhtml('正在加载歌曲 ...');
     progress.elem.disabled = false;  // Enable progress bar
     fetch('files/musics/0.lrc').then(response => response.text()).then(data => parse_lrc(data));
     started = true;
 }
 
 // Add event listener for play/pause button
-play_pause.elem.addEventListener('click', () => {
+play_pause.add_event_listener('click', () => {
     if (!started) {
         initialize();
     }
@@ -71,7 +71,7 @@ play_pause.elem.addEventListener('click', () => {
 });
 
 // Add event listener for prev song button
-prev_song.elem.addEventListener('click', () => {
+prev_song.add_event_listener('click', () => {
     if (started) {
         cur_song = (cur_song + song_count - 1) % song_count;
         change_song();
@@ -79,38 +79,28 @@ prev_song.elem.addEventListener('click', () => {
 });
 
 // Add event listener for next song button
-next_song.elem.addEventListener('click', () => {
+next_song.add_event_listener('click', () => {
     if (started) {
         cur_song = (cur_song + 1) % song_count;
         change_song();
     }
 });
 
-function change_song() {
-    audio.elem.src = `files/musics/${cur_song}.mp3`;
-    cover.elem.src = `files/musics/${cur_song}.png`;
-    audio.elem.play();
-    music_name.cover_innerhtml(song_name[cur_song]);
-    play_pause.cover_innerhtml('⏸️');
-    cur_time.cover_innerhtml('0:00');
-    total_time.cover_innerhtml(format_time(audio.elem.duration));
-    progress.elem.value = 0;
-    cur_lyric.cover_innerhtml('');
-    next_lyric.cover_innerhtml('');
-
-    fetch(`files/musics/${cur_song}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
-
-    audio.elem.addEventListener('loadedmetadata', () => {
-        total_time.cover_innerhtml(format_time(audio.elem.duration));
-    });
-}
-
-// Add event listener for when the audio ends
-audio.elem.addEventListener('ended', () => {
-    play_pause.cover_innerhtml('▶️');
+// Add event listener for play event
+audio.add_event_listener('play', () => {
+    cover.elem.style.animationPlayState = 'running';
 });
 
-audio.elem.addEventListener('timeupdate', () => {
+audio.add_event_listener('pause', () => {
+    cover.elem.style.animationPlayState = 'paused';
+});
+
+// Add event listener for when the audio ends
+audio.add_event_listener('ended', () => {
+    next_song.click();
+});
+
+audio.add_event_listener('timeupdate', () => {
     if (!is_seeking && started) {
         const currentTime = audio.elem.currentTime;
         const duration = audio.elem.duration;
@@ -123,14 +113,14 @@ audio.elem.addEventListener('timeupdate', () => {
 });
 
 // Add event listener for progress bar input
-progress.elem.addEventListener('input', () => {
+progress.add_event_listener('input', () => {
     if (started) {
         is_seeking = true;
     }
 });
 
 // Add event listener for progress bar change
-progress.elem.addEventListener('change', () => {
+progress.add_event_listener('change', () => {
     if (started) {
         let duration = audio.elem.duration;
         let value = progress.elem.value;
@@ -174,6 +164,6 @@ function update_lyrics(time) {
             break;
         }
     }
-    cur_lyric.cover_innerhtml(lyrics[i - 1].text);
+    cur_lyric.cover_innerhtml(i ? lyrics[i - 1].text : '');
     next_lyric.cover_innerhtml(lyrics[i] ? lyrics[i].text : '');
 }

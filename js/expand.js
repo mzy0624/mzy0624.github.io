@@ -10,9 +10,9 @@ class Expand extends Div {
         lists = new Ul(lists, {'class' : 'hidden'});
         let small = new Small(lists);
         if (this.lists.length > 0) {
-            let button = this.getButton();
+            let button = this.get_button();
             button.addEventListener('click', function () {
-                lists.elem.classList.toggle('visible');
+                lists.toggle_class('visible');
                 button.classList.toggle('rotated');
             });
             this.append(button);
@@ -20,10 +20,11 @@ class Expand extends Div {
         this.append(small);
     }
 
-    getButton() {
+    get_button() {
+        // UPDATE ME
         let button = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         button.id = 'toggleButton';
-        setAttributesForElement(button, {
+        set_attributes_for_element(button, {
             'style' : [
                 'margin-left: 5px',
                 'height: 25px',
@@ -32,15 +33,15 @@ class Expand extends Div {
             ],
             'viewBox' : '0 0 10 10',
         });
-        this.setShapeForButton(button);
+        this.set_shape_for_button(button);
         return button;
     }
     
-    setShapeForButton(button) {
+    set_shape_for_button(button) {
         let triangle = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        setAttributesForElement(triangle, {
+        set_attributes_for_element(triangle, {
             'points' : '3.27,2 3.27,8 8.46,5',
-            'fill' :   '#52adc8',
+            'fill'   : '#52adc8',
         });
         button.append(triangle);
     }

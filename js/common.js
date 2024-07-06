@@ -41,7 +41,7 @@ function getAnchor(url, attributes={}) {
     return url;
 }
 
-function setAttributesForElement(element, attributes) {
+function set_attributes_for_element(element, attributes) {
     /*
         attributes = {
             key1 : [value1-1, value1-2, ...],   // => [values...].join('; ')
@@ -52,17 +52,19 @@ function setAttributesForElement(element, attributes) {
     if (element instanceof BaseElement) {
         element = element.elem;
     }
-    Object.entries(attributes).forEach(
-        ([key, value]) => element.setAttribute(
-            key, 
-            Array.isArray(value) 
-                ? value.join('; ')  // e.g., key == 'style'
-                                    //       value == ['margin-top: 1em', 'color: red']
-                                    //       ==> 'margin-top: 1em; color: red'
-                : value             // e.g., key == 'target'
-                                    //       value == '_blank'
-        )
-    );
+    for (let key in attributes) {
+        let value = attributes[key];
+        if (Array.isArray(value)) {
+            value = value.join('; ');
+            // e.g., key == 'style', value == ['margin-top: 1em', 'color: red']
+            // ==> 'style' : 'margin-top: 1em; color: red'
+        }
+        let existing_value = element.getAttribute(key);
+        if (existing_value) {
+            value = `${existing_value}; ${value}`;
+        }
+        element.setAttribute(key, value);
+    }
 }
 
 
@@ -75,22 +77,7 @@ class BaseElement {
             this.append(contents);
         }
         // set attributes
-        setAttributesForElement(this, attributes);
-    }
-
-    prepend(contents) {
-        if (Array.isArray(contents)) {
-            contents.reverse().forEach(content => this.prepend(content));
-        }
-        else if (contents instanceof BaseElement) {
-            this.elem.insertBefore(contents.elem, this.elem.firstChild);
-        }
-        else if (typeof(contents) == 'string') {
-            this.elem.innerHTML = contents + this.elem.innerHTML;
-        }
-        else {
-            this.elem.insertBefore(contents, this.elem.firstChild);
-        }
+        set_attributes_for_element(this, attributes);
     }
     
     append(contents) {
@@ -108,8 +95,24 @@ class BaseElement {
         }
     }
 
+    add_class(class_name) {
+        this.elem.classList.add(class_name);
+    }
+
+    remove_class(class_name) {
+        this.elem.classList.remove(class_name);
+    }
+
+    toggle_class(class_name) {
+        this.elem.classList.toggle(class_name);
+    }
+
     cover_innerhtml(contents) {
         this.elem.innerHTML = contents;
+    }
+
+    add_event_listener(event, response) {
+        this.elem.addEventListener(event, response);
     }
 
     toString() {
@@ -147,6 +150,9 @@ class Br extends BaseElement {
 class Button extends BaseElement {
     constructor(contents='', attributes={}) {
         super('button', contents, attributes);
+    }
+    click() {
+        this.elem.click();
     }
 }
 
@@ -235,7 +241,6 @@ class List extends BaseElement {
             }
             return new Li(li);
         }))
-        // this.append(contents.map(li => li instanceof Li ? li : new Li(li)));
     }
 }
 
