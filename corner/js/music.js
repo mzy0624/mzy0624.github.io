@@ -82,6 +82,7 @@ function change_music() {
     audio.add_event_listener('loadedmetadata', () => {
         total_time.cover_innerhtml(format_time(audio.elem.duration));
     });
+    audio.elem.play();
     // change cover
     cover.elem.src = `files/musics/${cur_music}.png`;
     cover.remove_class('rotate');
@@ -99,8 +100,6 @@ function change_music() {
     cur_lyric.cover_innerhtml('');
     next_lyric.cover_innerhtml('');
     fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
-    // play
-    audio.elem.play();
 }
 
 // Add event listener for play/pause button
