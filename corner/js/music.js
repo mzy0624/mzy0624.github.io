@@ -2,8 +2,8 @@ let music_names  = ['七里香 - 周杰伦', '海阔天空 - BEYOND', '愿与愁
 let music_count  = music_names.length;
 let cur_music    = 0;
 let init         = false;
-let audio        = new BaseElement('audio', '',  {'src' : 'files/musics/0.mp3'});
-let cover        = new Img('files/musics/0.png', {'id' : 'cover', 'class' : 'hidden', 'style' : ['height: 95px', 'border-radius: 50%']});
+let audio        = new BaseElement('audio');
+let cover        = new Img('',                   {'class' : 'cover', 'style' : ['width: 95px', 'border-radius: 50%']});
 let music_name   = new Small('点击播放音乐');
 let prev_music   = new Button('⏪',              {'style' : 'background: transparent; border: none'})
 let play_pause   = new Button('▶️',               {'style' : 'background: transparent; border: none'});
@@ -23,7 +23,7 @@ let music_player = new Table([[
         new Div([cur_time, progress, total_time], {'class' : 'music_controller'}),
         new Div([cur_lyric, next_lyric], {'class' : 'lyrics'})
     ], {'class' : 'music_player'})
-]], {'style' : 'min-height: 100px'});
+]], {'style' : ['min-width: 100px', 'min-height: 105px']});
 append_elem('masthead', music_player);
 
 // Format time to mm:ss
@@ -66,13 +66,16 @@ function update_lyrics(time) {
 }
 
 function initialize() {
-    cover.remove_class('hidden');
+    change_music();
+    // audio.elem.src = 'files/musics/0.mp3';
+    // cover.elem.src = 'files/musics/0.png';
+    cover.remove_class('cover');
     cover.add_class('rotate');
-    music_name.cover_innerhtml(music_names[cur_music]);
-    total_time.cover_innerhtml(format_time(audio.elem.duration));
     cur_lyric.cover_innerhtml('正在加载歌曲 ...');
+    // music_name.cover_innerhtml(music_names[cur_music]);
+    // total_time.cover_innerhtml(format_time(audio.elem.duration));
     progress.elem.disabled = false;  // Enable progress bar
-    fetch('files/musics/0.lrc').then(response => response.text()).then(data => parse_lrc(data));
+    // fetch('files/musics/0.lrc').then(response => response.text()).then(data => parse_lrc(data));
     init = true;
 }
 
@@ -106,6 +109,7 @@ function change_music() {
 play_pause.add_event_listener('click', () => {
     if (!init) {
         initialize();
+        return;
     }
     if (audio.elem.paused) {
         audio.elem.play();

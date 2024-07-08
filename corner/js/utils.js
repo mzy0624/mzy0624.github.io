@@ -37,23 +37,30 @@ function execute_scripts_sync(element) {
     return promise;
 }
 
+function readmore_button(file, title, date) {
+    let button = new Button('阅读全文 >', {'class' : 'readmore'});
+    append_elem(document.body, new Div('', {'class' : 'overlay', 'id' : file, 'onclick' : `close_popup('${file}')`}));
+    button.add_event_listener('click', function() {
+        let div = document.getElementById(file);
+        if (div.children.length == 0) {
+            // The content has not been loaded
+            full_article(file, title, date);
+        }
+        open_popup(file);
+    });
+    return button;
+}
+
 function full_article(file, title, date) {
     fetch(`articles/${file}.html`).then(
         response => response.text()
     ).then(data => {
         let close = new Span('❌', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
         let article = new Div(data, {'class' : ['popup-content', 'full-article']});
-        let full = new Div(
-            new Div([title, close, date, new Br(), new Hr(), article], {
-                'class' : 'popup', 
-                'onclick' : 'event.stopPropagation();'
-            }), {
-                'class' : 'overlay',
-                'id' : file,
-                'onclick' : `close_popup('${file}')`
-            }
-        );
-        append_elem(document.body, full);
+        append_elem(file, new Div([title, close, date, new Br(), new Hr(), article], {
+            'class' : 'popup', 
+            'onclick' : 'event.stopPropagation();'
+        }));
         execute_scripts_sync(article.elem).then(() => {
             MathJax.typesetPromise([title.elem, article.elem]); // 手动 typeset 新插入的内容
         });

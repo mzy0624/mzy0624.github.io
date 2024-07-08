@@ -7,6 +7,7 @@ let information = {
 }
 let article_per_page = 5;
 
+
 function article_json_parser(json) {
     let date    = new Div(json.date,    {'class' : 'date'});
     let title   = new Div(json.title,   {'class' : 'title'});
@@ -20,14 +21,11 @@ function article_json_parser(json) {
         ));
     }
     if ("file" in json) {
-        let file = json.file;
-        let new_title = new Head(new Div(json.title, {'class' : 'title'}));
-        let new_date  = new Small(new Div(json.date, {'class' : 'date'}));
-        full_article(file, new_title, new_date);
-        article.push(new Button('阅读全文 >', {
-            'class' : 'readmore',
-            'onclick' : `open_popup('${file}')`
-        }));
+        article.push(readmore_button(
+            json.file,
+            new Head(new Div(json.title, {'class' : 'title'})),
+            new Small(new Div(json.date, {'class' : 'date'}))
+        ));
     }
     return new Li(article);
 }
