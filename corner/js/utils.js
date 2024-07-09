@@ -55,10 +55,11 @@ function full_article(file, title, date) {
     fetch(`articles/${file}.html`).then(
         response => response.text()
     ).then(data => {
-        let close = new Span('❌', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
+        // let close = new Span('❌', {'class' : 'close-btn', 'onclick' : `close_popup('${file}')`});
         let article = new Div(data, {'class' : ['popup-content', 'full-article']});
-        append_elem(file, new Div([title, close, date, new Br(), new Hr(), article], {
-            'class' : 'popup', 
+        // append_elem(file, new Div([title, close, date, new Br(), new Hr(), article], {
+        append_elem(file, new Div([title, date, new Br(), new Hr(), article], {
+                'class' : 'popup', 
             'onclick' : 'event.stopPropagation();'
         }));
         execute_scripts_sync(article.elem).then(() => {

@@ -1,25 +1,31 @@
 [
     {
+        "date"    : "2024.07.09",
+        "title"   : "📝 论文 <a href=\"\" target=\"_blank\">MapCoder: Multi-Agent Code Generation for Competitive Problem Solving</a> 阅读笔记",
+        "content" : "<b>ACL 2024, CCF A</b><br>",
+        "file"    : "study30"
+    },
+    {
         "date"    : "2024.06.24",
-        "title"   : "♟️ 博弈论笔记 4：非完全信息静态博弈",
+        "title"   : "♟️ 博弈论 4: 非完全信息静态博弈",
         "content" : "只写了一部分，懒得看了。",
         "file"    : "study29"
     },
     {
         "date"    : "2024.06.23",
-        "title"   : "♟️ 博弈论笔记 3：完全信息动态博弈",
+        "title"   : "♟️ 博弈论 3: 完全信息动态博弈",
         "content" : "看完这个就还剩非完全信息动态博弈了！",
         "file"    : "study28"
     },
     {
         "date"    : "2024.06.23",
-        "title"   : "♟️ 博弈论笔记 2：非完全信息静态博弈",
+        "title"   : "♟️ 博弈论 2: 非完全信息静态博弈",
         "content" : "看了三分之一了 QAQ。",
         "file"    : "study27"
     },
     {
         "date"    : "2024.06.21",
-        "title"   : "♟️ 博弈论笔记 1：完全信息静态博弈",
+        "title"   : "♟️ 博弈论 1: 完全信息静态博弈",
         "content" : "博弈论马上就要考试了，但一节课都没听过 QAQ，赶紧补天了。",
         "file"    : "study26"
     },
@@ -31,49 +37,49 @@
     },
     {
         "date"    : "2024.06,15",
-        "title"   :"📝 论文 <a href=\"https://openreview.net/forum?id=Gj3zN9zs4v\" target=\"_blank\">LEVER: Learning to Verify Language-to-Code Generation with Execution</a> 阅读笔记",
-        "content" : "用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
+        "title"   :"📝 论文 <a href=\"https://proceedings.mlr.press/v202/ni23b.html\" target=\"_blank\">LEVER: Learning to Verify Language-to-Code Generation with Execution</a> 阅读笔记",
+        "content" : "<b>PMLR 2023</b><br>用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
         "file"    : "study24"
     },
     {
         "date"    : "2024.06.14",
-        "title"   :"📝 论文 <a href=\"https://arxiv.org/abs/2109.03034\" target=\"_blank\">Generate & Rank: A Multi-task Framework for Math Word Problems</a> 阅读笔记",
-        "content" : "不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了 Generate & Rank 来解决这个问题。",
+        "title"   :"📝 论文 <a href=\"https://aclanthology.org/2021.findings-emnlp.195/\" target=\"_blank\">Generate & Rank: A Multi-task Framework for Math Word Problems</a> 阅读笔记",
+        "content" : "<b>EMNLP 2021, CCF B</b><br>不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了 Generate & Rank 来解决这个问题。",
         "file"    : "study23"
     },
     {
         "date"    : "2024.06.10",
-        "title"   : "🤖 强化学习笔记 6：Proximal Policy Optimization (PPO)",
+        "title"   : "🤖 强化学习 6: Proximal Policy Optimization (PPO)",
         "content" : "PPO 是目前应用最广泛的强化学习算法之一。",
         "file"    : "study22"
     },
     {
         "date"    : "2024.06.07",
-        "title"   : "🤖 强化学习笔记 5：Actor-Critic",
+        "title"   : "🤖 强化学习 5: Actor-Critic",
         "content" : "Actor-Critic 算法是 Policy-based (Actor) 和 Value-based (Critic) 的结合。",
         "file"    : "study21"
     },
     {
         "date"    : "2024.06.04",
-        "title"   : "🤖 强化学习笔记 4：Policy Gradient",
+        "title"   : "🤖 强化学习 4: Policy Gradient",
         "content" : "前面几个算法都是 Value-based 的，而 Policy Gradient 是 Policy-based 的。",
         "file"    : "study20"
     },
     {
         "date"    : "2024.06.03",
-        "title"   : "🤖 强化学习笔记 3：DQN 算法",
+        "title"   : "🤖 强化学习 3: DQN 算法",
         "content" : "省流：结合了神经网络的 $Q$-Learning 算法。",
         "file"    : "study19"
     },
     {
         "date"    : "2024.06.01",
-        "title"   : "🤖 强化学习笔记 2：$Q$-Learning 和 SARSA",
+        "title"   : "🤖 强化学习 2: $Q$-Learning 和 SARSA",
         "content" : "$Q$-Learning 和 SARSA 分别是 Off-policy 和 On-policy 的典型算法。",
         "file"    : "study18"
     },
     {
         "date"    : "2024.05.30",
-        "title"   : "🤖 强化学习笔记 1：$\\epsilon$-greedy",
+        "title"   : "🤖 强化学习 1: $\\epsilon$-greedy",
         "content" : "省流：以 $\\epsilon$ 的概率随机选动作，否则贪心选动作。",
         "file"    : "study17"
     },
@@ -96,20 +102,20 @@
     },
     {
         "date"    : "2024.05.23",
-        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2402.16906\" target=\"_blank\">LDB: A Large Language Model Debugger via Verifying Runtime Execution Step-by-step</a> 阅读笔记",
-        "content" : "很多代码生成的方法都是让大模型迭代地生成并优化自己的代码，但是这些方法大多都将代码看成一个整体，这会使得大模型很难优化复杂的代码。受到人类会经常打断点调试程序的启发，作者提出了 Large <u>L</u>anguage Model <u>D</u>e<u>b</u>ugger (LDB) 来缓解这个问题。",
+        "title"   : "📝 论文 <a href=\"https://github.com/FloridSleeves/LLMDebugger\" target=\"_blank\">Debug like a human: A Large Language Model Debugger via Verifying Runtime Execution Step-by-step</a> 阅读笔记",
+        "content" : "<b>ACL 2024, CCF A</b><br>很多代码生成的方法都是让大模型迭代地生成并优化自己的代码，但是这些方法大多都将代码看成一个整体，这会使得大模型很难优化复杂的代码。受到人类会经常打断点调试程序的启发，作者提出了 Large <u>L</u>anguage Model <u>D</u>e<u>b</u>ugger (LDB) 来缓解这个问题。",
         "file"    : "study13"
     },
     {
         "date"    : "2024.05.22",
         "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=KuPixIqPiq\" target=\"_blank\">Teaching Large Language Models to Self-Debug</a> 阅读笔记",
-        "content" : "让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。",
+        "content" : "<b>ICLR 2024</b><br>让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。",
         "file"    : "study12"
     },
     {
         "date"    : "2024.05.21",
         "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=S37hOerQLB\" target=\"_blank\">Self-Refine: Iterative Refinement with Self-Feedback</a> 阅读笔记",
-        "content" : "尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题。",
+        "content" : "<b>NIPS 2023, CCF A</b><br>尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题 。",
         "file"    : "study11"
     },
     {
@@ -127,43 +133,43 @@
     {
         "date"    : "2024.05.14",
         "title"   : "⚖️ 什么是 Scaling Law",
-        "content" : "Scaling Law 描述的是变量之间的函数关系，一个量的变化会引起另一个量与<b>变化的幂</b>成比例地相对变化。在机器学习中，Scaling Law 描述的是一系列与模型参数相关的量之间的函数关系。",
+        "content" : "Scaling Law 描述的是变量之间的函数关系，一个量的变化会引起另一个量与<b>变化的幂</b><br>成比例地相对变化。在机器学习中，Scaling Law 描述的是一系列与模型参数相关的量之间的函数关系。",
         "file"    : "study8"
     },
     {
         "date"    : "2024.05.14",
-        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2203.13474\" target=\"_blank\">CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis</a> 阅读笔记",
-        "content" : "在程序合成领域，CodeX 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen，并提出了一个新场景 “多轮程序合成”。",
+        "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=iaYcJKpY2B_\" target=\"_blank\">CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis</a> 阅读笔记",
+        "content" : "<b>ICLR 2023</b><br>在程序合成领域，CodeX 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen，并提出了一个新场景 “多轮程序合成”。",
         "file"    : "study7"
     },
     {
         "date"    : "2024.05.13",
-        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/1904.09751\" target=\"_blank\">The Curious Case of Neural Text Degeneration</a> 阅读笔记",
-        "content" : "之前有笔记提到，在生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解。作者提出了 Nucleus 采样，通过截断概率分布的不可靠尾部来缓解这个问题。",
+        "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=rygGQyrFvH\" target=\"_blank\">The Curious Case of Neural Text Degeneration</a> 阅读笔记",
+        "content" : "<b>ICLR 2020</b><br>之前有笔记提到，在生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解。作者提出了 Nucleus 采样，通过截断概率分布的不可靠尾部来缓解这个问题。",
         "file"    : "study6"
     },
     {
         "date"    : "2024.05.11",
         "title"   : "📝 论文 <a href=\"https://www.researchgate.net/publication/362173423\" target=\"_blank\">CodeT: Code Generation with Generated Tests</a> 阅读笔记",
-        "content" : "之前的笔记有提到，在代码生成问题中，可以在测试用例上运行代码来评估代码的好坏，问题在于如何设计高质量的测试用例，作者提出了一个自动生成测试用例并选择最佳程序的方法。",
+        "content" : "<b>ICLR 2023</b><br>之前的笔记有提到，在代码生成问题中，可以在测试用例上运行代码来评估代码的好坏，问题在于如何设计高质量的测试用例，作者提出了一个自动生成测试用例并选择最佳程序的方法。",
         "file"    : "study5"
     },
     {
         "date"    : "2024.05.10",
         "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2211.16490\" target=\"_blank\">Coder Reviewer Reranking for Code Generation</a> 阅读笔记",
-        "content" : "组会被分配到讲这篇文章，拿过来分享一下。",
+        "content" : "<b>ICML 2023, CCF A</b><br>组会被分配到讲这篇文章，拿过来分享一下。",
         "file"    : "study4"
     },
     {
         "date"    : "2024.05.09",
-        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2204.11454\" target=\"_blank\">Natural Language to Code Translation with Execution</a> 阅读笔记",
-        "content" : "代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码方法。",
+        "title"   : "📝 论文 <a href=\"https://aclanthology.org/2022.emnlp-main.231/\" target=\"_blank\">Natural Language to Code Translation with Execution</a> 阅读笔记",
+        "content" : "<b>EMNLP 2022, CCF B</b><br>代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码方法。",
         "file"    : "study3"
     },
     {
         "date"    : "2024.05.09",
-        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/1510.03055\" target=\"_blank\">A Diversity-Promoting Objective Function for Neural Conversation Models</a> 阅读笔记",
-        "content" : "对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解，作者提出的基于最大化互信息的解码方法可以有效缓解这个问题。",
+        "title"   : "📝 论文 <a href=\"https://aclanthology.org/N16-1014/\" target=\"_blank\">A Diversity-Promoting Objective Function for Neural Conversation Models</a> 阅读笔记",
+        "content" : "<b>HLT-NAACL 2016, CCF B</b><br>对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解，作者提出的基于最大化互信息的解码方法可以有效缓解这个问题。",
         "file"    : "study2"
     },
     {

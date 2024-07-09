@@ -7,7 +7,6 @@ let information = {
 }
 let article_per_page = 5;
 
-
 function article_json_parser(json) {
     let date    = new Div(json.date,    {'class' : 'date'});
     let title   = new Div(json.title,   {'class' : 'title'});

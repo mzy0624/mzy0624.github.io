@@ -67,15 +67,10 @@ function update_lyrics(time) {
 
 function initialize() {
     change_music();
-    // audio.elem.src = 'files/musics/0.mp3';
-    // cover.elem.src = 'files/musics/0.png';
     cover.remove_class('cover');
     cover.add_class('rotate');
     cur_lyric.cover_innerhtml('正在加载歌曲 ...');
-    // music_name.cover_innerhtml(music_names[cur_music]);
-    // total_time.cover_innerhtml(format_time(audio.elem.duration));
     progress.elem.disabled = false;  // Enable progress bar
-    // fetch('files/musics/0.lrc').then(response => response.text()).then(data => parse_lrc(data));
     init = true;
 }
 

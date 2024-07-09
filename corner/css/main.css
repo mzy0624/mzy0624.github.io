@@ -527,6 +527,7 @@ th {
     background-color: #f8f8f8;
     border: 1px solid #ddd;
     border-radius: 5px;
+    vertical-align: middle;
 }
 
 .page_button:hover {
@@ -537,6 +538,7 @@ th {
 .article_count {
     font-size: 12px;
     font-weight: normal;
+    vertical-align: middle;
 }
 
 .article_count::before {
@@ -551,6 +553,7 @@ th {
     font-size: 12px;
     font-weight: normal;
     margin-left: 1em;
+    vertical-align: middle;
 }
 
 .cur_page::before {
@@ -565,6 +568,7 @@ th {
     font-size: 12px;
     font-weight: normal;
     margin-right: 1em;
+    vertical-align: middle;
 }
 
 .page_count::after {

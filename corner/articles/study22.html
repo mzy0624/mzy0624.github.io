@@ -48,7 +48,7 @@
     这其实就是在控制 $\pi_\theta(a\mid s)$ 和 $\pi_{\theta'}(a\mid s)$ 之间的差距不要太大。如果 $A_{\theta'}(s,a)>0$，说明在状态 $s$ 下动作 $a$ 的价值高于平均，那么最大化目标函数会导致 ${\rm ratio}$ 增大，但为了防止它们之间的差距过大，${\rm clip}$ 函数不会让其超过 $1+\epsilon$；反之类似。
 </p>
 
-<div style="width: 80%">
+<!-- <div style="width: 80%">
     <pre id="PPO" class="pseudocode">
         \begin{algorithm}
             \caption{PPO Actor-Critic Style}
@@ -105,4 +105,4 @@
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('PPO', reset=true);</script>
+<script>render_pseudocode('PPO', reset=true);</script> -->

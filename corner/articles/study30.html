@@ -1,0 +1,36 @@
+<h1>解决了什么问题</h1>
+<p>代码合成需要深入理解复杂的自然语言描述，为复杂的算法何数据结构生成代码，以及成功执行全面的单元测试，所以虽然大模型在自然语言方面表现得很好，但是它在代码生成任务中的性能仍然有限。作者提出了 MAPCoder (<b>M</b>ulti-<b>A</b>gent <b>P</b>rompting Based Code Generation) 来做代码生成任务，这是一种基于 Multi-Agent 的 prompting 方法，它用四个 agents 来模拟人类写代码的整个过程。</p>
+<h1>The Pipeline of MAPCoder</h1>
+<p>下图是 MAPCoder 的总览：共有四个 Agents：Retrieval Agent (RA)、Planning Agent (PA)、Coder Agent (CA) 和 Debugging Agent (DA)。</p>
+<div style="text-align: center;">
+    <img src="files/study30/1.png" width="90%"/>
+</div>
+<h2>Retrieval Agent (RA)</h2>
+<p>RA 用来 “回忆” 过去相关的解决问题的示例，类似于人类的记忆，对于一个问题描述，RA 生成 $k$ 个相关的示例 $E=\{(pr_i,pl_i,c_i)\}_{i=1}^k$，其中 $pl_i$ 和 $c_i$ 分别为相关问题描述 $pr_i$ 对应的规划和代码。</p>
+<p>作者设计了一系列对 prompt 的有效性至关重要的指令：首先指导 RA 生成相似和不同的问题及其解决方案，促进问题规划的逆向工程；然后指导 RA 逐步生成代码，并允许后处理以生成相应的规划；最后指导 RA 生成相关算法并提供相应的解释教程，使得它能够反思底层算法并生成相似的示例。</p>
+<h2>Planning Agent (PA)</h2>
+<p>PA 为每一个从 RA 处获得的示例生成一个目标规划，从而为原问题生成一个循序渐进的规划。“因此，我们生成为每个检索的示例一个不同的目标规划。此外，多个规划提供了多种成功的方法”。为了让其他 agents 在生成时获得每个规划的效用信息，作者为 PA 设计的 prompt 要求 PA 不仅要生成 plan，还要生成每个 plan 对应的置信度得分。</p>
+<h2>Coding Agent (CA)</h2>
+<p>CA 接受原问题描述和一个从 PA 处获取的规划作为输入，生成对应的代码，并且在样例上进行测试，如果测试失败，CA 会将其传给下一个 agent 来 debug，否则该代码将作为最终解决方案返回。</p>
+<h2>Debugging Agent (DA)</h2>
+<p>最后，DA 使用问题描述中的样例来对 CA 生成的代码进行 debug，类似于人类在 debug 的时候会交叉检查他们的规划，MPACoder 会使用 PA 生成的规划来辅助 DA。实验证明，这种基于规划的调试方法显著增强了 debug 能力，它突出了 PA 和 DA 在生成过程中所扮演的关键角色。对于每个规划，此过程重复 $t$ 次。</p>
+<p>下图分别是用于各个 agents 的 prompt：</p>
+<div style="text-align: center;">
+    <img src="./files/study30/2.png" width="80%" /><br>
+    <img src="./files/study30/3.png" width="80%" /><br>
+    <img src="./files/study30/4.png" width="80%" />
+</div>
+<hr>
+<h1>Dynamic Agent Traversal (DAT)</h1>
+<p>这个 Dynamic Agent Traversal 也不知道怎么翻译合适，动态的 agent 遍历？索性不翻译了，直接叫 DAT 好了。DAT 始于 PA，它为原始问题生成 $k$ 个规划及其置信度得分，这些规划被存储，且置信度得分最高的一个被输入到 CA，然后 CA 基于这个规划生成代码并测试，如果测试通过，就返回该代码，否则代码将随着规划被一起输入到 DA 中，DA 试图迭代地（最多 $t$ 次）debug。如果成功 debug，代码被返回，否则用 PA 生成的置信度次高的规划重复上述过程，直到所有的规划都失败。原文的伪代码写的有点乱而且还有错误，就不放了，放一个该过程的流程图：</p>
+<div style="text-align: center;">
+    <img src="./files/study30/5.png" width="90%" />
+</div>
+<hr>
+<h1>一个例子</h1>
+<p>对于下图所示的问题，对比一下直接生成、CoT、Reflexion 和 MAPCoder 几种方法的效果：</p>
+<div style="text-align: center;">
+    <img src="./files/study30/6.png" width="95%"/>
+</div>
+    <!-- We summarize our agent traversal in Algorithm A in Appendix. Our algorithm’s complexity is O(kt). 
+    An example illustrating MapCoder's problem-solving compared to Direct, Chain-of-thought, and Reflexion approaches is in Figure 4.  -->
