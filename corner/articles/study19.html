@@ -16,8 +16,7 @@
                         \STATE Take action $a_t$, observe reward $r_t$ and next state $s_{t+1}$
                         \STATE Compute target $y_t=r_t+\gamma\max_a Q_{\phi}(s_{t+1},a)$
                         \STATE Compute loss $L=(y_t-Q_{\phi}(s_t, a_t))^2$
-                        \STATE Update $Q$ network: $\phi\gets\phi-\alpha\nabla_\phi L$
-                        \STATE Set $s_t \gets s_{t+1}$
+                        \STATE Update $Q$ network: $\phi=\phi-\alpha\nabla_\phi L$
                         \IF{$s_{t+1}$ is terminal}
                             \STATE\BREAK
                         \ENDIF
@@ -38,21 +37,21 @@
             \caption{DQN}
             \begin{algorithmic}
                 \STATE Initialize parameter $\phi$ of $Q$ network
-                \STATE Initialize parameter $\phi'\gets\phi$ of target network
+                \STATE Initialize parameter $\phi'=\phi$ of target network
                 \STATE Initialize replay buffer $R$
                 \FOR{each episode}
                     \STATE Get the initial state $s_1$
                     \FOR{$t=1\to T$}
                         \STATE Choose $a_t$ from $s_t$ using policy derived from $Q_\phi$ (e.g., $\epsilon$-greedy)
                         \STATE Take action $a_t$, observe reward $r_t$ and next state $s_{t+1}$
-                        \STATE $d\gets 1$ if $s_t$ is terminal else $d\gets 0$
+                        \STATE $d= 1$ if $s_t$ is terminal else $d= 0$
                         \STATE Push $(s_t,a_t,r_t,s_{t+1},d)$ to replay buffer $R$
                         \IF{there is enough data in buffer $R$}
                             \STATE Sample $\{(s_i,a_i,r_i,s_{i+1},d_i)\}_{i=1}^N$ from buffer $R$
                             \STATE $\forall 1\leqslant i\leqslant N$, compute $y_i=r_i+\gamma(1-d_i)\max_aQ_{\phi'}(s_{i+1},a)$ using target network
                             \STATE Compute loss $L=\frac{1}{N}\sum_{i=1}^N(y_i-Q_{\phi}(s_i,a_i))^2$
-                            \STATE Update $Q$ network: $\phi\gets\phi-\alpha\nabla_\phi L$
-                            \STATE Update target network: $\phi'\gets\tau\phi+(1-\tau)\phi'$ periodically
+                            \STATE Update $Q$ network: $\phi=\phi-\alpha\nabla_\phi L$
+                            \STATE Update target network: $\phi'=\tau\phi+(1-\tau)\phi'$ periodically
                         \ENDIF
                         \IF{$d$}
                             \STATE\BREAK

@@ -59,15 +59,15 @@
                         \STATE Compute advantage estimates $\hat{A}_1,\cdots,\hat{A}_T$
                     \ENDFOR
                     \STATE Optimize surrogate $L$ with respect to $\theta$, with $K$ epochs and minibatch size $M\leqslant NT$
-                    \STATE $\theta'\gets\theta$
+                    \STATE $\theta'=\theta$
                 \ENDFOR
                 \FUNCTION{GAE}{}
-                    \STATE $A_t\gets 0$
+                    \STATE $A_t= 0$
                     \FOR{$t=T-1\to 0$}
-                        \STATE $\delta_t\gets r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
-                        \STATE $A_t\gets\delta_t+\gamma\lambda A_{t+1}$
+                        \STATE $\delta_t= r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
+                        \STATE $A_t=\delta_t+\gamma\lambda A_{t+1}$
                         \STATE Store $A_t$ in advantages list
-                        \STATE $R_t\gets A_t+V_\phi(s_t)$
+                        \STATE $R_t= A_t+V_\phi(s_t)$
                     \ENDFOR
                 \ENDFUNCTION
 
@@ -80,7 +80,7 @@
                             \STATE Sample action $a_t$ from $\pi_\theta(a_t\mid s_t)$ and execute $a_t$
                             \STATE Observe reward $r_t$ and next state $s_{t+1}$
                             \STATE Store $s_t,a_t,r_t,s_{t+1}$, and log probability $\log\pi_\theta(a_t\mid s_t)$
-                            \STATE $s_t\gets s_{t+1}$
+                            \STATE $s_t= s_{t+1}$
                             \IF{done}
                                 \STATE\BREAK
                             \ENDIF
@@ -98,7 +98,7 @@
                             \ENDFOR
                         \ENDFOR
 
-                        \STATE Update $\theta\gets\theta'$
+                        \STATE Update $\theta=\theta'$
                     \ENDFOR
                 \ENDFUNCTION
             \end{algorithmic}

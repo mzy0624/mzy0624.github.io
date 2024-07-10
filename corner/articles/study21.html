@@ -8,8 +8,8 @@
     Critic 将 $r_t+\gamma V_\phi(s_{t+1})$ 作为 TD 目标，不会产生梯度，所以：
     $$\nabla_\theta\mathcal{L}_\theta=\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t),\quad\nabla_\phi\mathcal{L}_\phi=-\delta_t\nabla_\phi V_\phi(s_t)$$
     优于 Actor 和 Critic 分别采用梯度上升和梯度下降的方式更新，所以参数的更新为：
-    $$\theta\gets\theta+\alpha_\theta\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t)$$
-    $$\phi\gets\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$$
+    $$\theta=\theta+\alpha_\theta\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t)$$
+    $$\phi=\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$$
     Reinforce 算法基于采样，只能在序列结束后进行更新，这同时也要求任务具有有限的步数，而 Actor-Critic 算法则可以在每一步之后都进行更新，并且不对任务的步数做限制。用 Python 实现了 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/PolicyBased/ActorCritic.py" target="_blank">Actor-Critic 算法</a>。
 </p>
 <div style="width: 80%">
@@ -23,10 +23,10 @@
                     
                     \STATE Estimate value $V_\phi(s_t)$ and $V_\phi(s_{t+1})$
                     \STATE Compute TD error: $\delta_t=r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
-                    \STATE $\phi\gets\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$
+                    \STATE $\phi=\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$
                     
                     \STATE Compute policy gradient: $\nabla_\theta J(\theta) = \delta_t \nabla_\theta \log \pi_\theta(a_t | s_t)$
-                    \STATE $\theta\gets\theta+\alpha_\theta\nabla_\theta J(\theta)$                    
+                    \STATE $\theta=\theta+\alpha_\theta\nabla_\theta J(\theta)$                    
                 \ENDFOR
             \end{algorithmic}
         \end{algorithm}

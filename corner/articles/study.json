@@ -2,7 +2,7 @@
     {
         "date"    : "2024.07.09",
         "title"   : "📝 论文 <a href=\"\" target=\"_blank\">MapCoder: Multi-Agent Code Generation for Competitive Problem Solving</a> 阅读笔记",
-        "content" : "<b>ACL 2024, CCF A</b><br>",
+        "content" : "<b>ACL 2024, CCF A</b><br>作者提出了一个 Multi-Agent 的代码生成的方法来模拟人类写代码的整个过程。",
         "file"    : "study30"
     },
     {

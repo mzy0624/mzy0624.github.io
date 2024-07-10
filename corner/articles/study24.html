@@ -19,16 +19,16 @@
             \caption{Create Data}
             \begin{algorithmic}
                 \FUNCTION{CreateData}{$D_1,D_2,\cdots,D_N$}
-                    \STATE $\hat{D}\gets\varnothing$
+                    \STATE $\hat{D}=\varnothing$
                     \FOR{$n=1\to N$}
                         \FOR{$(x,*,z)\in D_n$}
                             \STATE Sample $n$ unique code candidates $S=\{\hat{y}_i\}_{i=1}^n$ from $P_{\rm LM}(y\mid x)$
                             \FOR{$\hat{y}\in S$}
-                                \STATE $\hat{z}\gets\mathcal{E}(\hat{y})$
-                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(\hat{y},\hat{z},\mathbb{I}(\hat{z}=z))\}$
+                                \STATE $\hat{z}=\mathcal{E}(\hat{y})$
+                                \STATE $\hat{D}_x=\hat{D}_x\cup\{(\hat{y},\hat{z},\mathbb{I}(\hat{z}=z))\}$
                             \ENDFOR
                             \IF{$D_n$ contains the gold program $y$}
-                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(y,z,1)\}$
+                                \STATE $\hat{D}_x=\hat{D}_x\cup\{(y,z,1)\}$
                             \ENDIF
                         \ENDFOR
                     \ENDFOR
