@@ -9,7 +9,21 @@ let article_per_page = 5;
 
 function article_json_parser(json) {
     let date    = new Div(json.date,    {'class' : 'date'});
-    let title   = new Div(json.title,   {'class' : 'title'});
+    let title   = json.title;
+    if ("publish" in json) {
+        let publish = json.publish;
+        let rank = '';
+        if (publish != "Preprint") {
+            rank = 'CCFNONE';
+            if (publish.includes(',')) {
+                // NAME YEAR, CCF RANK
+                rank = `CCF${publish[publish.length - 1]}`;
+            }
+        }
+        publish = `<span class="Paper ${rank}">${publish}</span><br>`
+        title = `${title}&nbsp;${publish}`;
+    }
+    title       = new Div(title,        {'class' : 'title'});
     let content = new Div(json.content, {'class' : 'article'});
     execute_scripts_sync(content.elem);
     let article = [date, title, content];

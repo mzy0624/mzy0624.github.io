@@ -1,8 +1,9 @@
 [
     {
         "date"    : "2024.07.09",
-        "title"   : "📝 论文 <a href=\"\" target=\"_blank\">MapCoder: Multi-Agent Code Generation for Competitive Problem Solving</a> 阅读笔记",
-        "content" : "<b>ACL 2024, CCF A</b><br>作者提出了一个 Multi-Agent 的代码生成的方法来模拟人类写代码的整个过程。",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2405.11403\" target=\"_blank\">MapCoder: Multi-Agent Code Generation for Competitive Problem Solving</a> 阅读笔记",
+        "publish" : "ACL 2024, CCF A",
+        "content" : "基于检索 (Retrieval) 和自我反思 (Reflexion) 都可以提升大模型在代码生成任务上的性能，作者结合这几种方法，提出了一个 Multi-Agent 的方法来模拟人类写代码的整个过程。",
         "file"    : "study30"
     },
     {
@@ -32,19 +33,22 @@
     {
         "date"    : "2024.06.17",
         "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2303.06689\" target=\"_blank\">Self-planning Code Generation with Large Language Models</a> 阅读笔记",
+        "publish" : "Preprint",
         "content" : "大模型在面对复杂的代码生成需求时性能不好，而人类通常会将复杂问题分解为简单的子问题然后一步一步解决，所以作者提出了 Self-Planning 方法来模拟这一行为，该方法包含 Planning（规划）和 Implementation（实现）两个步骤。",
         "file"    : "study25"
     },
     {
         "date"    : "2024.06,15",
         "title"   :"📝 论文 <a href=\"https://proceedings.mlr.press/v202/ni23b.html\" target=\"_blank\">LEVER: Learning to Verify Language-to-Code Generation with Execution</a> 阅读笔记",
-        "content" : "<b>PMLR 2023</b><br>用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
+        "publish" : "PMLR 2023",
+        "content" : "用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
         "file"    : "study24"
     },
     {
         "date"    : "2024.06.14",
         "title"   :"📝 论文 <a href=\"https://aclanthology.org/2021.findings-emnlp.195/\" target=\"_blank\">Generate & Rank: A Multi-task Framework for Math Word Problems</a> 阅读笔记",
-        "content" : "<b>EMNLP 2021, CCF B</b><br>不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了 Generate & Rank 来解决这个问题。",
+        "publish" : "EMNLP 2021, CCF B",
+        "content" : "不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了 Generate & Rank 来解决这个问题。",
         "file"    : "study23"
     },
     {
@@ -102,25 +106,29 @@
     },
     {
         "date"    : "2024.05.23",
-        "title"   : "📝 论文 <a href=\"https://github.com/FloridSleeves/LLMDebugger\" target=\"_blank\">Debug like a human: A Large Language Model Debugger via Verifying Runtime Execution Step-by-step</a> 阅读笔记",
-        "content" : "<b>ACL 2024, CCF A</b><br>很多代码生成的方法都是让大模型迭代地生成并优化自己的代码，但是这些方法大多都将代码看成一个整体，这会使得大模型很难优化复杂的代码。受到人类会经常打断点调试程序的启发，作者提出了 Large <u>L</u>anguage Model <u>D</u>e<u>b</u>ugger (LDB) 来缓解这个问题。",
+        "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2402.16906\" target=\"_blank\">Debug like a human: A Large Language Model Debugger via Verifying Runtime Execution Step-by-step</a> 阅读笔记",
+        "publish" : "ACL 2024, CCF A",
+        "content" : "很多代码生成的方法都是让大模型迭代地生成并优化自己的代码，但是这些方法大多都将代码看成一个整体，这会使得大模型很难优化复杂的代码。受到人类会经常打断点调试程序的启发，作者提出了 Large <u>L</u>anguage Model <u>D</u>e<u>b</u>ugger (LDB) 来缓解这个问题。",
         "file"    : "study13"
     },
     {
         "date"    : "2024.05.22",
         "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=KuPixIqPiq\" target=\"_blank\">Teaching Large Language Models to Self-Debug</a> 阅读笔记",
-        "content" : "<b>ICLR 2024</b><br>让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。",
+        "publish" : "ICLR 2024",
+        "content" : "让大模型一开始就生成正确的代码有点难，作者提出了 Self-Debugging，试图使用 prompt 让大模型能自己 debug 并输出正确的代码。",
         "file"    : "study12"
     },
     {
         "date"    : "2024.05.21",
         "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=S37hOerQLB\" target=\"_blank\">Self-Refine: Iterative Refinement with Self-Feedback</a> 阅读笔记",
-        "content" : "<b>NIPS 2023, CCF A</b><br>尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题 。",
+        "publish" : "NIPS 2023, CCF A",
+        "content" : "尽管大模型可以生成连贯的输出，但它们在解决复杂的需求方面往往达不到要求。受人类如何完善书面文本的启发，作者提出了 Self-Refine 来缓解这个问题 。",
         "file"    : "study11"
     },
     {
         "date"    : "2024.05.21",
         "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2312.13010\" target=\"_blank\">AgentCoder: Multiagent-Code Generation with Iterative Testing and Optimisation</a> 阅读笔记",
+        "publish" : "Preprint",
         "content" : "对于代码生成任务，大模型在平衡 “代码生成” 和 “测试用例生成与执行” 方面做得不够好。作者提出了 Multiagent-Code Generation 来缓解这个问题。",
         "file"    : "study10"
     },
@@ -139,37 +147,43 @@
     {
         "date"    : "2024.05.14",
         "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=iaYcJKpY2B_\" target=\"_blank\">CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis</a> 阅读笔记",
-        "content" : "<b>ICLR 2023</b><br>在程序合成领域，CodeX 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen，并提出了一个新场景 “多轮程序合成”。",
+        "publish" :"ICLR 2023",
+        "content" : "在程序合成领域，CodeX 虽然很强，但没开源，作者提出了一个开源的代码大模型 CodeGen，并提出了一个新场景 “多轮程序合成”。",
         "file"    : "study7"
     },
     {
         "date"    : "2024.05.13",
         "title"   : "📝 论文 <a href=\"https://openreview.net/forum?id=rygGQyrFvH\" target=\"_blank\">The Curious Case of Neural Text Degeneration</a> 阅读笔记",
-        "content" : "<b>ICLR 2020</b><br>之前有笔记提到，在生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解。作者提出了 Nucleus 采样，通过截断概率分布的不可靠尾部来缓解这个问题。",
+        "publish" :"ICLR 2020",
+        "content" : "之前有笔记提到，在生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解。作者提出了 Nucleus 采样，通过截断概率分布的不可靠尾部来缓解这个问题。",
         "file"    : "study6"
     },
     {
         "date"    : "2024.05.11",
         "title"   : "📝 论文 <a href=\"https://www.researchgate.net/publication/362173423\" target=\"_blank\">CodeT: Code Generation with Generated Tests</a> 阅读笔记",
-        "content" : "<b>ICLR 2023</b><br>之前的笔记有提到，在代码生成问题中，可以在测试用例上运行代码来评估代码的好坏，问题在于如何设计高质量的测试用例，作者提出了一个自动生成测试用例并选择最佳程序的方法。",
+        "publish" :"ICLR 2023",
+        "content" : "之前的笔记有提到，在代码生成问题中，可以在测试用例上运行代码来评估代码的好坏，问题在于如何设计高质量的测试用例，作者提出了一个自动生成测试用例并选择最佳程序的方法。",
         "file"    : "study5"
     },
     {
         "date"    : "2024.05.10",
         "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2211.16490\" target=\"_blank\">Coder Reviewer Reranking for Code Generation</a> 阅读笔记",
-        "content" : "<b>ICML 2023, CCF A</b><br>组会被分配到讲这篇文章，拿过来分享一下。",
+        "publish" : "ICML 2023, CCF A",
+        "content" : "组会被分配到讲这篇文章，拿过来分享一下。",
         "file"    : "study4"
     },
     {
         "date"    : "2024.05.09",
         "title"   : "📝 论文 <a href=\"https://aclanthology.org/2022.emnlp-main.231/\" target=\"_blank\">Natural Language to Code Translation with Execution</a> 阅读笔记",
-        "content" : "<b>EMNLP 2022, CCF B</b><br>代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码方法。",
+        "publish" : "EMNLP 2022, CCF B",
+        "content" : "代码生成的主流做法是从模型生成的多个代码中采样最佳的一个，主要问题就是如何评估生成代码的好坏。作者提出了基于执行的最小化贝叶斯风险解码方法。",
         "file"    : "study3"
     },
     {
         "date"    : "2024.05.09",
         "title"   : "📝 论文 <a href=\"https://aclanthology.org/N16-1014/\" target=\"_blank\">A Diversity-Promoting Objective Function for Neural Conversation Models</a> 阅读笔记",
-        "content" : "<b>HLT-NAACL 2016, CCF B</b><br>对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解，作者提出的基于最大化互信息的解码方法可以有效缓解这个问题。",
+        "publish" : "HLT-NAACL 2016, CCF B",
+        "content" : "对话生成任务中，基于最大化似然的解码方法会导致模型偏好生成退化解，作者提出的基于最大化互信息的解码方法可以有效缓解这个问题。",
         "file"    : "study2"
     },
     {

@@ -700,3 +700,29 @@ code {
     font-family: Arial, sans-serif;
     text-anchor: middle;
 }
+
+.Paper {
+    color: white;
+    padding: .3em;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    vertical-align: middle;
+    background-color: black;
+}
+
+.CCFA {
+    background-color: #ffd700;
+}
+
+.CCFB {
+    background-color: #c0c0c0;
+}
+
+.CCFC {
+    background-color: #cd7f32;
+}
+
+.CCFNONE {
+    background-color: #6c757d;
+}
