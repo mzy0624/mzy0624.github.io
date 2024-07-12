@@ -3,7 +3,7 @@
         "date"    : "2024.07.09",
         "title"   : "📝 论文 <a href=\"https://arxiv.org/abs/2405.11403\" target=\"_blank\">MapCoder: Multi-Agent Code Generation for Competitive Problem Solving</a> 阅读笔记",
         "publish" : "ACL 2024, CCF A",
-        "content" : "基于检索 (Retrieval) 和自我反思 (Reflexion) 都可以提升大模型在代码生成任务上的性能，作者结合这几种方法，提出了一个 Multi-Agent 的方法来模拟人类写代码的整个过程。",
+        "content" : "检索 (Retrieval) 和自我反思 (Reflexion) 都可以提升大模型在代码生成任务上的性能，作者结合这几种方法，提出了一个 Multi-Agent 的方法来模拟人类写代码的整个过程。",
         "file"    : "study30"
     },
     {
