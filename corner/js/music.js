@@ -3,28 +3,32 @@ let music_count  = music_names.length;
 let cur_music    = 0;
 let init         = false;
 let audio        = new BaseElement('audio');
-let cover        = new Img('',                   {'class' : 'cover', 'style' : ['width: 95px', 'border-radius: 50%']});
+let cover        = new Img('',                   {'class' : 'cover', 'style' : {'width' : '95px', 'border-radius' : '50%'}});
 let music_name   = new Small('点击播放音乐');
-let prev_music   = new Button('⏪',              {'style' : 'background: transparent; border: none'})
-let play_pause   = new Button('▶️',               {'style' : 'background: transparent; border: none'});
-let next_music   = new Button('⏩',              {'style' : 'background: transparent; border: none'});
-let progress     = new BaseElement('input', '',  {'type'  : 'range', 'value' : '0', 'disabled' : 'true'});
-let cur_time     = new Span('0:00',              {'style' : ['font-size: 14px', 'margin-right: 2px']});
-let total_time   = new Span('0:00',              {'style' : ['font-size: 14px', 'margin-left: 2px']});
-let cur_lyric    = new Para('',                  {'style' : ['margin: 0 10px', 'font-size: 10px']});
-let next_lyric   = new Para('',                  {'style' : ['margin: 0 10px', 'font-size: 10px', 'color: #9c9c9c;']});
+let prev_music   = new Button('⏪',              {'style' : {'background' : 'transparent', 'border' : 'none'}});
+let play_pause   = new Button('▶️',               {'style' : {'background' : 'transparent', 'border' : 'none'}});
+let next_music   = new Button('⏩',              {'style' : {'background' : 'transparent', 'border' : 'none'}});
+let progress     = new BaseElement('input', '',  { 'type' : 'range', 'value' : '0', 'disabled' : 'true'});
+let cur_time     = new Span('0:00',              {'style' : {'font-size' : '14px', 'margin-right' : '2px'}});
+let total_time   = new Span('0:00',              {'style' : {'font-size' : '14px', 'margin-left' : '2px'}});
+let cur_lyric    = new Para('',                  {'style' : {'margin' : '0 10px', 'font-size' : '10px'}});
+let next_lyric   = new Para('',                  {'style' : {'margin' : '0 10px', 'font-size' : '10px', 'color' : '#9c9c9c'}});
 let is_seeking   = false;
 let lyrics       = [];
 
 let music_player = new Table([[
     cover, new Div([
         audio, music_name,
-        new Div([prev_music, play_pause, next_music], {'style' : 'margin-top: -6px'}),
+        new Div([prev_music, play_pause, next_music], {'style' : {'margin-top' : '-6px'}}),
         new Div([cur_time, progress, total_time], {'class' : 'music_controller'}),
         new Div([cur_lyric, next_lyric], {'class' : 'lyrics'})
     ], {'class' : 'music_player'})
-]], {'style' : ['min-width: 100px', 'min-height: 105px']});
+]], {'style' : {'min-width' : '100px', 'min-height' : '105px'}});
 append_elem('masthead', music_player);
+
+audio = audio.elem;
+cover = cover.elem;
+progress = progress.elem;
 
 // Format time to mm:ss
 function format_time(time) {
@@ -67,36 +71,31 @@ function update_lyrics(time) {
 
 function initialize() {
     change_music();
-    cover.remove_class('cover');
-    cover.add_class('rotate');
+    cover.classList.remove('cover');
+    cover.classList.add('rotate');
     cur_lyric.cover_innerhtml('正在加载歌曲 ...');
-    progress.elem.disabled = false;  // Enable progress bar
+    progress.disabled = false;  // Enable progress bar
     init = true;
 }
 
 function change_music() {
-    // change audio
-    audio.elem.src = `files/musics/${cur_music}.mp3`;
-    audio.add_event_listener('loadedmetadata', () => {
-        total_time.cover_innerhtml(format_time(audio.elem.duration));
+    // update audio
+    audio.src = `files/musics/${cur_music}.mp3`;
+    audio.addEventListener('loadedmetadata', () => {
+        total_time.cover_innerhtml(format_time(audio.duration));
     });
-    audio.elem.play();
-    // change cover
-    cover.elem.src = `files/musics/${cur_music}.png`;
-    cover.remove_class('rotate');
-    setTimeout(() => { cover.add_class('rotate'); }, 1);   // A small timeout is needed
-    // change music name
-    music_name.cover_innerhtml(music_names[cur_music]);
-    // change play/pause button
-    play_pause.cover_innerhtml('⏸️');
-    // change times
-    cur_time.cover_innerhtml('0:00');
-    total_time.cover_innerhtml(format_time(audio.elem.duration));
-    // change progress bar
-    progress.elem.value = 0;
-    // change lyrics
-    cur_lyric.cover_innerhtml('');
-    next_lyric.cover_innerhtml('');
+    audio.play();
+    // update cover
+    cover.src = `files/musics/${cur_music}.png`;
+    cover.classList.remove('rotate');
+    setTimeout(() => { cover.classList.add('rotate'); }, 1);    // A small timeout is needed
+    music_name.cover_innerhtml(music_names[cur_music]);         // update music name
+    play_pause.cover_innerhtml('⏸️');                           // update play/pause button
+    cur_time.cover_innerhtml('0:00');                           // update current time
+    total_time.cover_innerhtml(format_time(audio.duration));    // update total time
+    progress.value = 0;                                         // reset progress bar
+    cur_lyric.cover_innerhtml('');                              // update current lyrics
+    next_lyric.cover_innerhtml('');                             // update next lyrics
     fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
 }
 
@@ -106,12 +105,12 @@ play_pause.add_event_listener('click', () => {
         initialize();
         return;
     }
-    if (audio.elem.paused) {
-        audio.elem.play();
+    if (audio.paused) {
+        audio.play();
         play_pause.cover_innerhtml('⏸️');
     } 
     else {
-        audio.elem.pause();
+        audio.pause();
         play_pause.cover_innerhtml('▶️');
     }
 });
@@ -133,25 +132,19 @@ next_music.add_event_listener('click', () => {
 });
 
 // Add event listener for play event
-audio.add_event_listener('play', () => {
-    cover.elem.style.animationPlayState = 'running';
-});
+audio.addEventListener('play',  () => { cover.style.animationPlayState = 'running'; });
 
-audio.add_event_listener('pause', () => {
-    cover.elem.style.animationPlayState = 'paused';
-});
+audio.addEventListener('pause', () => { cover.style.animationPlayState = 'paused';  });
 
 // Add event listener for when the audio ends
-audio.add_event_listener('ended', () => {
-    next_music.click();
-});
+audio.addEventListener('ended', () => { next_music.click(); });
 
-audio.add_event_listener('timeupdate', () => {
+audio.addEventListener('timeupdate', () => { 
     if (!is_seeking && init) {
-        const currentTime = audio.elem.currentTime;
-        const duration = audio.elem.duration;
+        const currentTime = audio.currentTime;
+        const duration = audio.duration;
 
-        progress.elem.value = (currentTime / duration) * 100;
+        progress.value = (currentTime / duration) * 100;
         cur_time.cover_innerhtml(format_time(currentTime));
 
         update_lyrics(currentTime);
@@ -159,18 +152,18 @@ audio.add_event_listener('timeupdate', () => {
 });
 
 // Add event listener for progress bar input
-progress.add_event_listener('input', () => {
+progress.addEventListener('input', () => {
     if (init) {
         is_seeking = true;
     }
 });
 
 // Add event listener for progress bar change
-progress.add_event_listener('change', () => {
+progress.addEventListener('change', () => {
     if (init) {
-        let duration = audio.elem.duration;
-        let value = progress.elem.value;
-        audio.elem.currentTime = (value / 100) * duration;
+        let duration = audio.duration;
+        let value = progress.value;
+        audio.currentTime = (value / 100) * duration;
         is_seeking = false;
     }
 });

@@ -41,32 +41,111 @@ function getAnchor(url, attributes={}) {
     return url;
 }
 
-function set_attributes_for_element(element, attributes) {
-    /*
-        attributes = {
-            key1 : [value1-1, value1-2, ...],   // => [values...].join('; ')
-            // or
-            key2 : value2
+function get_style_for_element(element, key) {
+    if (typeof(element) == 'string') {
+        element = document.getElementById(element);
+    }
+    if (element instanceof BaseElement) {
+        element = element.elem;
+    }
+    let styles = element.getAttribute('style');
+    if (styles == null) {
+        return '';
+    }
+    styles = styles.split(';');
+    for (let style of styles) {
+        key_value = style.split(':');
+        if (key_value[0] == key) {
+            return key_value[1].trim();
         }
+    }
+    return '';
+}
+
+function get_attribute_for_element(element, key) {
+    if (typeof(element) == 'string') {
+        element = document.getElementById('string');
+    }
+    if (element instanceof BaseElement) {
+        element = element.elem;
+    }
+    return element.getAttribute(key);
+}
+
+function update_styles(styles, key, value) {
+    let new_style = `${key}: ${value}`;
+    for (let i in styles) {
+        if (styles[i].split(':')[0] == key) {
+            if (value == '') {
+                styles.splice(i, 1);
+            }
+            else {
+                styles[i] = new_style;
+            }
+            return;
+        }
+    }
+    styles.push(new_style)
+}
+
+function set_style_for_element(element, styles) {
+    if (element instanceof BaseElement) {
+        element = element.elem;
+    }
+    let existing_styles = element.getAttribute('style');    // 'k1: v1; k2: v2'
+    if (existing_styles == null) {
+        existing_styles = '';
+    }
+    existing_styles = existing_styles.split(';');   // ['k1: v1', 'k2: v2']
+    for (let key in styles) {        
+        update_styles(existing_styles, key, styles[key]);
+    }
+    element.setAttribute('style', existing_styles.join(';'));
+}
+
+function set_attributes_for_element(element, attributes) {
+    /**
+     * attributes = {
+     *     'style' : {      // map
+     *         'display' : 'block',
+     *         'vertical-align' : 'middle',
+     *         ...
+     *     },
+     *     'class' : ['class1', 'class2'], // list or
+     * //  'class' : 'class1',             // string
+     *     'id'    : 'main',               // string
+     *     ...
+     * }
      */
+    if (typeof(element) == 'string') {  // id
+        element = document.getElementById(element);
+    }
     if (element instanceof BaseElement) {
         element = element.elem;
     }
     for (let key in attributes) {
-        let value = attributes[key];
-        if (Array.isArray(value)) {
-            value = value.join('; ');
-            // e.g., key == 'style', value == ['margin-top: 1em', 'color: red']
-            // ==> 'style' : 'margin-top: 1em; color: red'
+        if (key == 'style') {
+            set_style_for_element(element, attributes[key]);
         }
-        let existing_value = element.getAttribute(key);
-        if (existing_value) {
-            value = `${existing_value}; ${value}`;
+        else if (key == 'class') {
+            let classes = attributes[key];
+            if (!Array.isArray(classes)) {
+                classes = [classes];
+            }
+            classes.forEach(cls => element.classList.add(cls));
         }
-        element.setAttribute(key, value);
+        else {
+            let value = attributes[key];    // value is a string
+            // if (value === false) {  // false not 'false'
+            //     element.removeAttribute(key);
+            // }
+            // else {
+            //     element.setAttribute(key, value);
+            // }
+            element.setAttribute(key, value);
+        }
     }
 }
-
 
 class BaseElement {
     constructor(tagName, contents='', attributes={}) {

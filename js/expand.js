@@ -23,14 +23,14 @@ class Expand extends Div {
     get_button() {
         // UPDATE ME
         let button = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        button.id = 'toggleButton';
         set_attributes_for_element(button, {
-            'style' : [
-                'margin-left: 5px',
-                'height: 25px',
-                'vertical-align: middle',
-                'transition: all 0.3s'
-            ],
+            'id' : 'toggleButton',
+            'style' : {
+                'margin-left' : '5px',
+                'height' : '25px',
+                'vertical-align' : 'middle',
+                'transition' : 'all 0.3s'
+            },
             'viewBox' : '0 0 10 10',
         });
         this.set_shape_for_button(button);

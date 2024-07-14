@@ -8,9 +8,14 @@ let information = {
 let article_per_page = 5;
 
 function article_json_parser(json) {
-    let date    = new Div(json.date,    {'class' : 'date'});
-    let title   = json.title;
+    // date
+    let date  = new Div(json.date, {'class' : 'date'});
+
+    // title
+    let title = json.title;
     if ("publish" in json) {
+        // paper
+        let link = json.link;
         let publish = json.publish;
         let rank = '';
         if (publish != "Preprint") {
@@ -21,13 +26,19 @@ function article_json_parser(json) {
             }
         }
         publish = `<span class="Paper ${rank}">${publish}</span><br>`
-        title = `${title}&nbsp;${publish}`;
+        title = `📝 论文 <a href="${link}" target="_blank">${title}</a> 阅读笔记 ${publish}`;
     }
-    title       = new Div(title,        {'class' : 'title'});
+    title = new Div(title, {'class' : 'title'});
+
+    // content
     let content = new Div(json.content, {'class' : 'article'});
     execute_scripts_sync(content.elem);
+
+    // article
     let article = [date, title, content];
-    if ("link" in json) {
+
+    // button
+    if ("link" in json && !("publish" in json)) {
         article.push(new Button(
             new Anchor(json.link, '跳转链接 >'),
             {'class' : 'readmore'}
@@ -144,16 +155,20 @@ async function main() {
             new Img(span.id, {'width' : '65%'}),
             {
                 'class' : 'image-container', 
-                'style' : ['display: none', 'text-align: center']
+                'style' : {
+                    'display' : 'none', 
+                    'text-align' : 'center'
+                }
             }
         );
         button.add_event_listener('click', function() {
-            if (img.elem.style.display === 'none' || img.elem.style.display === '') {
-                set_attributes_for_element(img, {'style' : 'display: block'});
+            let display = get_style_for_element(img, 'display');
+            if (display == 'none' || display == '') {
+                set_style_for_element(img, {'display' : 'block'});
                 button.cover_innerhtml('收起');
             }
             else {
-                set_attributes_for_element(img, {'style' : 'display: none'});
+                set_style_for_element(img, {'display' : 'none'});
                 button.cover_innerhtml('查看大图');
             }
         });
