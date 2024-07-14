@@ -13,7 +13,7 @@ function article_json_parser(json) {
 
     // title
     let title_content = json.title;
-    if ("publish" in json) {
+    if ("publish" in json) {    // then "link" in json
         // paper
         let link = json.link;
         let publish = json.publish;
@@ -26,9 +26,13 @@ function article_json_parser(json) {
             }
         }
         publish = `<span class="Paper ${rank}">${publish}</span><br>`
-        title_content = `📝 论文 <a href="${link}" target="_blank">${title}</a> 阅读笔记 ${publish}`;
+        title_content = `📝 论文 <a href="${link}" target="_blank">${title_content}</a> 阅读笔记`;
+        let title_with_publish = `${title_content} ${publish}`;
+        title = new Div(title_with_publish, {'class' : 'title'});
     }
-    let title = new Div(title_content, {'class' : 'title'});
+    else {
+        title = new Div(title_content, {'class' : 'title'});
+    }
 
     // content
     let content = new Div(json.content, {'class' : 'article'});
