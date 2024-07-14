@@ -12,7 +12,7 @@ function article_json_parser(json) {
     let date  = new Div(json.date, {'class' : 'date'});
 
     // title
-    let title = json.title;
+    let title_content = json.title;
     if ("publish" in json) {
         // paper
         let link = json.link;
@@ -26,9 +26,9 @@ function article_json_parser(json) {
             }
         }
         publish = `<span class="Paper ${rank}">${publish}</span><br>`
-        title = `📝 论文 <a href="${link}" target="_blank">${title}</a> 阅读笔记 ${publish}`;
+        title_content = `📝 论文 <a href="${link}" target="_blank">${title}</a> 阅读笔记 ${publish}`;
     }
-    title = new Div(title, {'class' : 'title'});
+    let title = new Div(title_content, {'class' : 'title'});
 
     // content
     let content = new Div(json.content, {'class' : 'article'});
@@ -47,7 +47,7 @@ function article_json_parser(json) {
     if ("file" in json) {
         article.push(readmore_button(
             json.file,
-            new Head(new Div(json.title, {'class' : 'title'})),
+            new Head(new Div(title_content, {'class' : 'title'})),
             new Small(new Div(json.date, {'class' : 'date'}))
         ));
     }
