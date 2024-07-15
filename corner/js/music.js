@@ -80,9 +80,6 @@ function initialize() {
 function change_music() {
     // update audio
     audio.src = `files/musics/${cur_music}.mp3`;
-    audio.addEventListener('loadedmetadata', () => {
-        total_time.cover_innerhtml(format_time(audio.duration));
-    });
     // update cover
     cover.src = `files/musics/${cur_music}.png`;
     cover.classList.remove('rotate');
@@ -90,9 +87,6 @@ function change_music() {
     music_name.cover_innerhtml(music_names[cur_music]);           // update music name
     play_pause.cover_innerhtml('⏸️');                             // update play/pause button
     cur_time.cover_innerhtml('0:00');                             // update current time
-    setTimeout(() => {
-        total_time.cover_innerhtml(format_time(audio.duration));  // update total time
-    }, 1);
     progress.value = 0;                                           // reset progress bar
     cur_lyric.cover_innerhtml('正在加载歌曲...');                   // update current lyrics
     next_lyric.cover_innerhtml('');                               // update next lyrics
@@ -144,12 +138,14 @@ audio.addEventListener('timeupdate', () => {
     if (!is_seeking && init) {
         const currentTime = audio.currentTime;
         const duration = audio.duration;
-
         progress.value = (currentTime / duration) * 100;
         cur_time.cover_innerhtml(format_time(currentTime));
-
         update_lyrics(currentTime);
     }
+});
+
+audio.addEventListener('loadedmetadata', () => {
+    total_time.cover_innerhtml(format_time(audio.duration));
 });
 
 // Add event listener for progress bar input
