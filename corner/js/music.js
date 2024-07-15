@@ -73,7 +73,6 @@ function initialize() {
     change_music();
     cover.classList.remove('cover');
     cover.classList.add('rotate');
-    cur_lyric.cover_innerhtml('正在加载歌曲 ...');
     progress.disabled = false;  // Enable progress bar
     init = true;
 }
@@ -84,19 +83,21 @@ function change_music() {
     audio.addEventListener('loadedmetadata', () => {
         total_time.cover_innerhtml(format_time(audio.duration));
     });
-    audio.play();
     // update cover
     cover.src = `files/musics/${cur_music}.png`;
     cover.classList.remove('rotate');
-    setTimeout(() => { cover.classList.add('rotate'); }, 1);    // A small timeout is needed
-    music_name.cover_innerhtml(music_names[cur_music]);         // update music name
-    play_pause.cover_innerhtml('⏸️');                           // update play/pause button
-    cur_time.cover_innerhtml('0:00');                           // update current time
-    total_time.cover_innerhtml(format_time(audio.duration));    // update total time
-    progress.value = 0;                                         // reset progress bar
-    cur_lyric.cover_innerhtml('');                              // update current lyrics
-    next_lyric.cover_innerhtml('');                             // update next lyrics
+    setTimeout(() => { cover.classList.add('rotate'); }, 1);      // A small timeout is needed
+    music_name.cover_innerhtml(music_names[cur_music]);           // update music name
+    play_pause.cover_innerhtml('⏸️');                             // update play/pause button
+    cur_time.cover_innerhtml('0:00');                             // update current time
+    setTimeout(() => {
+        total_time.cover_innerhtml(format_time(audio.duration));  // update total time
+    }, 1);
+    progress.value = 0;                                           // reset progress bar
+    cur_lyric.cover_innerhtml('正在加载歌曲...');                   // update current lyrics
+    next_lyric.cover_innerhtml('');                               // update next lyrics
     fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
+    audio.play();
 }
 
 // Add event listener for play/pause button
