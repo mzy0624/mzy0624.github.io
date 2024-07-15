@@ -41,7 +41,6 @@ function format_time(time) {
 function parse_lrc(lrc) {
     let lines = lrc.split('\n');
     lyrics = [];
-
     for (let line of lines) {
         let match = line.match(/\[(\d+):(\d+).(\d+)\](.*)/);
         if (match) {
@@ -53,7 +52,6 @@ function parse_lrc(lrc) {
             lyrics.push({ time, text });
         }
     }
-    
     lyrics.sort((a, b) => a.time - b.time);
 }
 
@@ -74,22 +72,28 @@ function initialize() {
     cover.classList.remove('cover');
     cover.classList.add('rotate');
     progress.disabled = false;  // Enable progress bar
+    play_pause.cover_innerhtml('⏸️');
     init = true;
 }
 
+function reset() {
+    music_name.cover_innerhtml(music_names[cur_music]);
+    cur_time.cover_innerhtml('0:00');
+    progress.value = 0;
+    cur_lyric.cover_innerhtml('正在加载歌曲...');
+    next_lyric.cover_innerhtml('');
+}
+
 function change_music() {
-    // update audio
-    audio.src = `files/musics/${cur_music}.mp3`;
+    setTimeout(reset, 1);
+
     // update cover
     cover.src = `files/musics/${cur_music}.png`;
     cover.classList.remove('rotate');
     setTimeout(() => { cover.classList.add('rotate'); }, 1);      // A small timeout is needed
-    music_name.cover_innerhtml(music_names[cur_music]);           // update music name
-    play_pause.cover_innerhtml('⏸️');                             // update play/pause button
-    cur_time.cover_innerhtml('0:00');                             // update current time
-    progress.value = 0;                                           // reset progress bar
-    cur_lyric.cover_innerhtml('正在加载歌曲...');                   // update current lyrics
-    next_lyric.cover_innerhtml('');                               // update next lyrics
+
+    // update audio
+    audio.src = `files/musics/${cur_music}.mp3`;
     fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
     audio.play();
 }
