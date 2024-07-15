@@ -78,6 +78,9 @@ function initialize() {
 
 function reset() {
     music_name.cover_innerhtml(music_names[cur_music]);
+    cover.src = `files/musics/${cur_music}.png`;
+    cover.classList.remove('rotate');
+    setTimeout(() => { cover.classList.add('rotate'); }, 1);      // A small timeout is needed
     cur_time.cover_innerhtml('0:00');
     progress.value = 0;
     cur_lyric.cover_innerhtml('正在加载歌曲...');
@@ -86,12 +89,6 @@ function reset() {
 
 function change_music() {
     setTimeout(reset, 1);
-
-    // update cover
-    cover.src = `files/musics/${cur_music}.png`;
-    cover.classList.remove('rotate');
-    setTimeout(() => { cover.classList.add('rotate'); }, 1);      // A small timeout is needed
-
     // update audio
     audio.src = `files/musics/${cur_music}.mp3`;
     fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
