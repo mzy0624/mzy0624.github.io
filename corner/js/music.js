@@ -76,23 +76,23 @@ function initialize() {
     init = true;
 }
 
-function reset() {
-    music_name.cover_innerhtml(music_names[cur_music]);
-    cover.src = `files/musics/${cur_music}.png`;
-    cover.classList.remove('rotate');
-    setTimeout(() => { cover.classList.add('rotate'); }, 1);      // A small timeout is needed
-    cur_time.cover_innerhtml('0:00');
-    progress.value = 0;
-    cur_lyric.cover_innerhtml('正在加载歌曲...');
-    next_lyric.cover_innerhtml('');
-}
-
 function change_music() {
-    setTimeout(reset, 1);
     // update audio
     audio.src = `files/musics/${cur_music}.mp3`;
-    fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
     audio.play();
+    
+    music_name.cover_innerhtml(music_names[cur_music]);
+    cover.src = `files/musics/${cur_music}.png`;
+    cur_time.cover_innerhtml('0:00');
+    progress.value = 0;
+    cover.classList.remove('rotate');
+    
+    setTimeout(() => {      // A small timeout is needed
+        cur_lyric.cover_innerhtml('正在加载歌曲...');
+        next_lyric.cover_innerhtml('');
+        cover.classList.add('rotate');
+    }, 1);
+    fetch(`files/musics/${cur_music}.lrc`).then(response => response.text()).then(data => parse_lrc(data));
 }
 
 // Add event listener for play/pause button
