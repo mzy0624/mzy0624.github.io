@@ -35,7 +35,7 @@ append_elem('masthead', new Table([[
         new Div([cur_time, progress, total_time],                                      {'class' : 'music_controller'}),
         new Div([cur_lyric, next_lyric],                                               {'class' : 'lyrics'})
     ], {'class' : 'music_player'})
-]], {'style' : {'min-width' : '100px', 'min-height' : '105px'}}));
+]], {'style' : {'min-width' : '100px', 'min-height' : '105px', 'user-select' : 'none'}}));
 
 audio = audio.elem;
 cover = cover.elem;

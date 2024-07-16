@@ -7,51 +7,48 @@ let information = {
 }
 let article_per_page = 5;
 
+function get_title(json) {
+    // Custom title
+    let title = new Div(json.title, {'class' : 'title'});
+    if ('publish' in json) {
+        // Paper title with link
+        let publish = json.publish;
+        let publish_span = new Span(publish, {'class' : 'Paper'});
+        if (publish != 'Preprint') {
+            // has rank
+            let rank = 'CCFNONE';
+            if (publish.includes(',')) {
+                rank = `CCF${publish[publish.length - 1]}`;
+            }
+            publish_span.add_class(rank);
+        }
+        let link = new Anchor(json.link, json.title);
+        title = new Div([publish_span, link], {'class' : ['title', 'paper_title']});
+    }
+    return title;
+}
+
 function article_json_parser(json) {
     // date
     let date  = new Div(json.date, {'class' : 'date'});
-
     // title
-    let title_content = json.title;
-    let title = new Div(title_content, {'class' : 'title'});
-    if ("publish" in json) {    // then "link" in json
-        // paper
-        let link = json.link;
-        let publish = json.publish;
-        let rank = '';
-        if (publish != "Preprint") {
-            rank = 'CCFNONE';
-            if (publish.includes(',')) {
-                // NAME YEAR, CCF RANK
-                rank = `CCF${publish[publish.length - 1]}`;
-            }
-        }
-        publish = `<span class="Paper ${rank}">${publish}</span><br>`
-        title_content = `📝 论文 <a href="${link}" target="_blank">${title_content}</a> 阅读笔记`;
-        title.cover_innerhtml(title_content);
-        title.append(publish);
-    }
-
+    let title = get_title(json);
     // content
     let content = new Div(json.content, {'class' : 'article'});
     execute_scripts_sync(content.elem);
-
     // article
     let article = [date, title, content];
-
     // button
-    if ("link" in json && !("publish" in json)) {
-        article.push(new Button(
-            new Anchor(json.link, '跳转链接 >'),
-            {'class' : 'readmore'}
-        ));
+    if ('link' in json && !('publish' in json)) {
+        article.push(new Button(new Anchor(json.link, '跳转链接 >'), {'class' : 'readmore'}));
     }
-    if ("file" in json) {
-        article.push(readmore_button(
-            json.file,
-            new Head(new Div(title_content, {'class' : 'title'})),
-            new Small(new Div(json.date, {'class' : 'date'}))
-        ));
+    if ('file' in json) {
+        let new_title = new Head(new Anchor(json.link, json.title), 1, {'class' : 'title'});
+        let new_date = new Small(json.date, {'class' : 'date'});
+        if ('publish' in json) {
+            new_title.add_class('paper_title');
+        }
+        article.push(readmore_button(json.file, new_title, new_date));
     }
     return new Li(article);
 }

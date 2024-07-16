@@ -94,13 +94,15 @@ function set_style_for_element(element, styles) {
     }
     let existing_styles = element.getAttribute('style');    // 'k1: v1; k2: v2'
     if (existing_styles == null) {
-        existing_styles = '';
+        existing_styles = [];
     }
-    existing_styles = existing_styles.split(';');   // ['k1: v1', 'k2: v2']
+    else {
+        existing_styles = existing_styles.split('; ');   // ['k1: v1', 'k2: v2']
+    }
     for (let key in styles) {        
         update_styles(existing_styles, key, styles[key]);
     }
-    element.setAttribute('style', existing_styles.join(';'));
+    element.setAttribute('style', existing_styles.join('; '));
 }
 
 function set_attributes_for_element(element, attributes) {
@@ -215,8 +217,8 @@ function append_elem(target, ...elems) {
 }
 
 class Hr extends BaseElement {
-    constructor() {
-        super('hr');
+    constructor(attributes={}) {
+        super('hr', '', attributes);
     }
 }
 

@@ -52,12 +52,17 @@ function readmore_button(file, title, date) {
                     response => response.text()
                 ).then(data => {
                     let article = new Div(data, {'class' : ['popup-content', 'full-article']});
-                    append_elem(
-                        file, new Div(
-                            [title, date, new Br(), new Hr(), article], 
-                            {'class' : 'popup', 'onclick' : 'event.stopPropagation();'}
-                        )
-                    );
+                    let head = new Div([title, date], {
+                        'style' : {
+                            'display': 'flex',
+                            'justify-content' : 'space-between',
+                            'align-items' : 'center'
+                        }
+                    });
+                    append_elem(file, new Div(
+                        [head, new Hr({'class' : 'thick'}), article], 
+                        {'class' : 'popup', 'onclick' : 'event.stopPropagation();'}
+                    ));
                     execute_scripts_sync(article.elem).then(() => {
                         MathJax.typesetPromise([title.elem, article.elem]).then(resolve); // 手动 typeset 新插入的内容
                     });
