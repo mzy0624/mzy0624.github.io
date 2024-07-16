@@ -1,5 +1,13 @@
 [
     {
+        "date"    : "2024.07.15",
+        "title"   : "CodeRL: Mastering Code Generation through Pretrained Models and Deep Reinforcement Learning",
+        "link"    : "https://papers.nips.cc/paper_files/paper/2022/hash/8636419dea1aa9fbd25fc4248e702da4-Abstract-Conference.html",
+        "publish" : "NIPS 2022, CCF A",
+        "content" : "TBD",
+        "file"    : "study31"
+    },
+    {
         "date"    : "2024.07.09",
         "title"   : "MapCoder: Multi-Agent Code Generation for Competitive Problem Solving",
         "link"    : "https://arxiv.org/abs/2405.11403",
