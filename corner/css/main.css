@@ -751,6 +751,7 @@ code {
     background-color: black;
     margin-right: .5em;
     margin-bottom: .2em;
+    user-select: none;
 }
 
 .CCFA {
