@@ -1,9 +1,10 @@
 let information = {
     'study' : { 'title' : '📚 学习科研' },
     'life'  : { 'title' : '🕒 生活 P 事'},
-    'tech'  : { 'title' : '🛠️ 技术相关'},
     'mood'  : { 'title' : '🤔 心情随想'},
-    'hobby' : { 'title' : '🧩 兴趣爱好'}
+    'hobby' : { 'title' : '🧩 兴趣爱好'},
+    'tech'  : { 'title' : '🛠️ 技术相关'},
+    'log'   : { 'title' : '🆕 更新日志'}
 }
 let article_per_page = 5;
 
