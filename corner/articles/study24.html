@@ -19,16 +19,16 @@
             \caption{Create Data}
             \begin{algorithmic}
                 \FUNCTION{CreateData}{$D_1,D_2,\cdots,D_N$}
-                    \STATE $\hat{D}=\varnothing$
-                    \FOR{$n=1\to N$}
+                    \STATE $\hat{D}\gets\varnothing$
+                    \FOR{$n\gets 1\cdots N$}
                         \FOR{$(x,*,z)\in D_n$}
-                            \STATE Sample $n$ unique code candidates $S=\{\hat{y}_i\}_{i=1}^n$ from $P_{\rm LM}(y\mid x)$
+                            \STATE Sample $n$ unique code candidates $S\gets\{\hat{y}_i\}_{i=1}^n$ from $P_{\rm LM}(y\mid x)$
                             \FOR{$\hat{y}\in S$}
-                                \STATE $\hat{z}=\mathcal{E}(\hat{y})$
-                                \STATE $\hat{D}_x=\hat{D}_x\cup\{(\hat{y},\hat{z},\mathbb{I}(\hat{z}=z))\}$
+                                \STATE $\hat{z}\gets\mathcal{E}(\hat{y})$
+                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(\hat{y},\hat{z},\mathbb{I}(\hat{z}=z))\}$
                             \ENDFOR
                             \IF{$D_n$ contains the gold program $y$}
-                                \STATE $\hat{D}_x=\hat{D}_x\cup\{(y,z,1)\}$
+                                \STATE $\hat{D}_x\gets\hat{D}_x\cup\{(y,z,1)\}$
                             \ENDIF
                         \ENDFOR
                     \ENDFOR
@@ -41,7 +41,7 @@
 <script>render_pseudocode('create_data', reset=true);</script>
 <p>
     得到数据集后，对于输入 $x$，训练验证器的目标是最小化负对数似然：
-    $$\mathcal{L}_{\theta}(x)=-\dfrac{1}{|\hat{D}_x|}\sum_{(y,z,v)\in\hat{D}_x}\log P_\theta(v\mid x,y,z)$$
+    $$\mathcal{L}_{\theta}(x)\gets-\dfrac{1}{|\hat{D}_x|}\sum_{(y,z,v)\in\hat{D}_x}\log P_\theta(v\mid x,y,z)$$
 </p>
 <hr>
 <h1>个人看法</h1>

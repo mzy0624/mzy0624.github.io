@@ -4,7 +4,7 @@
         "title"   : "CodeRL: Mastering Code Generation through Pretrained Models and Deep Reinforcement Learning",
         "link"    : "https://papers.nips.cc/paper_files/paper/2022/hash/8636419dea1aa9fbd25fc4248e702da4-Abstract-Conference.html",
         "publish" : "NIPS 2022, CCF A",
-        "content" : "TBD",
+        "content" : "对于代码生成任务，<b>当时</b>（还不是大模型时代）的大部分语言模型都是基于 NTP 的有监督训练，这忽略很多重要的信号，作者提出了一种基于强化学习的新框架。",
         "file"    : "study31"
     },
     {

@@ -45,16 +45,16 @@
             \begin{algorithmic}
                 \STATE $k$ and $t$ are hyper-parameters
                 \FUNCTION{DynamicAgentTraversal}{$x,E$}
-                    \STATE $\{(p_i,s_i)\}_{i=1}^k={\rm PlanningAgent}(E)$ where $s_1\geqslant s_2\geqslant\cdots\geqslant s_k$
-                    \FOR{$i=1\to k$}
-                        \STATE $c={\rm CodingAgent}(x,p_i)$
-                        \STATE $passed,log={\rm Test}(c,samples)$
+                    \STATE $\{(p_i,s_i)\}_{i=1}^k\gets{\rm PlanningAgent}(E)$ where $s_1\geqslant s_2\geqslant\cdots\geqslant s_k$
+                    \FOR{$i\gets 1\cdots k$}
+                        \STATE $c\gets{\rm CodingAgent}(x,p_i)$
+                        \STATE $passed,log\gets{\rm Test}(c,samples)$
                         \IF{$passed$}
                             \STATE\RETURN $c$
                         \ELSE
-                            \FOR{$j=1\to t$}
-                                \STATE $c'={\rm DebuggingAgent}(x,c,p_i,log)$
-                                \STATE $passed,log={\rm Test}(c',samples)$
+                            \FOR{$j\gets 1\cdots t$}
+                                \STATE $c'\gets{\rm DebuggingAgent}(x,c,p_i,log)$
+                                \STATE $passed,log\gets{\rm Test}(c',samples)$
                                 \IF{$pass$}
                                     \STATE\RETURN $c'$
                                 \ENDIF
@@ -64,7 +64,7 @@
                     \STATE\RETURN $c$
                 \ENDFUNCTION
                 \FUNCTION{MapCoder}{$x$}
-                    \STATE $E=={\rm RetrievalAgent}(x)$
+                    \STATE $E\gets{\rm RetrievalAgent}(x)$
                     \STATE\RETURN\CALL{DynamicAgentTraversal}{$x,E$}
                 \ENDFUNCTION
             \end{algorithmic}

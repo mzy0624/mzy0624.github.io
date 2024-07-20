@@ -11,13 +11,13 @@
         \begin{algorithm}
             \caption{$Q$-Learning}
             \begin{algorithmic}
-                \FOR{$t=1\to T$}
+                \FOR{$t\gets 1\cdots T$}
                     \STATE Choose $a_t$ from $s_t$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
                     \STATE Take action $a_t$, observe reward $r_t$ and the next state $s_{t+1}$
                     \IF{done}
                         \STATE\BREAK
                     \ENDIF
-                    \STATE $Q(s_t,a_t)= Q(s_t,a_t)+\alpha(r_t+\gamma\max_{a}Q(s_{t+1},a)-Q(s_t,a_t))$
+                    \STATE $Q(s_t,a_t)\gets Q(s_t,a_t)+\alpha(r_t+\gamma\max_{a}Q(s_{t+1},a)-Q(s_t,a_t))$
                 \ENDFOR
             \end{algorithmic}
         \end{algorithm}
@@ -40,13 +40,13 @@
             \caption{SARSA}
             \begin{algorithmic}
                 \STATE Choose $a_1$ from $s_1$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
-                \FOR{$t=1\to T$}
+                \FOR{$t\gets 1\cdots T$}
                     \STATE Take action $a_t$, observe reward $r_t$ and the next state $s_{t+1}$
                     \STATE Choose $a_{t+1}$ from $s_{t+1}$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
                     \IF{done}
                         \STATE\BREAK
                     \ENDIF
-                    \STATE $Q(s_t,a_t)= Q(s_t,a_t)+\alpha(r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t))$
+                    \STATE $Q(s_t,a_t)\gets Q(s_t,a_t)+\alpha(r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t))$
                 \ENDFOR
             \end{algorithmic}
         \end{algorithm}

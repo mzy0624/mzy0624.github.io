@@ -50,17 +50,17 @@
             \caption{Expression Bank}
             \begin{algorithmic}
                 \FUNCTION{ExpBank}{$\mathcal{D}$}
-                    \STATE $\mathcal{D}'=\{(P,S,1)\}_{(P,S)\in\mathcal{D}}$
+                    \STATE $\mathcal{D}'\gets\{(P,S,1)\}_{(P,S)\in\mathcal{D}}$
                     \FOR{$(P,S)\in\mathcal{D}$}
                         \STATE Generate top-$K$ expressions $\mathcal{S}_1$ for $P$ with beam search
                         \STATE Get new expressions $\mathcal{S}_2$ by adding tree-based disturbance to $S$
-                        \STATE $\mathcal{S}=\mathcal{S}_1\cup\mathcal{S}_2$
+                        \STATE $\mathcal{S}\gets\mathcal{S}_1\cup\mathcal{S}_2$
                         \FOR{$S'\in\mathcal{S}$}
-                            \STATE $y= 1$
+                            \STATE $y\gets 1$
                             \IF{${\rm result}(S')\ne {\rm result}(S)$}
-                                \STATE $y= 0$
+                                \STATE $y\gets 0$
                             \ENDIF
-                            \STATE $\mathcal{D}'=\mathcal{D}'\cup\{(P,S',y)\}$
+                            \STATE $\mathcal{D}'\gets\mathcal{D}'\cup\{(P,S',y)\}$
                         \ENDFOR
                     \ENDFOR
                     \STATE\RETURN $\mathcal{D}'$
@@ -84,7 +84,7 @@
                         \STATE Fine-tuning Encoder $\theta_e$ and Decoder $\theta_d$ on $\mathcal{D}$ with generation loss $J_{\rm GEN}$
                     \ENDFOR
                     \REPEAT
-                        \STATE $\mathcal{D}'=$ \CALL{ExpBank}{$\mathcal{D}$}
+                        \STATE $\mathcal{D}'\gets$ \CALL{ExpBank}{$\mathcal{D}$}
                         \STATE Train $\theta_e,\theta_d,\theta_v$ with respect to the joint loss $J_{\rm GEN}+J_{\rm RANK}$ on $\mathcal{D}'$
                     \UNTIL{done}
                 \ENDFUNCTION

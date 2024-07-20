@@ -11,12 +11,12 @@
         \begin{algorithm}
             \caption{Self-Refine}
             \begin{algorithmic}
-                \STATE $y_0=\mathcal{M}(p_{\rm gen}\ \|\ x)$
-                \STATE $t=0$
+                \STATE $y_0\gets\mathcal{M}(p_{\rm gen}\ \|\ x)$
+                \STATE $t\gets 0$
                 \WHILE{not done}
-                    \STATE $fb_t=\mathcal{M}(p_{\rm fb}\ \|\ x\ \|\ y_t)$
-                    \STATE $y_{t+1}=\mathcal{M}(p_{\rm refine}\ \|\ x\ \|\ y_0\ \|\ fb_0\ \|\ \cdots\ \|\ y_t\ \|\ fb_t)$
-                    \STATE $t=t+1$
+                    \STATE $fb_t\gets\mathcal{M}(p_{\rm fb}\ \|\ x\ \|\ y_t)$
+                    \STATE $y_{t+1}\gets\mathcal{M}(p_{\rm refine}\ \|\ x\ \|\ y_0\ \|\ fb_0\ \|\ \cdots\ \|\ y_t\ \|\ fb_t)$
+                    \STATE $t\gets t+1$
                 \ENDWHILE
                 \STATE\RETURN $y_t$
             \end{algorithmic}
