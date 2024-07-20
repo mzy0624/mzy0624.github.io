@@ -89,11 +89,14 @@ function update_styles(styles, key, value) {
 }
 
 function set_style_for_element(element, styles) {
+    if (typeof(element) == 'string') {  // id
+        element = document.getElementById(element);
+    }
     if (element instanceof BaseElement) {
         element = element.elem;
     }
     let existing_styles = element.getAttribute('style');    // 'k1: v1; k2: v2'
-    if (existing_styles == null) {
+    if (existing_styles == null || existing_styles == '') {
         existing_styles = [];
     }
     else {
