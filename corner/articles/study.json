@@ -1,5 +1,11 @@
 [
     {
+        "date"    : "2024.07.21",
+        "title"   : "⚔️ 什么是 Co-Training",
+        "content" : "TBD",
+        "file"    : "study32"
+    },
+    {
         "date"    : "2024.07.15",
         "title"   : "CodeRL: Mastering Code Generation through Pretrained Models and Deep Reinforcement Learning",
         "link"    : "https://papers.nips.cc/paper_files/paper/2022/hash/8636419dea1aa9fbd25fc4248e702da4-Abstract-Conference.html",
