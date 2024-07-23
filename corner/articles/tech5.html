@@ -1,0 +1,29 @@
+<h1>MySQL 的安装</h1>
+<p>首先安装 MySQL</p>
+<div class="code-container"><pre><code>sudo apt-get install mysql-server</code></pre></div>
+
+<h1>保证数据库的安全</h1>
+<p>然后设置参数保证服务器和数据库的安全：</p>
+<div class="code-container"><pre><code>sudo mysql_secure_installation</code></pre></div>
+<p>初次运行会询问是否安装密码验证组件，它只允许用户设置足够安全的密码，后面依次有 “是否移除匿名用户”、“是否允许远程登录 root”、“是否删除测试数据库并访问它”、“是否重新加载权限表”，按需选择即可。</p>
+
+<h1>修改身份验证方法</h1>
+<p>MySQL Server 带有一个客户端实用程序，可以从终端访问数据库并与之交互。通常，未做任何配置时，访问服务器的用户将使用 auth_socket 插件进行身份验证，这会阻止服务器使用密码对用户进行身份验证，不仅会引发安全问题，还会使用户无法借助外部程序访问数据库，因此要将身份验证方法从 auth_socket 改为使用 mysql_native_password：</p>
+<div class="code-container"><pre><code>sudo mysql</code></pre></div>
+<p>检查数据库对不同用户使用的身份验证方法<b>（下面所有的命令前面若有 "mysql> " 输入提示符，则表示该命令是 MySQL 命令，否则为系统命令）</b>：</p>
+<div class="code-container"><pre><code>mysql> select user, authentication_string, plugin, host from mysql.user;</code></pre></div>
+<p>会发现在 user 为 root 的那行的 plugin 确实为 auth_socket，使用以下命令切换到密码验证：</p>
+<div class="code-container"><pre><code>mysql> alter user 'root'@'localhost' identified with mysql_native_password by 'password';</code></pre></div>
+<p>注意，如果前面设置了密码验证组件，那么此步中的密码可能需要符合一定的强度。然后重新加载授权表并将更改更新到数据库：</p>
+<div class="code-container"><pre><code>mysql> flush privileges;</code></pre></div>
+<p>再次运行上面的查询身份验证方法的语句，不出意外的话会发现 root 那行的 plugin 变为了 mysql_native_password，更改完成。但 root 身份验证方法的更改导致无法使用和之前相同的命令打开 MySQL 控制台（即 sudo mysql），所以需要包括用户名和密码参数：</p>
+<div class="code-container"><pre><code>mysql -u root -p</code></pre></div>
+<p>然后输入刚才设置的密码就可以了。</p>
+
+<h1>创建新用户</h1>
+<p>现在可以创建一个新用户并授予适当的权限：</p>
+<div class="code-container"><pre><code>mysql> create user 'mzy'@'localhost' identified by 'password';
+mysql> grant all privileges on *.* to 'mzy'@'localhost' with grant option;
+</code></pre></div>
+<p>现在就可以把上面的 root 换成新建的用户名访问并操作数据库了：</p>
+<div class="code-container"><pre><code>mysql -u mzy -p</code></pre></div>
