@@ -2,7 +2,7 @@
     {
         "date"    : "2024.07.21",
         "title"   : "⚔️ 什么是 Co-Training",
-        "content" : "TBD",
+        "content" : "最近的想法有点和 Co-Training 类似，但跑实验的时候两个模型老是收敛不到我想要的地方，所以来学习一下相关知识。",
         "file"    : "study32"
     },
     {

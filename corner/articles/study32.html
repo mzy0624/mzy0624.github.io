@@ -1,3 +1,47 @@
-<p>Co-training（协同训练）是一种半监督学习技术，需要两种数据视图，它假设每个示例都使用两组不同的特征来描述，这两组特征提供了关于示例的补充信息。理想情况下，这两个视图是有条件独立的（即在给定类的情况下，每个示例的两个特征集是有条件的独立的），每个视图都是足够的（即仅从每个视图就可以准确地预测示例的类）。</p>
-<p>Krogel 和 Scheffer 表明，只有当数据集之间是独立的时候（即当一个模型正确地标记了另一个模型之前误标的数据），Co-Training 才是有用的。如果模型对所有未标记的数据都达成一致，即它们之间相互依赖，那么标记数据并不会产生新的信息。</p>
-<p>To Be Done</p>
+<p>Co-training（协同训练）是一种半监督学习技术，它的核心思想是利用两种数据视图 (view)，并要求<b>这两种视图在监督信息足够时可以独立训练模型</b>，而在监督信息不足以训练模型时，两个使用不同数据视图的模型之间则可以协同训练。</p>
+<h2>数据的特征视图 (Feature Views)</h2>
+<p>数据集被分成两个或多个特征视图，每个视图都提供不同的特征集，例如，在网页分类中，一个视图可以是网页的文本内容，另一个视图可以是网页的超链接。</p>
+<h2>独立性假设 (Independence Assumption)</h2>
+<p>不同特征视图下的数据应该是条件独立的，即在给定标签的条件下，各个视图的特征是相互独立的。</p>
+<hr>
+
+<h1>Co-Training</h1>
+<h2>初始化</h2>
+<p>首先从初始的少量有标记数据训练两个独立的模型，每个模型使用一个特征视图。</p>
+<h2>迭代优化</h2>
+<p>重复一下步骤直到满足停止条件：</p>
+<ol>
+    <li>使用每个模型对无标签数据打上伪标签，并选择高置信度的样本；</li>
+    <li>一个模型选择的高置信度样本被添加到另一个模型的训练集中；</li>
+    <li>使用扩充后的训练集重新训练每个模型；</li>
+</ol>
+<hr>
+
+<h1>伪代码</h1>
+<p>假设数据集 $D=D_L\cup D_U$，其中 $D_L=\{(x_i,y_i)\}_{i=1}^m$ 为有标签数据集合，而 $D_U=\{x_i\}_{i=m+1}^{m+u}$ 为无标签数据集合，且有 $m\ll u$。模型 $M_1,M_2$ 分别利用 $x$ 的不同视图来预测 $x$ 的类别：</p>
+<div style="width: 70%">
+    <pre id="co-training" class="pseudocode">
+        \begin{algorithm}
+            \caption{Co-Training}
+            \begin{algorithmic}
+                \FUNCTION{PseudoLabel}{$M,D_U,\mathcal{D_M},k$}
+                \STATE $D'_L\gets M(D_U)\qquad$\COMMENT{$\ D'_L$ is $D_U$ with pseudo labels given by $M$}
+                \STATE Select $k$ examples $D'\subseteq D'_L$ with the hightest confidence
+                \STATE \RETURN $D'$
+                \ENDFUNCTION
+                \FUNCTION{CoTraining}{$D,k$}
+                    \STATE $D_1\gets D_L$
+                    \STATE $D_2\gets D_L$
+                    \REPEAT
+                        \STATE Train $M_1$ and $M_2$ on $D_1$ and $D_2$, respectively.
+                        \STATE $D'_1\gets$ \CALL{PseudoLabel}{$M_1,D_U,D_1,k$}
+                        \STATE $D'_2\gets$ \CALL{PseudoLabel}{$M_2,D_U,D_2,k$}
+                        \STATE $D_1\gets D_1\cup D'_1$
+                        \STATE $D_2\gets D_2\cup D'_2$
+                    \UNTIL{done}
+                \ENDFUNCTION
+            \end{algorithmic}
+        \end{algorithm}
+    </pre>
+</div>
+<script>render_pseudocode('co-training', reset=true);</script>
