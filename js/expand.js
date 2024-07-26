@@ -10,18 +10,17 @@ class Expand extends Div {
         if (expands != 0) {     // [] == 0, "" == 0
             let button = this.get_button();
             if (Array.isArray(expands)) {
-                expands = new Ul(expands, {'class' : 'hidden'});
+                expands = new Ul(expands, {'class' : 'hidden', 'style' : {'font-size' : 'smaller'}});
             }
             else {
                 expands = new Div(expands, {'class' : 'hidden'});
             }
-            let small = new Small(expands);
             button.addEventListener('click', function () {
                 expands.toggle_class('visible');
                 button.classList.toggle('rotated');
             });
             this.append(button);
-            this.append(small);
+            this.append(expands);
         }
     }
 

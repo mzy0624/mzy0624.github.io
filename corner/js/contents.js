@@ -154,13 +154,11 @@ async function main() {
         append_elem(`${item}-title`, first, prev, cur_page, page_count, article_count, next, last);
     }
 
-    // Large Images
+    // Expand
     document.querySelectorAll('.expand').forEach(span => {
         let html = span.innerHTML;
         span.innerHTML = '';
         append_elem(span, new Expand('', html));
-        // append_elem(span, new Expand('', '<img src="./files/avatar.png" style="width: 50%"/>'));
-        // append_elem(span, new Expand('', [new Img(span.id, {'width' : '50%'})]));
     });
 }
 
