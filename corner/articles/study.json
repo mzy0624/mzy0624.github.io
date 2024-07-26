@@ -120,7 +120,8 @@
     {
         "date"    : "2024.05.05",
         "title"   : "⛓️ 什么是 Chain-of-Thought (CoT)",
-        "content" : "CoT 是一系列中间推理步骤，用这些步骤作为 prompt 会让大模型得到更好的效果（<a href=\"https://arxiv.org/abs/2201.11903\" target=\"_blank\">原论文</a>），例如 <span id=\"files/study14/1.png\" class=\"large_image\"></span>"
+        "content" : "CoT 是一系列中间推理步骤，用这些步骤作为 prompt 会让大模型得到更好的效果（<a href=\"https://arxiv.org/abs/2201.11903\" target=\"_blank\">原论文</a>），例如",
+        "expand"  : "<center><img src=\"files/study14/1.png\" style=\"width: 60%\"/></center>"
     },
     {
         "date"    : "2024.05.23",

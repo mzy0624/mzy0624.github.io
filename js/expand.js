@@ -1,23 +1,28 @@
 class Expand extends Div {
-    constructor(contents='', lists=[], attributes={}) {
+    constructor(contents, expands, attributes={}) {
         super(contents, attributes);
-        this.lists = lists;
+        this.expands = expands;
         this.expand();
     }
     
     expand() {
-        let lists = this.lists;
-        lists = new Ul(lists, {'class' : 'hidden'});
-        let small = new Small(lists);
-        if (this.lists.length > 0) {
+        let expands = this.expands;
+        if (expands != 0) {     // [] == 0, "" == 0
             let button = this.get_button();
+            if (Array.isArray(expands)) {
+                expands = new Ul(expands, {'class' : 'hidden'});
+            }
+            else {
+                expands = new Div(expands, {'class' : 'hidden'});
+            }
+            let small = new Small(expands);
             button.addEventListener('click', function () {
-                lists.toggle_class('visible');
+                expands.toggle_class('visible');
                 button.classList.toggle('rotated');
             });
             this.append(button);
+            this.append(small);
         }
-        this.append(small);
     }
 
     get_button() {

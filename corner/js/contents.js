@@ -35,7 +35,13 @@ function article_json_parser(json) {
     // title
     let title = get_title(json);
     // content
-    let content = new Div(json.content, {'class' : 'article'});
+    let content;
+    if ("expand" in json) {
+        content = new Expand(json.content, json.expand, {'class' : 'article'});
+    }
+    else {
+        content = new Div(json.content, {'class' : 'article'});
+    }
     execute_scripts_sync(content.elem);
     // article
     let article = [date, title, content];
@@ -149,30 +155,12 @@ async function main() {
     }
 
     // Large Images
-    document.querySelectorAll('.large_image').forEach(span => {
-        let button = new Button('查看大图', {'class' : 'readmore'});
-        let img = new Div(
-            new Img(span.id, {'width' : '65%'}),
-            {
-                'class' : 'image-container', 
-                'style' : {
-                    'display' : 'none', 
-                    'text-align' : 'center'
-                }
-            }
-        );
-        button.add_event_listener('click', function() {
-            let display = get_style_for_element(img, 'display');
-            if (display == 'none' || display == '') {
-                set_style_for_element(img, {'display' : 'block'});
-                button.cover_innerhtml('收起');
-            }
-            else {
-                set_style_for_element(img, {'display' : 'none'});
-                button.cover_innerhtml('查看大图');
-            }
-        });
-        append_elem(span, button, img);
+    document.querySelectorAll('.expand').forEach(span => {
+        let html = span.innerHTML;
+        span.innerHTML = '';
+        append_elem(span, new Expand('', html));
+        // append_elem(span, new Expand('', '<img src="./files/avatar.png" style="width: 50%"/>'));
+        // append_elem(span, new Expand('', [new Img(span.id, {'width' : '50%'})]));
     });
 }
 
