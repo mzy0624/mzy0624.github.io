@@ -148,9 +148,9 @@ async function main() {
         let next  = new Button('下一页', {'class' : 'page_button'});
         let last  = new Button('末页',  {'class' : 'page_button'});
         first.add_event_listener('click', function() { show_page(item, 1); });
-        prev.add_event_listener('click', function() { prev_page(item); });
-        next.add_event_listener('click', function() { next_page(item); });
-        last.add_event_listener('click', function() { show_page(item, -1); });
+        prev .add_event_listener('click', function() { prev_page(item); });
+        next .add_event_listener('click', function() { next_page(item); });
+        last .add_event_listener('click', function() { show_page(item, -1); });
         append_elem(`${item}-title`, first, prev, cur_page, page_count, article_count, next, last);
     }
 
