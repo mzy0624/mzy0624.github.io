@@ -153,13 +153,6 @@ async function main() {
         last .add_event_listener('click', function() { show_page(item, -1); });
         append_elem(`${item}-title`, first, prev, cur_page, page_count, article_count, next, last);
     }
-
-    // Expand
-    document.querySelectorAll('.expand').forEach(span => {
-        let html = span.innerHTML;
-        span.innerHTML = '';
-        append_elem(span, new Expand('', html));
-    });
 }
 
 main();

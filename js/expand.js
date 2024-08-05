@@ -7,20 +7,23 @@ class Expand extends Div {
     
     expand() {
         let expands = this.expands;
-        if (expands != 0) {     // [] == 0, "" == 0
-            let button = this.get_button();
+        if (expands != 0) {
             if (Array.isArray(expands)) {
                 expands = new Ul(expands, {'class' : 'hidden', 'style' : {'font-size' : 'smaller'}});
             }
             else {
                 expands = new Div(expands, {'class' : 'hidden'});
             }
+            let button = this.get_button();
             button.addEventListener('click', function () {
-                expands.toggle_class('visible');
                 button.classList.toggle('rotated');
+                expands.toggle_class('visible');
             });
             this.append(button);
             this.append(expands);
+        }
+        else {
+            set_style_for_element(this, {'margin-bottom' : '.9333em'})
         }
     }
 
