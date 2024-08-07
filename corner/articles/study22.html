@@ -1,108 +1,85 @@
-<h1>Proximal Policy Optimization (PPO)</h1>
+<h1>解决了什么问题</h1>
+<p><b>这篇文章的最后一个版本发布于 2022.11.03，那时 ChatGPT (2022.11.30) 还没有发布</b>。而当时语言模型的训练基本上是以 Next Token Prediction (NTP) 为目标的有监督训练，这忽略了很多重要但潜在有用的信号，例如单元测试。为了解决这些局限性，作者提出了一种通过预训练语言模型和深度强化学习进行程序合成任务的新框架 CodeRL。</p>
+<hr>
+
+<h1>程序合成任务</h1>
 <p>
-    <a href="https://arxiv.org/abs/1707.06347" target="_blank">近端策略优化 (PPO)</a> 是目前非常流行的强化学习算法，由 OpenAI 在 2017 年提出。根据策略梯度的公式：
-    $$\nabla_\theta\bar{R}_\theta=\mathbb{E}_{(s,a)\sim\pi_\theta}\left[A_\theta(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]$$
-    可知每次更新 $\theta$ 会导致原来采样的数据不能用了，需要重新采样，这就使得训练速度非常慢，这是 on-policy 算法的通病。
+    假设 $D$ 是问题描述，$\hat{W}=(\hat{w}_1,\cdots,\hat{w}_T)\in\mathcal{V}^T$ 是模型输出的代码，在训练过程中，假设 $W=(w_1\cdots,w_T)$ 是 ground truth，$\theta$ 是模型参数，那么模型的目标是最小化：
+    $$\mathcal{L}_{ce}(\theta)=-\sum_t\log p_\theta(w_t\mid w_{1:t-1},D)$$
+    而推理过程中，模型自回归地生成代码，其中 $t$ 时刻输出的 token $\hat{w}_t$ 从分布 $p_\theta(\cdot\mid \hat{w}_{1:t-1},D)$ 中采样，然后使用测试用例来评估生成的代码，而 “测试样例” (example test cases) 一般会作为问题描述的一部分给出。
 </p>
-<h2>重要性采样 (Importance Sampling)</h2>
+<hr>
+
+<h1>有监督学习的两个局限性</h1>
+<ul>
+    <li>仅以 teacher-forcing 的方式训练具有 NTP 目标的模型通常会在推理阶段累积误差。</li>
+    <li>当时的模型没法充分利用单元测试，而单元测试直接通过程序的功能正确性来决定模型的性能。</li>
+</ul>
+<hr>
+
+
+<h1>CodeRL</h1>
+<p>为了解决这些问题，作者提出了 CodeRL 框架。具体地说，在训练过程中，作者将语言模型视作一个 Actor，且引入一个预训练的 Critic，它用来评估生成程序的功能正确性。而在推理过程中，作者引入了一个新的生成过程，该过程使用 Critical Sampling 策略，允许模型根据单元测试和 Critic 分数的反馈自动重新生成程序。</p>
+<p>对于模型的 backbone，作者使用 <a href="https://aclanthology.org/2021.emnlp-main.685/" target="_blank">CodeT5</a> 作为 backbone，并做了以下调整：</p>
+<ul>
+    <li><b>改进预训练数据</b>：使用大规模 Github 代码数据集扩大 Python 预训练数据集，生成的 Python 数据集 (GCPY) 有 10.5B 个 tokens，是 CodeT5 使用的数据集 (CodeSearchNet) 的十倍大。</li>
+    <li><b>改进预训练目标函数</b>：引入了 NTP 的预训练任务。具体来说，作者对每个代码样本的 pivot 位置进行均匀采样，然后将 pivot 之前的内容传给编码器，剩余内容传给解码器。为了控制输入和输出序列的长度，pivot 被限制在原始序列的 10% 到 90% 之间。</li>
+</ul>
+
+<h1>将程序合成形式化为强化学习问题</h1>
 <p>
-    在分布 $p$ 下采样的目的就是求期望：
-    $$\mathbb{E}_p[f(x)]=\int p(x)f(x){\rm d}x$$
-    对于另一个分布 $q$：
-    $$\int p(x)f(x){\rm d}x=\int q(x)f(x)\dfrac{p(x)}{q(x)}{\rm d}x=\mathbb{E}_q\left[f(x)\dfrac{p(x)}{q(x)}\right]$$
-    其中 $p(x)/q(x)$ 称为重要性权重，这时候就可以用另一个策略 $\pi_{\theta'}$ 把策略梯度变成 off-policy 的：
+    将模型的可学习参数 $\theta$ 视作随机策略，在 $t$ 时刻，$\theta$ 采取动作，选择此时要输出的 token $w_t^s$，并且更新模型状态，在 episode 结束时，模型收到奖励值 $r$，这个奖励值和模型生成程序的正确性相关，所以模型的目标是最小化：
+    $$\mathcal{L}_{rl}(\theta)=-\mathbb{E}_{W^s\sim p_\theta}[r\left(W^s\right)]$$
+    根据策略梯度理论：
     \begin{align*}
-        \nabla_\theta\bar{R}_\theta=&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{p_{\theta}(s,a)}{p_{\theta'}(s,a)}A_{\theta'}(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]\\
-                                   =&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{p_{\theta}(a\mid s)p_{\theta}(s)}{p_{\theta'}(a\mid s)p_{\theta'}(s)}A_{\theta'}(s,a)\nabla_\theta\log p_\theta(a\mid s)\right]\\
+        \nabla_\theta\mathcal{L}_{rl}(\theta)\approx&\ -\mathbb{E}_{W^s\sim p_\theta}\left[r\left(W^s\right)\nabla_\theta\log p_\theta\left(W^s\mid D\right)\right]\\
+        \approx&\ -\mathbb{E}_{W^s\sim p_\theta}\left[r\left(W^s\right)\sum_t\nabla_\theta\log p_\theta(w^s_t\mid w^s_{1:t-1},D)\right]
     \end{align*}
-    这里优势函数的下标是 $\theta'$ 而不是 $\theta$ 的原因是和环境互动的是 $\pi_{\theta'}$ 而不是 $\pi_\theta$。在两次策略更新之间，环境中状态的分布通常不会发生剧烈变化，$p_{\theta'}(s)$ 和 $p_\theta(s)$ 的差距可以忽略不计，所以：
-    \begin{align*}
-        \nabla_\theta\bar{R}_\theta\approx&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{p_{\theta}(a\mid s)\nabla_\theta\log p_\theta(a\mid s)}{p_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]\\
-                                   =&\ \mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{\nabla_\theta p_\theta(a\mid s)}{p_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]
-    \end{align*}
-    $p(a\mid s)$ 其实就是 $\pi(a\mid s)$，可以通过梯度去反推原来的目标函数：
-    $$J^{\theta'}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{\pi_{\theta}(a\mid s)}{\pi_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]$$
-    如何去选取 $\theta'$ 是一个问题，在 PPO 算法中，$\theta'$ 其实就是更新前的 $\theta$，所以 PPO 还是一个 on-policy 的算法。根据上面的推导，可以得到使用重要性采样后期望相同，但并不意味着方差相同：
-    \begin{align*}
-        {\rm Var}_q\left[f(x)\dfrac{p(x)}{q(x)}\right]=&\ \mathbb{E}_q\left[\left(f(x)\dfrac{p(x)}{q(x)}\right)^2\right]-\mathbb{E}_q^2\left[f(x)\dfrac{p(x)}{q(x)}\right]\\
-                                                      =&\ \mathbb{E}_p\left[f^2(x)\dfrac{p(x)}{q(x)}\right]-\mathbb{E}_p^2[f(x)]\\
-                                                      =&\ \mathbb{E}_p[f^2(x)]-\mathbb{E}^2_p[f(x)]+\mathbb{E}_p\left[f^2(x)\dfrac{p(x)-q(x)}{q(x)}\right]\\
-                                                      =&\ {\rm Var}_p[f(x)]+\mathbb{E}_p\left[f^2(x)\dfrac{p(x)-q(x)}{q(x)}\right]
-    \end{align*}
-    这就是 PPO 要解决的问题，具体来说 PPO 有两个版本：PPO-penalty 和 PPO-clip。
 </p>
 
-<h2>PPO-penalty</h2>
+<h1>使用测试用例定义回报 (return) 值</h1>
 <p>
-    PPO-penalty 其实就是在目标函数中加了一个 KL 散度来限制两个分布之间的差距不要太大：
-    $$J^{\theta'}_{\rm PPO-penalty}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\left[\dfrac{\pi_{\theta}(a\mid s)}{\pi_{\theta'}(a\mid s)}A_{\theta'}(s,a)\right]-\beta{\rm KL}(\theta\ \|\ \theta')$$
-    其中 $\beta$ 是权重，可以使用自适应 KL 惩罚来动态调整权重：若 KL 散度大于某一个阈值就增加 $\beta$；若 KL 散度小于另一个阈值就减少 $\beta$，这两个参数都是自己设置的超参。简单地说，就是如果 KL 散度太大，说明后面这个惩罚没起到什么作用，那就增加它的权重；如果 KL 散度太小，说明惩罚太强了，就减少它的权重。
+    对于每个采样到的程序 $W^s$，回报 $r$ 定义为：
+    $$r\left(W^s\right)=\left\lbrace\begin{array}{ll}
+        -1.0&\text{if compile error (CE)}\\
+        -0.6&\text{if rumtime error (RE)}\\
+        -0.3&\text{if $W^s$ failed any test case (FT)}\\
+        +1.0&\text{if $W^s$ passed all test cases (PT)}
+    \end{array}\right.$$
+    为了减小方差，可以减去一个 baseline：
+    $$\nabla_\theta\mathcal{L}_{rl}(\theta)=-\mathbb{E}_{W^s\sim p_\theta}\left[\left(r\left(W^s\right)-r\left(W^b\right)\right)\sum_t\nabla_\theta\log p_\theta(w^s_t\mid w^s_{1:t-1},D)\right]$$
+    其中 $W^b$ 是通过贪心策略采样得到的程序，从而优于 baseline 的方法都会得到一个正的回报值，而劣于 baseline 的方法会得到一个负的回报值。
 </p>
 
-<h2>PPO-clip</h2>
+<!-- <h1>Critic 作为误差预测的中间回报</h1> -->
+<h1>Intermediate Return by Critic as Error Predictor</h1>
 <p>
-    PPO-clip 使用了一个裁剪 (clip) 函数 ${\rm clip}(x,l,r)=\max(\min(a,r),l)$，其实就是把 $x$ 限定在区间 $[l,r]$ 中。为了简化，记：
-    $${\rm ratio}=\dfrac{\pi_{\theta}(a\mid s)}{\pi_{\theta'}(a\mid s)},\ {\rm clip\_ratio}={\rm clip}({\rm ratio},1-\epsilon,1+\epsilon)$$
-    则 PPO-clip 的目标函数可以写成：
-    $$J^{\theta'}_{\rm PPO-clip}(\theta)=\mathbb{E}_{(s,a)\sim\pi_{\theta'}}\Big[\min\Big({\rm ratio}\cdot A_{\theta'}(s,a),{\rm clip\_ratio}\cdot A_{\theta'}(s,a)\Big)\Big]$$
-    这其实就是在控制 $\pi_\theta(a\mid s)$ 和 $\pi_{\theta'}(a\mid s)$ 之间的差距不要太大。如果 $A_{\theta'}(s,a)>0$，说明在状态 $s$ 下动作 $a$ 的价值高于平均，那么最大化目标函数会导致 ${\rm ratio}$ 增大，但为了防止它们之间的差距过大，${\rm clip}$ 函数不会让其超过 $1+\epsilon$；反之类似。
+    上面的梯度估计仅基于解码过程结束时的最终回报，然而，程序通常遵循固定的语法规则，其中单个 token 可能会使程序出错，因此上面的式子可能过于严格，所以作者引入了参数为 $\phi$ 的 Critic，它接收问题描述 $D$ 和相应的程序 $W^s$ 为输入，输出 $W^s$ 的回报，所以 Critic 的目标函数为：
+    $$\mathcal{L}_{\rm Critic}(\phi)=-\log p_\phi(u\mid W^s,D)$$
+    其中 $u$ 为编译器基于测试用例给出的 ground truth 回报值。作者采用比 Actor 更小的 Transformer 作为 Critic 的基础架构，从 Critic 解码器获得的 tokens 的上下文隐状态 $(h_1,\cdots,h_T)$ 沿着序列长度维度进行最大池化 $h^{\rm pool}={\rm Pooling}(h_1,\cdots,h_T)$，Critic 的最终输出为：
+    $$\hat{u}={\rm softmax}\left({\rm Linear}\left(h^{\rm pool}\right)\right)$$
+    有了训练好的 Critic，可以使用概率分布 $\hat{v}_t={\rm softmax}({\rm Linear}(h_t))$ 来估计与 ground truth 测试输出相关的 $w_t^s$ 的 token 级别的值 $\hat{q}$（这里的 $h_t$ 没有经过池化）：$\hat{q}_\phi(w^s_t)=\hat{v}_t[u]$，其中 $\hat{v}[\cdot]$ 表示从四种可能的结果中得出特定结果的概率。从而，Actor 的目标函数可以估计为：
+    $$\nabla_\theta\mathcal{L}_{rl}(\theta)=-\mathbb{E}_{W^s\sim p_\theta}\left[\left(r\left(W^s\right)-r\left(W^b\right)\right)\sum_t\hat{q}_\phi(w^s_t)\nabla_\theta\log p_\theta(w^s_t\mid w^s_{1:t-1},D)\right]$$
 </p>
 
-<!-- <div style="width: 80%">
-    <pre id="PPO" class="pseudocode">
-        \begin{algorithm}
-            \caption{PPO Actor-Critic Style}
-            \begin{algorithmic}
-                \FOR{each episode}
-                    \FOR{${\rm actor}=1\to N$}
-                        \STATE Run policy $\pi_{\theta'}$ in environment for $T$ timesteps
-                        \STATE Compute advantage estimates $\hat{A}_1,\cdots,\hat{A}_T$
-                    \ENDFOR
-                    \STATE Optimize surrogate $L$ with respect to $\theta$, with $K$ epochs and minibatch size $M\leqslant NT$
-                    \STATE $\theta'=\theta$
-                \ENDFOR
-                \FUNCTION{GAE}{}
-                    \STATE $A_t= 0$
-                    \FOR{$t=T-1\to 0$}
-                        \STATE $\delta_t= r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
-                        \STATE $A_t=\delta_t+\gamma\lambda A_{t+1}$
-                        \STATE Store $A_t$ in advantages list
-                        \STATE $R_t= A_t+V_\phi(s_t)$
-                    \ENDFOR
-                \ENDFUNCTION
+<h1>使用 Critic 和测试用例来生成代码</h1>
+<p>作者使用问题描述中提供的测试用例来提升模型的推理性能：对于每个问题，让模型生成 $N$ 份代码，通过题目描述中的测试用例的代码会被当做该问题的规约，这些代码组成集合 $\mathcal{P}$，剩余代码组成集合 $\mathcal{F}$。</p>
+<h2>Program Refining</h2>
+<p>
+    $\mathcal{P}$ 中的代码只是通过了题目描述中的测试用例，但并不能保证它们可以通过隐藏的测试用例。因此，作者使用另一轮生成来进一步优化程序。具体地，作者使用这些代码的子序列（种子）作为对 Actor 的 prompts，并使用另一个 Critic ($\phi$-test) 来指导子序列的选择。这个 Critic 使用和 $\mathcal{L}_{\rm Critic}(\phi)$ 相似的目标函数训练，只是变成了 $\rm \{FT, PT\}$ 的二分类问题。设 $W^{\rm pass}=\{w_1,\cdots,w_T\}$ 表示通过测试用例的代码：
+    $$\hat{q}_{\phi_{\rm test}}(w_t)=p_{\phi_{\rm test}}(\hat{u}={\rm PassedTest}\mid w_{1:t},D)$$
+    表示 Critic 预测子序列 $w_{1:t}$ 可以通过测试用例的概率，对于每个 $W^{\rm pass}$，选出概率最高的子序列作为种子。然后作者使用这些种子来作为对 Actor 的 prompts 指导它基于这个子序列继续生成代码。
+</p>
 
-                \FUNCTION{PPO}{$\pi_\theta,\alpha,\epsilon,\gamma,\lambda,N,K$}
-                    \FOR{each episode}
-                        \STATE Reset environment and initialize state $s_0$
-                        \STATE Initialize lists: states, actions, rewards, dones, log probabilities
+<h2>Program Repairing</h2>
+<p>
+    如果 $N$ 份代码都没有通过题目描述中的测试用例，作者会在 refinement 之前调试这些代码。具体地说，使用和 program refining 中相同的 Critic 模型从 $N$ 份代码中选出得分最高的几份候选代码，设 $W^{\rm fail}$ 表示没有通过测试用例的代码：
+    $$\hat{q}_{\phi_{\rm test}}\left(W^{\rm fail}\right)=p_{\phi_{\rm test}}\left(\hat{u}={\rm PassedTest}\mid W^{\rm fail},D\right)$$
+    表示 Critic 给 $W^{\rm fail}$ 的打分，选择得分最高的 $M$ 份代码，使用修复模型 $\omega$ 对代码进行调试。修复模型是一个 Seq2Seq 的生成模型，输入为题目描述 $D$ 和待修复代码 $W^{\rm fail}$ 的连结，从而修复模型的目标函数为：
+    $$\mathcal{L}_{ce}^{\rm repair}=-\sum_t\log p_\omega\left(W\mid D,W^{\rm fail},u,c\right)$$
+    其中 $u\in\{{\rm CE,RE,FT,PT}\}$ 和 $c\in\{\text{syntax error, out-of-index},\cdots\}$ 是作者引入的额外信号。
+</p>
+<hr>
 
-                        \FOR{$t=0\to T$}
-                            \STATE Sample action $a_t$ from $\pi_\theta(a_t\mid s_t)$ and execute $a_t$
-                            \STATE Observe reward $r_t$ and next state $s_{t+1}$
-                            \STATE Store $s_t,a_t,r_t,s_{t+1}$, and log probability $\log\pi_\theta(a_t\mid s_t)$
-                            \STATE $s_t= s_{t+1}$
-                            \IF{done}
-                                \STATE\BREAK
-                            \ENDIF
-                        \ENDFOR
-                        \STATE $R,A=$ \CALL{GAE}{}
-                        \STATE Compute returns and advantages using Generalized Advantage Estimation (GAE)
-                        \STATE \textit{(Details of GAE not included for brevity)}
-
-                        \FOR{$epoch=1\to K$}
-                            \FOR{each batch of size $N$}
-                                \STATE Compute new log probabilities $\log \pi_{\theta'}(a_t\mid s_t)$
-                                \STATE Compute probability ratio $r_t(\theta') = \dfrac{\pi_{\theta'}(a_t\mid s_t)}{\pi_\theta(a_t\mid s_t)}$
-                                \STATE Compute surrogate loss $\mathcal{L}^{CLIP} = \min(r_t(\theta') \hat{A}_t, \text{clip}(r_t(\theta'), 1 - \epsilon, 1 + \epsilon) \hat{A}_t)$
-                                \STATE Perform gradient descent on $\mathcal{L}^{CLIP}$ to update $\theta'$
-                            \ENDFOR
-                        \ENDFOR
-
-                        \STATE Update $\theta=\theta'$
-                    \ENDFOR
-                \ENDFUNCTION
-            \end{algorithmic}
-        \end{algorithm}
-    </pre>
-</div>
-<script>render_pseudocode('PPO', reset=true);</script> -->
+<h1>个人看法</h1>
+<p>在当时，还不是大模型时代，是个很好的想法，就是文章写得有点难懂，以及整个框架略显繁琐。</p>

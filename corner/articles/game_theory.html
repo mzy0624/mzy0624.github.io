@@ -1,0 +1,665 @@
+<h1>完全信息静态博弈</h1>
+<h2>完全信息静态博弈的定义</h2>
+<p>
+    在一个 $N$ 人的博弈中，玩家 $i$ 的策略空间为 $A_i$，收益函数为 $u_i:A_1\times\cdots\times A_n\to\mathbb{R}$，则：
+    <ul>
+        <li>“完全信息” 指的是收益函数在所有玩家之间是共同知识；</li>
+        <li>“静态” 指的是所有玩家同时做策略选择，并且所有玩家都知道对手的策略空间。</li>
+    </ul>
+    一个完全信息静态博弈可以形式化为：
+    $$G=\{N,\{A_i\}_{i=1}^N,\{u_i\}_{i=1}^N\}$$
+    此外，对于玩家 $i$，分别定义结果策略 $a$ 和对手策略 $a_{-i}$ 为：
+    $$a=(a_1,a_2,\cdots,a_n)$$
+    $$a_{-i}=(a_1,\cdots,a_{i-1},a_{i+1},\cdots,a_n)$$
+    从而有 $a=(a_i,a_{-i})$，静态博弈也叫策略式博弈 (Strategy Game)。
+</p>
+
+<h2>纳什均衡 (Nash Equilibrium)</h2>
+<p>
+    在博弈 $G=\{N,\{A_i\}_{i=1}^N,\{u_i\}_{i=1}^N\}$ 中，博弈结果 $a^*=(a_1^*,a_2^*,\cdots,a_n^*)$ 被称为是博弈 $G$ 的一个纳什均衡解，如果 $\forall 1\leqslant i\leqslant N$：
+    $$\forall a_i\in A_i,u_i(a_i^*,a_{-i}^*)\geqslant u_i(a_i,a_{-i}^*)$$
+    即 $a_i^*$ 是最优化问题 $\max_{a_i\in A_i}u_i(a_i,a_{-i}^*)$ 的解。
+</p>
+<p>
+    <b>求解纳什均衡</b>：定义玩家 $i$ 关于对手策略 $a_{-i}$ 的最优反应为：
+    $$B_i(a_{-i})=\{a_i\in A_i\mid \forall a_i'\in A_i,u_i(a_i,a_{-i})\geqslant u_i(a_i',a_{-i})\}$$
+    同时满足所有玩家最优反应的博弈结果就是该博弈的纳什均衡解，即 $\forall 1\leqslant i\leqslant N,a_i^*\in B_i(a_{-i}^*)$。
+</p>
+<p>而对于左边的收益矩阵，可以使用标记法来确定纳什均衡：对于玩家 $1$，若玩家 $2$ 选择 $a_{21}$，则玩家 $1$ 的最优反应为 $B_1(a_{21})=\{a_{12}\}$，所以在 $(a_{12},a_{21})$ 标记玩家 $1$；同理还要在 $(a_{11},a_{22}),(a_{12},a_{22}),(a_{11},a_{23})$ 处标记玩家 $1$，得到中间的表格。然后对于玩家 $2$ 进行同样的操作，得到右边的表格。最终标记了所有玩家的 $(a_{11},a_{23})$ 就是该博弈的纳什均衡。如果不存在就要考虑其他方法，例如混合策略纳什均衡。</p>
+<div style="text-align: center;">
+    <div id="study21-table-1" style="display: inline-block; margin-right: 20px;"></div>
+    <div id="study21-table-2" style="display: inline-block; margin-right: 20px;"></div>
+    <div id="study21-table-3" style="display: inline-block"></div>
+</div>
+<h2>古诺模型</h2>
+<p>有 $N$ 个生产同质产品的企业，$q_i$ 表示企业 $i$ 的产量，市场总供给 $Q=\sum_{i=1}^nq_i$，市场价 $P(Q)=a-bQ$，企业 $i$ 生产 $q_i$ 的总成本 $C_i(q_i)=cq_i$，且生产每单位产品的边际成本为一个小于 $a$ 的常数 $c$，所有企业同时进行产量决策。</p>
+<p>
+    首先求解每个企业的最优反应，若企业的利润就是其收益，那么企业 $i$ 的收益为：
+    $$u_i(Q)=q_i(P(Q)-c)=q_i(a-bQ-c)$$
+    每个企业 $i$ 都想要最大化其收益 $u_i$，所以：
+    $$\dfrac{\partial u_i(Q)}{\partial q_i}=a-bQ-c-bq_i$$
+    令偏导为零，得到 $q_i=(a-bQ-c)/b$ 对所有企业 $i$ 都成立，那么所有企业的产量都相等，所以 $Q=Nq_i$，代入上式得到：
+    $$q_i=\dfrac{a-c}{(N+1)b}$$
+    所以古诺博弈的纳什均衡解即为：
+    $$\left(\dfrac{a-c}{(N+1)b},\dfrac{a-c}{(N+1)b},\cdots,\dfrac{a-c}{(N+1)b}\right)$$
+</p>
+
+<h2>混合策略 (Mixed Strategy)</h2>
+<p><b>纯策略 (Pure Strategy)</b>：玩家 $i$ 的策略空间为 $A_i=\{a_{i1},\cdots,a_{iK}\}$，则$a\in A_i$ 称为 $i$ 的纯策略。</p>
+<p>
+    <b>混合策略</b>：混合策略就是给每个纯策略分配一个概率，$A_i$ 上的概率分布 $\Delta(A_i)$ 定义为：
+    $$\Delta(A_i)=\left\{p_i=(p_{i1},p_{i2},\cdots,p_{iK}),\forall 1\leqslant k\leqslant K,0\leqslant p_{ik}\leqslant 1,\sum_{k=1}^Kp_{ik}=1\right\}$$
+    则混合策略 $p_i=(p_{i1},p_{i2},\cdots,p_{iK})\in\Delta(A_i)$，其中 $p_{ik}$ 表示玩家 $i$ 选择策略 $a_{ik}$ 的概率。
+</p>
+<p><b>期望收益</b>：对于混合策略博弈结果 $p=(p_1,p_2,\cdots,p_n)$，玩家 $i$ 的期望收益为：$$U_i(p)=\sum_{a\in A}p(a)u_i(a)$$</p>
+<p><b>混合策略博弈的形式化</b>：混合策略博弈可以形式化为：$$G=\{N,\{\Delta(A_i)\}_{i=1}^N,\{U_i\}_{i=1}^N\}$$</p>
+<p>
+    <b>混合策略纳什均衡</b>：混合策略博弈结果 $p=(p_1,p_2,\cdots,p_N)$ 是混合策略纳什均衡，如果 $\forall 1\leqslant i\leqslant N$：
+    $$\forall p_i'\in\Delta(A_i),u_i(p_i,p_{-i})\geqslant u_i(p_i',p_{-i})$$
+    类似地，玩家 $i$ 的最优反应可以定义为：
+    $$B_i(p_{-i})=\{p_i\in\Delta(A_i)\mid \forall p_i'\in \Delta(A_i),u_i(p_i,p_{-i})\geqslant u_i(p_i',p_{-i})\}$$
+    且 $p$ 是混合策略纳什均衡，如果 $\forall 1\leqslant i\leqslant N,p_i^*\in B_i(p_{-i}^*)$。
+</p>
+<p>
+    <b>求解混合策略纳什均衡</b>：玩家 $i$ 选择任意一种纯策略的期望收益是相同的：对于下面的收益矩阵，对于玩家 $1$，选择 $a_{11}$ 的期望收益等于其选择 $a_{12}$ 的期望收益，于是：
+    $$\left\lbrace\begin{array}{ll}
+    2p_{11}+5p_{12}=4p_{11}+2p_{12}\\
+    p_{11}+p_{12}=1
+    \end{array}\right.\implies p_1=(0.6,0.4)$$
+    同理 $p_2=(0.75,0.25)$。所以 $p=\big((0.6,0.4),(0.75,0.25)\big)$ 就是一个混合策略纳什均衡。
+</p>
+<div id="study21-table-4"></div>
+
+<h2>占优策略 (Dominant Strategy)</h2>
+<p>
+    设 $a_i,a_i'\in A_i$ 是玩家 $i$ 的两种纯策略，定义：
+    <ul>
+        <li><b>严格占优于</b>：$a_i$ 严格占优于 $a_i'$ 如果：$$\forall a_{-i}\in A_{-i},u_i(a_i,a_{-i})>u_i(a'_i,a_{-i})$$</li>
+        <li><b>弱占优于</b>：$a_i$ 弱占优于 $a_i'$ 如果：$$\forall a_{-i}\in A_{-i},u_i(a_i,a_{-i})\geqslant u_i(a'_i,a_{-i})\ \&\ \exists a_{-i}\in A_{-i},u_i(a_i,a_{-i})>u_i(a'_i,a_{-i})$$</li>
+        <li><b>严格 / 弱占优策略</b>：$a_i$ 是严格 / 弱占优策略如果 $a_i$ 严格 / 弱占优于玩家 $i$ 的其他所有策略。</li>
+    </ul>
+</p>
+<p><b>占优策略均衡</b>：每个玩家的占优策略构成的博弈结果称为占优策略均衡，它属于纳什均衡，且它易求解但可能不存在。</p>
+<p><b>被占优策略 (Dominated Strategy)</b>：若纯策略 $a_i$ 严格 / 弱占优于 $a_i'$，则 $a_i'$ 被 $a_i$ 严格 / 弱占优。重复消除被占优策略可以求解占优策略均衡，且可以简化混合策略纳什均衡的求解（被严格占优的策略在混合策略纳什均衡中的概率为 $0$）。</p>
+
+<h2>二人零和博弈 (Two-Players Zero-Sum Game)</h2>
+<p>顾名思义，二人零和博弈只有两个玩家，zero-sum 的意思是 $\forall a\in A_1\times A_2,u_1(a)+u_2(a)=0$，即在任何博弈结果上，两个玩家的收益之和为零，这样在收益矩阵上就可以只记录一个玩家的收益。</p>
+<p>
+    <b>最大化最小原则 (Max-Min)</b>：有了零和的约束，求解纳什均衡会更简洁，首先将收益矩阵都转化为 $u$ 的形式，即 $u_1=u,u_2=-u$，从而两个玩家的目标分别为：
+    $$\left\lbrace\begin{array}{ll}
+    \max\limits_{a_1\in A_1}\min\limits_{a_2\in A_2}u(a_1,a_2)\\
+    \max\limits_{a_2\in A_2}\min\limits_{a_1\in A_1}\left(-u(a_1,a_2)\right)
+    \end{array}\right.\implies\left\lbrace\begin{array}{ll}
+    \max\limits_{a_1\in A_1}\min\limits_{a_2\in A_2}u(a_1,a_2)\\
+    -\min\limits_{a_2\in A_2}\max\limits_{a_1\in A_1}u(a_1,a_2)
+    \end{array}\right.$$
+    而前面的负号不影响策略的取值，例如下面左边的收益矩阵：
+</p>
+<div style="text-align: center;">
+    <div id="study21-table-5" style="display: inline-block; margin-right: 20px;"></div>
+    <div id="study21-table-6" style="display: inline-block"></div>
+</div>
+<ul>
+    <li>对于玩家 $1$，有 $\max\limits_{a_1\in A_1}\min\limits_{a_2\in A_2}u(a_1,a_2)=\max\limits_{a_1\in A_1}\{1,1,3\}=3$，其中 $a_1=a_{13},a_2=a_{22}$；</li>
+    <li>对于玩家 $2$，有 $\min\limits_{a_2\in A_2}\max\limits_{a_1\in A_1}u(a_1,a_2)=\min\limits_{a_2\in A_2}\{4,6,6\}=4$，其中 $a_1=a_{13},a_2=a_{21}$。</li>
+</ul>
+<p><b>引理</b>：对于有限二人零和博弈，有：$$\min_{a_2\in A_2}\max_{a_1\in A_2}u(a_1,a_2)\geqslant\max_{a_1\in A_1}\min_{a_2\in A_2}u(a_1,a_2)$$</p>
+<p>
+    <b>二人零和博弈的纳什均衡</b>：在一个二人零和博弈中，两个玩家分别选择了 $a_1^*,a_2^*$，其中：
+    $$a_1^*\in\mathop{\arg\max}_{a_1\in A_1}\min_{a_2\in A_2}u(a_1,a_2),\ a_2^*\in\mathop{\arg\min}_{a_2\in A_2}\max_{a_1\in A_1}u(a_1,a_2)$$
+    则 $a^*=(a_1^*,a_2^*)$ 是该博弈的一个纳什均衡当且仅当：
+    $$\max_{a_1\in A_1}\min_{a_2\in A_2}u(a_1,a_2)=\min_{a_2\in A_2}\max_{a_1\in A_1}u(a_1,a_2)$$
+    例如在上面右边的博弈中，$(a_{12},a_{22})$ 是纳什均衡，而左边的博弈中 $(a_{13},a_{21})$ 和 $(a_{13},a_{22})$ 都不是纳什均衡。
+</p>
+<p>
+    <b>二人零和博弈的混合策略纳什均衡</b>：记 $A_1=\{a_{11},\cdots,a_{1m}\},A_2=\{a_{21},\cdots,a_{2n}\},\Delta_i=\Delta(A_i)$，且收益矩阵 $M\in\mathbb{R}^{m\times n},M_{ij}=u(a_{1i},a_{2j})$，对于混合策略 $p_1,p_2$，玩家 $1$ 的期望收益函数为：
+    $$U(p_1,p_2)=\sum_{i=1}^m\sum_{j=1}^np_{1i}p_{2j}u(a_{1i},a_{2j})=p_1Mp_2^{\rm T}$$
+    所以两个玩家的目标分别为：
+    $$\max_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}p_1Mp_2^{\rm T},\ \min_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}p_1Mp_2^{\rm T}$$
+    根据<a href="https://en.wikipedia.org/wiki/Minimax_theorem" target="_blank">定理</a>，有：
+    $$\max_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}p_1Mp_2^{\rm T}=\min_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}p_1Mp_2^{\rm T}$$
+    所以二人零和博弈的混合策略纳什均衡 $p^*=(p_1^*,p_2^*)$ 一定存在，其中：
+    $$p_1^*\in\mathop{\arg\max}_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}U(p_1,q_2),\ p_2^*\in\mathop{\arg\min}_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}U(p_1,p_2)$$
+</p>
+
+<script>
+    append_elem('study21-table-1', create_game_table([
+        ['2, 0',     '1, 1',     '4, 2'],
+        ['3, 1',     '1, 2',     '2, 3'],
+        ['1, 3',     '0, 2',     '3, 0'],
+    ]));
+    append_elem('study21-table-2', create_game_table([
+        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, 2'],
+        ['<u>3</u>, 1', '<u>1</u>, 2', '2, 3'],
+        ['1, 3',        '0, 2',        '3, 0'],
+    ]));
+    append_elem('study21-table-3', create_game_table([
+        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, <u>2</u>'],
+        ['<u>3</u>, 1', '<u>1</u>, 2', '2, <u>3</u>'],
+        ['1, <u>3</u>', '0, 2',        '3, 0'],
+    ]));
+    append_elem('study21-table-4', create_game_table([
+        ['1, 2', '0, 4'],
+        ['0, 5', '3, 2'],
+    ], [], [], mixed=true));
+    append_elem('study21-table-5', create_game_table([
+        [2, 6, 1],
+        [3, 1, 4],
+        [4, 3, 6]
+    ]));
+    append_elem('study21-table-6', create_game_table([
+        [1, 1, 8],
+        [5, 2, 4],
+        [7, 0, 0]
+    ]));
+    
+</script>
+<hr>
+
+<h1>非完全信息静态博弈</h1>
+<h2>非完全信息静态博弈的定义</h2>
+<p>“非完全信息” 指的是玩家可能不知道其他玩家的收益，这种情况下，可以考虑玩家有一个隐藏的状态，在不同的状态下，收益矩阵不同，其他的非完全信息静态博弈都可以转化为这种模型。</p>
+<p>例如男生和女生决定去看球 ($B$) 还是看跳舞 ($D$)，如果两个人都知道对方喜欢自己，那么收益矩阵可能是下面左边的表格。但如果男生不知道女生是否喜欢自己，只知道女生有 $p$ 的概率喜欢自己，而女生知道自己是否喜欢男生，那么收益矩阵可能变为后两个表格。</p>
+<div style="text-align: center; margin-top: -1em;">
+    <div id="study22-table-1" style="display: inline-block; margin-right: 20px;"></div>
+    <div id="study22-table-2" style="display: inline-block; margin-right: 20px;"></div>
+    <div id="study22-table-3" style="display: inline-block"></div>
+</div>
+<p>
+    如果男生选择 $B$，因为女生知道自己是否喜欢男生，所以对于概率 $p$，女生会选择收益高的 $B$，而对于概率 $1-p$，女生会选择 $D$，从而此时男生的期望收益为：
+    $$U_1(B,(B,D))=2p+0(1-p)=2p$$
+    在<b>女生策略不变</b>的情况下，男生选择 $D$ 的期望收益为：
+    $$U_1(D,(B,D))=0\cdot p+1(1-p)=1-p$$
+    所以当 $2p\geqslant 1-p$ 即 $p\geqslant 1/3$ 时，$B$ 是男生的最优反应，此时 $(B,(B,D))$ 是该博弈的纳什均衡；同理当 $p\geqslant 2/3$ 时，$(D,(D,B))$ 是纳什均衡。
+</p>
+
+<h2>形式化：贝叶斯博弈</h2>
+<p>
+    静态博弈 $G=\{N,\{A_i\}_{i=1}^N,\{\Theta_i\}_{i=1}^N,\{u_i\}_{i=1}^N,p\}$ 是贝叶斯博弈，其中：
+    <ul>
+        <li>$\Theta_i$ 是玩家 $i$ 的状态集，是其私有信息，给定状态，收益是确定的；</li>
+        <li>$p=p(\theta_1,\cdots,\theta_N)$ 表示在 $\Theta_1\times\cdots\times\Theta_N$ 上的联合分布；</li>
+        <li>$a_i:\Theta_i\to A_i$ 为玩家 $i$ 的纯策略，表示其在所有状态下的策略选择 $a_i=(a_i(\theta_{i1}),\cdots,a_i(\theta_{in_i}))$；</li>
+        <li>$u_i:A_1\times\cdots\times A_N\times\Theta_1\times\cdots\times\Theta_N\to\mathbb{R}$ 为玩家 $i$ 的收益函数，$u_i(a_1,\cdots,a_N,\theta_1,\cdots,\theta_N)$ 表示在这些博弈结果和状态下玩家 $i$ 的收益。</li>
+    </ul>
+</p>
+<p>
+    一般来说，每个玩家的状态是独立的，即：
+    $$p(\theta_1,\cdots,\theta_N)=\prod_{i=1}^Np(\theta_i)$$
+    根据贝叶斯公式，有：
+    $$p(\theta_{-i}\mid\theta_i)=\dfrac{p(\theta_i,\theta_{-i})}{p(\theta_i)}$$
+    博弈结果 $(a_1,\cdots,a_N)$ 是纳什均衡，如果 $\forall 1\leqslant i\leqslant N,a_i'(\theta_i)\in A_i$，都有：
+    $$U_i(a_i(\theta_i),a_{-i})\geqslant U_i(a_i'(\theta_i),a_{-i})$$
+    <b>定理</b>：博弈结果 $(a_1,\cdots,a_N)$ 是纳什均衡，当且仅当 $\forall 1\leqslant i\leqslant N,\theta_i\in\Theta_i$，都有：
+    $$a_i(\theta_i)\in B_i(a_{-i},\theta_i)$$
+</p>
+
+<h2>例子：非完全信息古诺竞争</h2>
+<p>两家公司 $1$ 和 $2$ 生产同样的商品，这种商品可能的成本为 $c$ 或 $c'$，众所周知公司 $1$ 的成本为 $c$，但公司 $1$ 不知道公司 $2$ 的成本，它相信公司 $2$ 的成本为 $c$ 的概率为 $p$，其他假设和完全信息古诺竞争相同，两家公司同时进行产量决策。</p>
+<p>
+    容易得到，公司 $1$ 的期望收益为：
+    \begin{align*}
+        U_1(q_1,q_2,q_2',c,c')=&\ pq_1(a-q_1-q_2-c)+(1-p)q_1(a-q_1-q_2'-c)\\
+                              =&\ q_1(a-q_1-c)-q_1(pq_2+(1-p)q_2')
+    \end{align*}
+    公司 $2$ 成本为 $c^*$ 时的期望收益（其中 $c^*\in\{c,c'\}$）：
+    $$U_2(q_1,q_2^*,c^*)=q_2^*(a-q_1-q_2^*-c^*)$$
+    两家公司都想最大化期望收益，那么：
+    $$\dfrac{\partial U_1}{\partial q_1}=a-2q_1-c-pq_2-(1-p)q_2'$$
+    $$\dfrac{\partial U_2}{\partial q_2^*}=a-q_1-2q_2^*-c^*$$
+    令偏导为零，得到：
+    $$\left\lbrace\begin{array}{l}
+    2q_1=a-c-pq_2-(1-p)q_2'\\
+    2q_2=a-q_1-c\\
+    2q_2'=a-q_1-c'
+    \end{array}\right.$$
+    联立这三个方程即可解得纳什均衡解 $(q_1,(q_2,q_2'))$。
+</p>
+
+<script>
+    append_elem('study22-table-1', create_game_table(
+        [['1, 2', '0, 0'], ['0, 0', '2, 1']], 
+        [['$B$', '$D$'], ['$B$', '$D$']], 
+        ['Boy', 'Girl']
+    ));
+    append_elem('study22-table-2', create_game_table(
+        [['2, 1', '0, 0'], ['0, 0', '1, 2']], 
+        [['$B$', '$D$'], ['$B$', '$D$']], 
+        ['Boy', 'Girl $p$']
+    ));
+    append_elem('study22-table-3', create_game_table(
+        [['2, 0', '0, 2'], ['0, 1', '1, 0']], 
+        [['$B$', '$D$'], ['$B$', '$D$']], 
+        ['Boy', 'Girl $1-p$']
+    ));
+</script>
+<hr>
+
+<h1>完全信息动态博弈</h1>
+<h2>完全信息动态博弈的定义</h2>
+<p>“动态” 指的是玩家轮流做决策，也叫扩展式博弈 (Extensive Game)，特点是每一步没有收益，只有最后一步才有收益，相较于静态博弈，动态博弈多了玩家的序列信息，以及每个点上的策略集。动态博弈的例子有尼姆游戏、下棋等。</p>
+<p>
+    对于玩家集合 $N$，策略集合为 $A$，历史集为 $H$，历史集是 “策略的序列” 构成的集合，性质有：
+    <ol>
+        <li>$\varnothing\in H$，表示博弈树的根结点；</li>
+        <li>若策略序列 $a^1a^2\cdots a^k\in H$ 且 $k>s$，那么 $a^1a^2\cdots a^s\in H$；</li>
+        <li>若无穷策略序列 $(a^k)_{k=1}^{\infty}$ 满足 $\forall k,a^1a^2\cdots a^k\in H$，则 $(a^k)_{k=1}^{\infty}\in H$；</li>
+        <li>每一条历史序列都对应博弈树上其末端到达的结点；</li>
+        <li>在完全信息动态博弈中，历史集的大小等于博弈树的结点数；</li>
+        <li>最终历史 (Terminal History) $a^1a^2\cdots a^k\in H$ 要么满足 $k$ 为 $\infty$，要么满足 $\forall a^{k+1}\in A,a^1a^2\cdots a^{k+1}\notin H$；</li>
+        <li>最终历史集 $Z$ 即为所有最终历史的集合，在这些结点上是收益。</li>
+    </ol>
+    博弈玩家函数 (Player Function) $P$ 定义为：
+    <ol>
+        <li>$P:H\ \backslash Z\to N$，给每一个非终结历史分配一个玩家；</li>
+        <li>$P(h)$ 表示在历史 $h$ 后轮到哪个玩家做决策。</li>
+    </ol>
+    则完全信息动态博弈可以形式化为 $G=\{N,H,P,\{u_i\}\}$。
+</p>
+<h2>例子：Entry Game</h2>
+<p>公司 G 试图进入某市场，该市场的另一家公司 B 可以选择对立 (F) 或者合作 (C)，这样可以画出一颗博弈树：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="400" height="300">
+        <!-- Circles & Texts -->
+        <circle cx="150" cy="50"  r="4" class="node" /> <!-- G -->
+        <text    x="150"  y="40"  class="text">G</text>
+        <circle cx="50"  cy="150" r="4" class="node" /> <!-- 0, 20 -->
+        <text    x="50"   y="180" class="text">(0, 20)</text>
+        <circle cx="250" cy="150" r="4" class="node" /> <!-- B -->
+        <text    x="260"  y="140" class="text">B</text>
+        <circle cx="150" cy="250" r="4" class="node" /> <!-- -5, 0 -->
+        <text    x="150"  y="280" class="text">(-5, 0)</text>
+        <circle cx="350" cy="250" r="4" class="node" /> <!-- 10, 10 -->
+        <text    x="350"  y="280" class="text">(10, 10)</text>
+
+        <!-- Lines & Texts -->
+        <line x1="150" y1="50"  x2="50"  y2="150" class="node" />
+        <text  x="80"   y="100" class="text">Out</text>
+        <line x1="150" y1="50"  x2="250" y2="150" class="node" />
+        <text  x="220"  y="100" class="text">In</text>
+        <line x1="250" y1="150" x2="150" y2="250" class="node" />
+        <text  x="180"  y="200" class="text">F</text>
+        <line x1="250" y1="150" x2="350" y2="250" class="node" />
+        <text  x="320"  y="200" class="text">C</text>
+    </svg>
+</div>
+<p>
+    博弈树由结点和边组成，对应博弈玩家、策略和收益。其中非叶子结点代表博弈玩家，表示此时哪个玩家做出决策，每个非叶子结点有且仅有一个博弈玩家；而叶子结点代表每个玩家在此时的收益；边表示策略。该博弈树可以被形式化为：
+    <ul>
+        <li>$N=\{{\rm G,B}\}$</li>
+        <li>$H=\{\varnothing,\text{Out, In, (In, F), (In, C)}\}$</li>
+        <li>$P(\varnothing)={\rm G},P({\rm In})={\rm B}$</li>
+        <li>$u({\rm Out})=(0,20), u(({\rm In, F}))=(-5,0),u(({\rm In,C}))=(10,10)$</li>
+    </ul>
+</p>
+<hr>
+
+<h2>动态博弈的纯策略</h2>
+<p>
+    给定 $G$，玩家 $i$ 的纯策略为：
+    $$\times_{h\in H}\{a^s\mid (h,a^s)\in H,P(h)=i\}$$
+    比如下面的博弈树中：
+</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="600" height="400">
+        <!-- Circles & Texts -->
+        <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="270"  y="40"  class="text">1</text>
+        <circle cx="110" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="110"  y="140" class="text">2</text>
+        <circle cx="430" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="430"  y="140" class="text">2</text>
+        <circle cx="30"  cy="250" r="4" class="node"></circle>  <!-- (3, 8) -->
+        <text    x="30"   y="280" class="text">(3, 8)</text>
+        <circle cx="190" cy="250" r="4" class="node"></circle>  <!-- (8, 3) -->
+        <text    x="190"  y="280" class="text">(8, 3)</text>
+        <circle cx="350" cy="250" r="4" class="node"></circle>  <!-- (5, 5) -->
+        <text    x="350"  y="280" class="text">(5, 5)</text>
+        <circle cx="510" cy="250" r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="520"  y="240" class="text">1</text>
+        <circle cx="470" cy="350" r="4" class="node"></circle>  <!-- (2, 10) -->
+        <text    x="470"  y="380" class="text">(2, 10)</text>
+        <circle cx="550" cy="350" r="4" class="node"></circle>  <!-- (1, 10) -->
+        <text    x="550"  y="380" class="text">(1, 10)</text>
+
+        <!-- Lines & Texts -->
+        <line x1="270" y1="50"  x2="110" y2="150" class="node" /> <!-- A -->
+        <text  x="190"  y="90"  class="text">A</text>
+        <line x1="270" y1="50"  x2="430" y2="150" class="node" /> <!-- B --> 
+        <text  x="350"  y="90"  class="text">B</text>
+        <line x1="110" y1="150" x2="30"  y2="250" class="node" /> <!-- C --> 
+        <text  x="60"   y="200" class="text">C</text>
+        <line x1="110" y1="150" x2="190" y2="250" class="node" /> <!-- D --> 
+        <text  x="160"  y="200" class="text">D</text>
+        <line x1="430" y1="150" x2="350" y2="250" class="node" /> <!-- E --> 
+        <text  x="380"  y="200" class="text">E</text>
+        <line x1="430" y1="150" x2="510" y2="250" class="node" /> <!-- F --> 
+        <text  x="480"  y="200" class="text">F</text>
+        <line x1="510" y1="250" x2="470" y2="350" class="node" /> <!-- G --> 
+        <text  x="480"  y="300" class="text">G</text>
+        <line x1="510" y1="250" x2="550" y2="350" class="node" /> <!-- H --> 
+        <text  x="540"  y="300" class="text">H</text>
+    </svg>
+</div>
+<p>1 和 2 的纯策略分别为 $\rm \{A,B\}\times\{G,H\}$ 和 $\rm \{C,D\}\times\{E,F\}$。其实就是找到玩家对应的所有结点，每个结点的所有出边都对应一个策略的集合，这些集合的笛卡尔积就是该玩家的纯策略。</p>
+
+<h2>动态博弈的纳什均衡</h2>
+<p>动态博弈和静态博弈的纳什均衡定义是一样的，求解动态博弈的纳什均衡的方法：<b>诱导静态博弈</b>。动态博弈可以转化为静态博弈，根据每个玩家的纯策略组合，得到相应的收益，从而计算诱导收益矩阵，例如上面的博弈树对应的诱导收益矩阵为：</p>
+<div id="study23-table-1"></div>
+<script>
+    append_elem("study23-table-1", create_game_table(
+        [
+            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
+            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
+            ['5, 5', '2, 10', '5, 5', '2, 10'], 
+            ['5, 5', '1, 0',  '5, 5', '1, 0'], 
+        ],
+        [['AG', 'AH', 'BG', 'BH'], ['CE', 'CF', 'DE', 'DF']],
+        ['1','2']
+    ))
+</script>
+
+<p>然后就可以通过静态博弈的方法求解动态博弈的纳什均衡为 $\rm (AG,CF),(AH,CF),(BH,CE)$，但是这样求出来的纳什均衡的有些策略是不可信的，例如 AH 肯定不是纳什均衡，因为 AG 优于 AH。为了避免这些不可信的解，需要找出另一种均衡，让所有均衡都是可信的，即<b>子博弈完美均衡</b>。</p>
+<p><b>子博弈 (Subgame)</b>：由一个动态博弈的第一阶段以后得任意阶段开始的后续博弈阶段构成的，包含初始信息集和进行博弈所需要的全部信息，能自成一个博弈的原博弈的一部分，称为原动态博弈的一个子博弈。</p>
+<p><b>子博弈完美均衡 (Subgame Perfect Equilibrium)</b>：如果一个纳什均衡在每个子博弈中都是纳什均衡，那么它就是子博弈完美均衡。可以证明，每一个完全信息动态博弈都有子博弈完美均衡。</p>
+<p><b>求解子博弈完美均衡：后向归纳</b>：从最末端的非叶子结点（即最后的子博弈）开始，计算纳什均衡（即对于该非叶子结点的玩家求最优收益），用这个收益代替这个子博弈的根结点，然后重复上述步骤直到根结点，例如下面的博弈树：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="600" height="400">
+        <!-- Lines & Texts -->
+        <line x1="270" y1="50"  x2="110" y2="150" class="red-node" /> <!-- A -->
+        <text  x="190"  y="90"  class="text">A</text>
+        <line x1="270" y1="50"  x2="430" y2="150" class="node" /> <!-- B --> 
+        <text  x="350"  y="90"  class="text">B</text>
+        <line x1="110" y1="150" x2="30"  y2="250" class="red-node" /> <!-- C --> 
+        <text  x="60"   y="200" class="text">C</text>
+        <line x1="110" y1="150" x2="190" y2="250" class="node" /> <!-- D --> 
+        <text  x="160"  y="200" class="text">D</text>
+        <line x1="430" y1="150" x2="350" y2="250" class="node" /> <!-- E --> 
+        <text  x="380"  y="200" class="text">E</text>
+        <line x1="430" y1="150" x2="510" y2="250" class="red-node" /> <!-- F --> 
+        <text  x="480"  y="200" class="text">F</text>
+        <line x1="510" y1="250" x2="470" y2="350" class="red-node" /> <!-- G --> 
+        <text  x="480"  y="300" class="text">G</text>
+        <line x1="510" y1="250" x2="550" y2="350" class="node" /> <!-- H --> 
+        <text  x="540"  y="300" class="text">H</text>
+
+        <!-- Circles & Texts -->
+        <circle cx="270" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="270"  y="40"  class="text">1</text>
+        <text    x="310"  y="50"  class="text">(3, 8)</text>
+        <circle cx="110" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="110"  y="140" class="text">2</text>
+        <text    x="70"   y="160" class="text">(3, 8)</text>
+        <circle cx="430" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="430"  y="140" class="text">2</text>
+        <text    x="470"  y="160" class="text">(2, 10)</text>
+        <circle cx="30"  cy="250" r="4" class="node"></circle>  <!-- (3, 8) -->
+        <text    x="30"   y="280" class="text">(3, 8)</text>
+        <circle cx="190" cy="250" r="4" class="node"></circle>  <!-- (8, 3) -->
+        <text    x="190"  y="280" class="text">(8, 3)</text>
+        <circle cx="350" cy="250" r="4" class="node"></circle>  <!-- (5, 5) -->
+        <text    x="350"  y="280" class="text">(5, 5)</text>
+        <circle cx="510" cy="250" r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="520"  y="240" class="text">1</text>
+        <text    x="550"  y="260" class="text">(2, 10)</text>
+        <circle cx="470" cy="350" r="4" class="node"></circle>  <!-- (2, 10) -->
+        <text    x="470"  y="380" class="text">(2, 10)</text>
+        <circle cx="550" cy="350" r="4" class="node"></circle>  <!-- (1, 10) -->
+        <text    x="550"  y="380" class="text">(1, 10)</text>
+    </svg>
+</div>
+<p>子博弈完美均衡为 $\rm (AG,CF)$，如果某个结点的多个分支被选中，则依次分析得到多个子博弈完美均衡。</p>
+
+<h2>主从博弈 (Stackelberg Game)</h2>
+<p>Leader 先做决策，Follower 后做决策，如下面的收益矩阵：</p>
+<div id="study23-table-2" style="margin-top: -1em;"></div>
+<script>
+    append_elem("study23-table-2", create_game_table(
+        [
+            ['$L_{11},R_{11}$', '$L_{12},R_{12}$', '$\\cdots$', '$L_{1n},R_{1n}$'], 
+            ['$L_{21},R_{21}$', '$L_{22},R_{22}$', '$\\cdots$', '$L_{2n},R_{2n}$'], 
+            ['$\\vdots$',       '$\\vdots$',       '$\\ddots$', '$\\vdots$'], 
+            ['$L_{m1},R_{m1}$', '$L_{m2},R_{m2}$', '$\\cdots$', '$L_{mn},R_{mn}$'], 
+        ],
+        [['$a_{11}$', '$a_{12}$', '$\\vdots$', '$a_{1m}$'], ['$a_{21}$', '$a_{22}$', '$\\cdots$', '$a_{2n}$']],
+        ['Leader','Follower'], 
+        true,
+        [['$p_{11}$', '$p_{12}$', '', '$p_{1m}$'], ['$p_{21}$', '$p_{22}$', '', '$p_{2n}$']],
+    ));
+</script>
+<p>
+    使用线性规划求解 Stackelberg Equilibrium：
+    $$\max_{p_1}p_1Lp_2^{\rm T}\quad {\rm s.t.}\ p_2=\mathop{\arg\max}_{p_2}p_1Rp_2^{\rm T}$$
+    例如下面的收益矩阵：
+</p>
+<div style="text-align: center">
+    <div id="study23-table-3" style="display: inline-block;"></div>
+    <div style="display: inline-block; vertical-align: bottom;">
+        $$\implies\left\lbrace\begin{array}{l}
+            L=\begin{pmatrix}1&3\\0&2\end{pmatrix}\\
+            R=\begin{pmatrix}1&0\\0&1\end{pmatrix}
+        \end{array}\right.$$
+    </div>
+</div>
+<!-- <div id="study23-table-3" style="margin-top: -1em;"></div> -->
+<script>append_elem("study23-table-3", create_game_table([['$1,1$', '$3,0$'], ['$0,0$', '$2,1$']]));</script>
+<p>
+    若 $p_1=(p,1-p)$，则 $p_1L=(p,p+2),p_1R=(p,1-p)$：
+    <ul>
+        <li>
+            当玩家 $2$ 选择 $a_{21}$，即 $p_2=(1,0)$ 时，优化目标为：
+            $$\max_{p}p\quad {\rm s.t.}\ (p,1-p)(1,0)^{\rm T}\geqslant (p,1-p)(0,1)^{\rm T}\implies p=1$$
+        </li>
+        <li>
+            当玩家 $2$ 选择 $a_{22}$ 即 $p_2=(0,1)$ 时，优化目标为：
+            $$\max_{p+2}p\quad {\rm s.t.}\ (p,1-p)(0,1)^{\rm T}\geqslant (p,1-p)(1,0)^{\rm T}\implies p=0.5$$
+        </li>
+    </ul>
+    古诺竞争中，若企业 $1$ 先决定产量，企业 $2$ 再决定，那么企业 $1$ 的目标为：
+    $$\max_{q_1}q_1(a-b(q_1+q_2)-c)\quad {\rm s.t.}\ q_2=\dfrac{a-c-bq_1}{2b}$$
+    代入解得 $q_1=\dfrac{a-c}{2b},q_2=\dfrac{a-c}{4b}$，即为该主从博弈的 Stackelberg 均衡。
+</p>
+
+<h2>Game Tree Search</h2>
+<p><b>Min-Max</b>：两个玩家 max 和 min，max 先做决策，然后轮流做决策直到博弈结束，例如下面的博弈树：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="150">
+        <!-- Lines & Texts -->
+        <line x1="250" y1="10"  x2="100" y2="60"  class="node" />
+        <line x1="100" y1="60"  x2="50"  y2="110" class="node" />
+        <line x1="100" y1="60"  x2="100" y2="110" class="node" />
+        <line x1="100" y1="60"  x2="150" y2="110" class="node" />
+        
+        <line x1="250" y1="10"  x2="250" y2="60"  class="node" />
+        <line x1="250" y1="60"  x2="200" y2="110" class="node" />
+        <line x1="250" y1="60"  x2="250" y2="110" class="node" />
+        <line x1="250" y1="60"  x2="300" y2="110" class="node" />
+        
+        <line x1="250" y1="10"  x2="400" y2="60"  class="node" />
+        <line x1="400" y1="60"  x2="350" y2="110" class="node" />
+        <line x1="400" y1="60"  x2="400" y2="110" class="node" />
+        <line x1="400" y1="60"  x2="450" y2="110" class="node" />
+        
+        <!-- Circles & Texts -->
+        <circle cx="250" cy="10"  r="4" class="red-node"></circle>
+        <circle cx="100" cy="60"  r="4" class="blue-node"></circle>
+        <circle cx="250" cy="60"  r="4" class="blue-node"></circle>
+        <circle cx="400" cy="60"  r="4" class="blue-node"></circle>
+
+        <circle cx="50"  cy="110" r="4" class="node"></circle>
+        <text    x="50"   y="140" class="text">3</text>
+        <circle cx="100" cy="110" r="4" class="node"></circle>
+        <text    x="100"  y="140" class="text">12</text>
+        <circle cx="150" cy="110" r="4" class="node"></circle>
+        <text    x="150"  y="140" class="text">8</text>
+        <circle cx="200" cy="110" r="4" class="node"></circle>
+        <text    x="200"  y="140" class="text">2</text>
+        <circle cx="250" cy="110" r="4" class="node"></circle>
+        <text    x="250"  y="140" class="text">4</text>
+        <circle cx="300" cy="110" r="4" class="node"></circle>
+        <text    x="300"  y="140" class="text">6</text>
+        <circle cx="350" cy="110" r="4" class="node"></circle>
+        <text    x="350"  y="140" class="text">14</text>
+        <circle cx="400" cy="110" r="4" class="node"></circle>
+        <text    x="400"  y="140" class="text">2</text>
+        <circle cx="450" cy="110" r="4" class="node"></circle>
+        <text    x="450"  y="140" class="text">5</text>
+   </svg>
+</div>
+<p>其中，红色、蓝色、黑色节点分别代表 max、min 和收益，自下而上分析，min 选择收益最小的，max 选择收益最大的，于是得到以下博弈树：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="180">
+        <!-- Lines & Texts -->
+        <line x1="250" y1="30"  x2="100" y2="80"  class="red-node" />
+        <line x1="100" y1="80"  x2="50"  y2="130" class="blue-node" />
+        <line x1="100" y1="80"  x2="100" y2="130" class="node" />
+        <line x1="100" y1="80"  x2="150" y2="130" class="node" />
+        
+        <line x1="250" y1="30"  x2="250" y2="80"  class="node" />
+        <line x1="250" y1="80"  x2="200" y2="130" class="blue-node" />
+        <line x1="250" y1="80"  x2="250" y2="130" class="node" />
+        <line x1="250" y1="80"  x2="300" y2="130" class="node" />
+        
+        <line x1="250" y1="30"  x2="400" y2="80"  class="node" />
+        <line x1="400" y1="80"  x2="350" y2="130" class="node" />
+        <line x1="400" y1="80"  x2="400" y2="130" class="blue-node" />
+        <line x1="400" y1="80"  x2="450" y2="130" class="node" />
+        
+        <!-- Circles & Texts -->
+        <circle cx="250" cy="30"  r="4" class="red-node"></circle>
+        <text    x="250"  y="20"  class="red-text">3</text>
+        <circle cx="100" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="80"   y="80"  class="red-text">3</text>
+        <circle cx="250" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="230"  y="80"  class="blue-text">2</text>
+        <circle cx="400" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="420"  y="80"  class="blue-text">2</text>
+
+        <circle cx="50"  cy="130" r="4" class="node"></circle>
+        <text    x="50"   y="160" class="blue-text">3</text>
+        <circle cx="100" cy="130" r="4" class="node"></circle>
+        <text    x="100"  y="160" class="text">12</text>
+        <circle cx="150" cy="130" r="4" class="node"></circle>
+        <text    x="150"  y="160" class="text">8</text>
+        <circle cx="200" cy="130" r="4" class="node"></circle>
+        <text    x="200"  y="160" class="blue-text">2</text>
+        <circle cx="250" cy="130" r="4" class="node"></circle>
+        <text    x="250"  y="160" class="text">4</text>
+        <circle cx="300" cy="130" r="4" class="node"></circle>
+        <text    x="300"  y="160" class="text">6</text>
+        <circle cx="350" cy="130" r="4" class="node"></circle>
+        <text    x="350"  y="160" class="text">14</text>
+        <circle cx="400" cy="130" r="4" class="node"></circle>
+        <text    x="400"  y="160" class="blue-text">2</text>
+        <circle cx="450" cy="130" r="4" class="node"></circle>
+        <text    x="450"  y="160" class="text">5</text>
+    </svg>
+</div>
+<p><b>评估函数 (Evaluation Function)</b>：用来评估当前状态对于一个玩家的好坏，它先为当前玩家评分，再为其对手评分，作差之后得到当前状态对于该玩家的好坏，其实就是上面博弈树叶子结点对应的值。</p>
+<p><b>$\alpha$-$\beta$ 剪枝</b>：如果一个状态被证明是不好的（不比已知的其他状态好），且对手可以导致该状态发生，那就没必要在对应的结点展开博弈树。例如在上面的博弈树中，采用 DFS 搜索博弈树时，先搜索最左边那棵子树，得到该结点的值为 3，再搜索中间的子树时，第一个叶子结点的值为 2，说明这个子树一定比左子树差，所以就没必要继续搜索，右子树中由于 14 先于 2 被搜索到，所以只有最后的 5 并没有被搜索。从而就可以得到如下的搜索路径（虚线代表该路径没有被搜索）：</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="180">
+        <!-- Lines & Texts -->
+        <line x1="250" y1="30"  x2="100" y2="80"  class="red-node" />
+        <line x1="100" y1="80"  x2="50"  y2="130" class="blue-node" />
+        <line x1="100" y1="80"  x2="100" y2="130" class="node" />
+        <line x1="100" y1="80"  x2="150" y2="130" class="node" />
+        
+        <line x1="250" y1="30"  x2="250" y2="80"  class="node" />
+        <line x1="250" y1="80"  x2="200" y2="130" class="blue-node" />
+        <line x1="250" y1="80"  x2="250" y2="130" class="dash" />
+        <line x1="250" y1="80"  x2="300" y2="130" class="dash" />
+        
+        <line x1="250" y1="30"  x2="400" y2="80"  class="node" />
+        <line x1="400" y1="80"  x2="350" y2="130" class="node" />
+        <line x1="400" y1="80"  x2="400" y2="130" class="blue-node" />
+        <line x1="400" y1="80"  x2="450" y2="130" class="dash" />
+        
+        <!-- Circles & Texts -->
+        <circle cx="250" cy="30"  r="4" class="red-node"></circle>
+        <text    x="250"  y="20"  class="red-text">3</text>
+        <circle cx="100" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="80"   y="80"  class="red-text">3</text>
+        <circle cx="250" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="230"  y="80"  class="blue-text">2</text>
+        <circle cx="400" cy="80"  r="4" class="blue-node"></circle>
+        <text    x="420"  y="80"  class="blue-text">2</text>
+
+        <circle cx="50"  cy="130" r="4" class="node"></circle>
+        <text    x="50"   y="160" class="blue-text">3</text>
+        <circle cx="100" cy="130" r="4" class="node"></circle>
+        <text    x="100"  y="160" class="text">12</text>
+        <circle cx="150" cy="130" r="4" class="node"></circle>
+        <text    x="150"  y="160" class="text">8</text>
+        <circle cx="200" cy="130" r="4" class="node"></circle>
+        <text    x="200"  y="160" class="blue-text">2</text>
+        <circle cx="250" cy="130" r="4" class="node"></circle>
+        <text    x="250"  y="160" class="text">4</text>
+        <circle cx="300" cy="130" r="4" class="node"></circle>
+        <text    x="300"  y="160" class="text">6</text>
+        <circle cx="350" cy="130" r="4" class="node"></circle>
+        <text    x="350"  y="160" class="text">14</text>
+        <circle cx="400" cy="130" r="4" class="node"></circle>
+        <text    x="400"  y="160" class="blue-text">2</text>
+        <circle cx="450" cy="130" r="4" class="node"></circle>
+        <text    x="450"  y="160" class="text">5</text>
+    </svg>
+</div>
+<p>$\alpha$-$\beta$ 剪枝的具体流程（传递两个值 $\alpha,\beta$ 什么的）懒得写了，反正大致操作就是像上面这样的。</p>
+<hr>
+
+<h1>非完全信息动态博弈</h1>
+<h2>非完全信息动态博弈的定义</h2>
+<p>上面提到，完全信息动态博弈定义为 $G=\{N,H,P,\{u_i\}\}$，而非完全信息动态博弈指的是玩家可能无法获取所有信息，定义信息集 $I$，则非完全信息动态博弈可以定义为 $G=\{N,H,P,I,\{u_i\}\}$。</p>
+<p><b>信息集</b>：若 $|N|=n$，则信息集定义为 $I=\{I_1,I_2,\cdots,I_n\}$，其中 $I_i$ 代表玩家 $i$ 所掌握的信息的分割 (partition)，即 $I_i$ 内的元素互不相交，且并集为全集。例如下面的博弈树，虚线代表玩家 $1$ 无法区分玩家 $2$ 选了 A 还是 B，所以玩家 $1$ 在该结点处的信息为 $\rm\{LA,LB\}$，玩家的信息集为 $I_1=\{\varnothing,\{{\rm LA,LB}\}\},I_2=\{\{{\rm L}\}\}$</p>
+<div style="text-align: center; margin-top: -1em;">
+    <svg width="500" height="400">
+        <!-- Circles & Texts -->
+        <circle cx="310" cy="50"  r="4" class="node"></circle>  <!-- 1 -->
+        <text    x="310"  y="40"  class="text">1</text>
+        <circle cx="150" cy="150" r="4" class="node"></circle>  <!-- 2 -->
+        <text    x="150"  y="140" class="text">2</text>
+        <circle cx="470" cy="150" r="4" class="node"></circle>  <!-- (2, 1) -->
+        <text    x="470"  y="180" class="text">(2, 1)</text>
+        <circle cx="70"  cy="250" r="4" class="node"></circle>
+        <circle cx="230" cy="250" r="4" class="node"></circle>
+        <circle cx="30"  cy="350" r="4" class="node"></circle>  <!-- (0, 0) -->
+        <text    x="30"   y="380" class="text">(0, 0)</text>
+        <circle cx="110" cy="350" r="4" class="node"></circle>  <!-- (1, 2) -->
+        <text    x="110"  y="380" class="text">(1, 2)</text>
+        <circle cx="190" cy="350" r="4" class="node"></circle>  <!-- (1, 2) -->
+        <text    x="190"  y="380" class="text">(1, 2)</text>
+        <circle cx="270" cy="350" r="4" class="node"></circle>  <!-- (0, 0) -->
+        <text    x="270"  y="380" class="text">(0, 0)</text>
+
+        <!-- Lines & Texts -->
+        <line x1="310" y1="50"  x2="150" y2="150" class="node" /> <!-- L -->
+        <text  x="230"  y="90"  class="text">L</text>
+        <line x1="310" y1="50"  x2="470" y2="150" class="node" /> <!-- R --> 
+        <text  x="390"  y="90"  class="text">R</text>
+        <line x1="150" y1="150" x2="70"  y2="250" class="node" /> <!-- A -->
+        <text  x="100"  y="200" class="text">A</text>
+        <line x1="150" y1="150" x2="230" y2="250" class="node" /> <!-- B -->
+        <text  x="200"  y="200" class="text">B</text>
+        <line x1="70"  y1="250" x2="30"  y2="350" class="node" /> <!-- a --> 
+        <text  x="40"   y="300" class="text">a</text>
+        <line x1="70"  y1="250" x2="110" y2="350" class="node" /> <!-- b --> 
+        <text  x="100"  y="300" class="text">b</text>
+        <line x1="230" y1="250" x2="190" y2="350" class="node" /> <!-- a --> 
+        <text  x="200"  y="300" class="text">a</text>
+        <line x1="230" y1="250" x2="270" y2="350" class="node" /> <!-- b --> 
+        <text  x="260"  y="300" class="text">b</text>
+        <line x1="70"  y1="250" x2="230" y2="250" class="dash" /> <!-- 1 -->
+        <text  x="150"  y="240" class="text">1</text>
+    </svg>
+</div>
+<p>
+    <b>纯策略</b>：玩家 $i$ 的纯策略为：$A(I_{i1})\times A(I_{i2})\times\cdots\times A(I_{im})$，其中 $A(I_{ij})$ 为 $I_{ij}$ 中的策略，例如上面的博弈树：
+    $$I_1=\{I_{11},I_{12}\}=\{\varnothing,\{{\rm LA, LB}\}\},I_2=\{I_{21}\}=\{\{\rm L\}\}$$
+    $$\implies A(I_{11})=\{{\rm L,R}\},A(I_{12})=\{{\rm a,b}\},A(I_{21})=\{{\rm A,B}\}$$
+    所以玩家 $1$ 的纯策略为 $\{\rm La,Lb,Ra,Rb\}$。
+</p>
+<p><b>完美回忆 (Perfect Recall)</b>：一个动态博弈具有完美回忆当所有玩家都可以想起他之前做了什么决策。</p>
+<p><b>行为策略 (Behavioral Strategy)</b>：玩家 $i$ 的行为策略是 $A(I_{ik})$ 上针对不同点的概率分布 $\beta_{ik}(I_{ik})_{I_{ik}\in I_i}$，例如上面的博弈树中，$1$ 的行为策略可能为：$0.1$ 的概率选择 L、$0.3$ 的概率选择 a。在非完全信息博弈中，混合策略和行为策略可能会产生不同的均衡解。</p>
+<p>这章不想看了，反正这课及格就行 QAQ，等什么时候心情好再把这一部分补上吧哈哈哈。6 月 26 日补充：考完试了，这章就考了一道题，还好没看，但其他章考了几题不会做的，空了好几题，错了好几题 QAQ，不过无所谓了，能及格就行。</p>
+<!-- <p><b>定理</b>：在一个具有完美回忆的有限非完全信息动态博弈中：任何玩家的任何混合策略都可以被替换为一个等价的行为策略，反之亦然。</p> -->

@@ -3,7 +3,7 @@
         "date"    : "2024.07.21",
         "title"   : "⚔️ 什么是 Co-Training",
         "content" : "最近的想法有点和 Co-Training 类似，但跑实验的时候两个模型老是收敛不到我想要的地方，所以来学习一下相关知识。",
-        "file"    : "study32"
+        "file"    : "study23"
     },
     {
         "date"    : "2024.07.15",
@@ -11,7 +11,7 @@
         "link"    : "https://papers.nips.cc/paper_files/paper/2022/hash/8636419dea1aa9fbd25fc4248e702da4-Abstract-Conference.html",
         "publish" : "NIPS 2022, CCF A",
         "content" : "对于代码生成任务，<b>当时</b>（还不是大模型时代）的大部分语言模型都是基于 NTP 的有监督训练，这忽略很多重要的信号，作者提出了一种基于强化学习的新框架。",
-        "file"    : "study31"
+        "file"    : "study22"
     },
     {
         "date"    : "2024.07.09",
@@ -19,31 +19,7 @@
         "link"    : "https://arxiv.org/abs/2405.11403",
         "publish" : "ACL 2024, CCF A",
         "content" : "检索 (Retrieval) 和自我反思 (Reflexion) 都可以提升大模型在代码生成任务上的性能，作者结合这几种方法，提出了一个 Multi-Agent 的方法来模拟人类写代码的整个过程。",
-        "file"    : "study30"
-    },
-    {
-        "date"    : "2024.06.24",
-        "title"   : "♟️ 博弈论 4: 非完全信息静态博弈",
-        "content" : "只写了一部分，懒得看了。",
-        "file"    : "study29"
-    },
-    {
-        "date"    : "2024.06.23",
-        "title"   : "♟️ 博弈论 3: 完全信息动态博弈",
-        "content" : "看完这个就还剩非完全信息动态博弈了！",
-        "file"    : "study28"
-    },
-    {
-        "date"    : "2024.06.23",
-        "title"   : "♟️ 博弈论 2: 非完全信息静态博弈",
-        "content" : "看了三分之一了 QAQ。",
-        "file"    : "study27"
-    },
-    {
-        "date"    : "2024.06.21",
-        "title"   : "♟️ 博弈论 1: 完全信息静态博弈",
-        "content" : "博弈论马上就要考试了，但一节课都没听过 QAQ，赶紧补天了。",
-        "file"    : "study26"
+        "file"    : "study21"
     },
     {
         "date"    : "2024.06.17",
@@ -51,7 +27,7 @@
         "link"    : "https://arxiv.org/abs/2303.06689",
         "publish" : "Preprint",
         "content" : "大模型在面对复杂的代码生成需求时性能不好，而人类通常会将复杂问题分解为简单的子问题然后一步一步解决，所以作者提出了 Self-Planning 方法来模拟这一行为，该方法包含 Planning（规划）和 Implementation（实现）两个步骤。",
-        "file"    : "study25"
+        "file"    : "study20"
     },
     {
         "date"    : "2024.06,15",
@@ -59,7 +35,7 @@
         "link"    : "https://proceedings.mlr.press/v202/ni23b.html",
         "publish" : "PMLR 2023",
         "content" : "用测试用例做代码 ranking 的时候，以往的做法都只考虑执行结果而没有考虑语义，作者提出了 LEVER 来综合考虑自然语言、代码本身和执行结果。",
-        "file"    : "study24"
+        "file"    : "study19"
     },
     {
         "date"    : "2024.06.14",
@@ -67,42 +43,12 @@
         "link"    : "https://aclanthology.org/2021.findings-emnlp.195/",
         "publish" : "EMNLP 2021, CCF B",
         "content" : "不同于自然语言，数学表达式中的一个小错误可能会引起整个表达式错误，作者提出了 Generate & Rank 来解决这个问题。",
-        "file"    : "study23"
-    },
-    {
-        "date"    : "2024.06.10",
-        "title"   : "🤖 强化学习 6: Proximal Policy Optimization (PPO)",
-        "content" : "PPO 是目前应用最广泛的强化学习算法之一。",
-        "file"    : "study22"
-    },
-    {
-        "date"    : "2024.06.07",
-        "title"   : "🤖 强化学习 5: Actor-Critic",
-        "content" : "Actor-Critic 算法是 Policy-based (Actor) 和 Value-based (Critic) 的结合。",
-        "file"    : "study21"
-    },
-    {
-        "date"    : "2024.06.04",
-        "title"   : "🤖 强化学习 4: Policy Gradient",
-        "content" : "前面几个算法都是 Value-based 的，而 Policy Gradient 是 Policy-based 的。",
-        "file"    : "study20"
-    },
-    {
-        "date"    : "2024.06.03",
-        "title"   : "🤖 强化学习 3: DQN 算法",
-        "content" : "省流：结合了神经网络的 $Q$-Learning 算法。",
-        "file"    : "study19"
-    },
-    {
-        "date"    : "2024.06.01",
-        "title"   : "🤖 强化学习 2: $Q$-Learning 和 SARSA",
-        "content" : "$Q$-Learning 和 SARSA 分别是 Off-policy 和 On-policy 的典型算法。",
         "file"    : "study18"
     },
     {
         "date"    : "2024.05.30",
-        "title"   : "🤖 强化学习 1: $\\epsilon$-greedy",
-        "content" : "省流：以 $\\epsilon$ 的概率随机选动作，否则贪心选动作。",
+        "title"   : "🤖 强化学习笔记: 从 $\\epsilon$-greedy 到 PPO",
+        "content" : "补一下强化学习的基础知识 QAQ。",
         "file"    : "study17"
     },
     {

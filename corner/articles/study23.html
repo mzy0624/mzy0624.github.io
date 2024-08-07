@@ -1,99 +1,47 @@
-<h1>解决了什么问题</h1>
-<p>Math Word Problems（MWP，不知道怎么翻译合适）是 NLP 领域的一个重要任务，差不多可以理解成小学数学题，之前的做法基本上都是将其视作一个和普通 NLP 任务类似的生成任务。但作者指出 MWP 不只是一个生成任务，因为数学表达式和自然语言之间有一个很重要的不同：在数学表达式中，一个小错误就会导致整个表达式错误，而自然语言在这方面就表现得更鲁棒，但是以前的做法都没有考虑这一点。于是作者提出了一个新框架：Generate & Rank，其实就是在生成的基础上多了排序。该框架包含两部分：Generator 和 Ranker，其中给定数学问题，Generator 负责生成一些候选数学表达式，而 Ranker 负责讲这些表达式排序，从而选出最有可能正确的表达式。Generator 和 Ranker 都基于 <a href="https://aclanthology.org/2020.acl-main.703/" target="_blank">BART</a>，是编码器-解码器架构。下面有些地方跟原文不太一样，但只是表达方式不同，意思是一样的。</p>
+<p>Co-training（协同训练）是一种半监督学习技术，它的核心思想是利用两种数据视图 (view)，并要求<b>这两种视图在监督信息足够时可以独立训练模型</b>，而在监督信息不足以训练模型时，两个使用不同数据视图的模型之间则可以协同训练。</p>
+<h2>数据的特征视图 (Feature Views)</h2>
+<p>数据集被分成两个或多个特征视图，每个视图都提供不同的特征集，例如，在网页分类中，一个视图可以是网页的文本内容，另一个视图可以是网页的超链接。</p>
+<h2>独立性假设 (Independence Assumption)</h2>
+<p>不同特征视图下的数据应该是条件独立的，即在给定标签的条件下，各个视图的特征是相互独立的。</p>
 <hr>
 
-<h1>Generator</h1>
-<p>
-    给定训练集 $\mathcal{D}=\{(P_i,S_i)\}_{i=1}^N$，其中 $P=(x_1,x_2,\cdots,x_n)$ 为数学问题，$S=(s_1,s_2,\cdots,s_m)$ 为答案，Generator 最小化负对数似然：
-    $$J_{\rm GEN}=-\dfrac{1}{|\mathcal{D}|}\sum_{(P,S)\in\mathcal{D}}\log\Pr(S\mid P)$$
-    其中，条件概率以自回归的方式解码：
-    \begin{align*}
-        \Pr(S\mid P)=&\ \prod_{i=1}^m\Pr(s_i\mid P,S_{1:i-1})\\
-        \Pr(*\mid P,S_{1:i-1})=&\ {\rm softmax}({\rm FFN}(d_i))\\
-        d_i=&\ {\rm Dncoder}(R;S_{1:i-1})\\
-        R=&\ {\rm Encoder}(P)
-    \end{align*}
-    即把 $P$ 丢到编码器里，编码器的输出和已经生成的词丢到解码器里，再加一个全连接层得到候选词的分布。
-</p>
+<h1>Co-Training</h1>
+<h2>初始化</h2>
+<p>首先从初始的少量有标记数据训练两个独立的模型，每个模型使用一个特征视图。</p>
+<h2>迭代优化</h2>
+<p>重复一下步骤直到满足停止条件：</p>
+<ol>
+    <li>使用每个模型对无标签数据打上伪标签，并选择高置信度的样本；</li>
+    <li>一个模型选择的高置信度样本被添加到另一个模型的训练集中；</li>
+    <li>使用扩充后的训练集重新训练每个模型；</li>
+</ol>
 <hr>
 
-<h1>Ranker</h1>
-<p>
-    Rank 可以看成一个二分类任务（$P$ 和 $S$ 是否匹配），根据 $P$ 和 $S$ 匹配的概率进行 rank。为了进行二分类，作者在解码器后面接了一个 MLP：
-    \begin{align*}
-        p=&\ {\rm softmax}({\rm MLP}(d))\\
-        d=&\ {\rm Decoder}(R;S)\\
-        R=&\ {\rm Encoder}(P)
-    \end{align*}
-    其实就是把 $P$ 丢到编码器里，编码器的输出和 $S$ 一起丢到解码器里，再加一层 MLP 作为分类层，然后计算分类损失（交叉熵）：
-    $$J_{\rm RANK}=-\dfrac{1}{|\mathcal{D}'|}\sum_{(P,S,y)\in\mathcal{D}'}\big(y\log p+(1-y)\log(1-p)\big)$$
-    其中 $\mathcal{D}'$ 为表达式库 (Expression Bank)，是三元组 $P,S,y$ 组成的集合，标签 $y$ 代表 $P$ 和 $S$ 是否匹配。
-</p>
-<hr>
-
-<h1>Expression Bank</h1>
-<p>为了获得表达式库 $\mathcal{D}'$，作者提出了两种方法：</p>
-<h2>Model-based Generation</h2>
-<p>就是让 Generator 以 beam search 的方式搜索 top-$K$ 个表达式，根据生成的表达式的值是否等于 ground truth 的值来确定标签 $y$ 的值。</p>
-<h2>Tree-based Disturbance</h2>
-<p>就是将原表达式转化为 AST 的形式，然后做以下四种操作产生新表达式：</p>
-<ul>
-    <li>Expand：将叶子节点展开为新的子树；</li>
-    <li>Edit：随机修改某一个节点；</li>
-    <li>Delete：删去一个叶子结点或替换为其兄弟节点；</li>
-    <li>Swap：交换一个运算符节点的左右子树。</li>
-</ul>
-<p>然后同样根据表达式的值来确定标签 $y$ 的值。计算表达式库的伪代码可以写为：</p>
-<div style="width: 80%">
-    <pre id="exp_bank" class="pseudocode">
+<h1>伪代码</h1>
+<p>假设数据集 $D=D_L\cup D_U$，其中 $D_L=\{(x_i,y_i)\}_{i=1}^m$ 为有标签数据集合，而 $D_U=\{x_i\}_{i=m+1}^{m+u}$ 为无标签数据集合，且有 $m\ll u$。模型 $M_1,M_2$ 分别利用 $x$ 的不同视图来预测 $x$ 的类别：</p>
+<div style="width: 70%">
+    <pre id="co-training" class="pseudocode">
         \begin{algorithm}
-            \caption{Expression Bank}
+            \caption{Co-Training}
             \begin{algorithmic}
-                \FUNCTION{ExpBank}{$\mathcal{D}$}
-                    \STATE $\mathcal{D}'\gets\{(P,S,1)\}_{(P,S)\in\mathcal{D}}$
-                    \FOR{$(P,S)\in\mathcal{D}$}
-                        \STATE Generate top-$K$ expressions $\mathcal{S}_1$ for $P$ with beam search
-                        \STATE Get new expressions $\mathcal{S}_2$ by adding tree-based disturbance to $S$
-                        \STATE $\mathcal{S}\gets\mathcal{S}_1\cup\mathcal{S}_2$
-                        \FOR{$S'\in\mathcal{S}$}
-                            \STATE $y\gets 1$
-                            \IF{${\rm result}(S')\ne {\rm result}(S)$}
-                                \STATE $y\gets 0$
-                            \ENDIF
-                            \STATE $\mathcal{D}'\gets\mathcal{D}'\cup\{(P,S',y)\}$
-                        \ENDFOR
-                    \ENDFOR
-                    \STATE\RETURN $\mathcal{D}'$
+                \FUNCTION{PseudoLabel}{$M,D_U,\mathcal{D_M},k$}
+                \STATE $D'_L\gets M(D_U)\qquad$\COMMENT{$\ D'_L$ is $D_U$ with pseudo labels given by $M$}
+                \STATE Select $k$ examples $D'\subseteq D'_L$ with the hightest confidence
+                \STATE \RETURN $D'$
                 \ENDFUNCTION
-            \end{algorithmic}
-        \end{algorithm}
-    </pre>
-</div>
-<script>render_pseudocode('exp_bank', reset=true);</script>
-<hr>
-
-<h1>Generator 和 Ranker 的联合训练</h1>
-<p>对 Generator 在 $\mathcal{D}$ 上做微调后，会进行 Generator 和 Ranker 的联合训练，训练过程其实就是 “生成表达式库 $\mathcal{D}'$”、“在 $\mathcal{D}'$ 上以联合损失 $J_{\rm GEN}+J_{\rm RANK}$ 优化 Generator 和 Ranker” 的交替进行。</p>
-<div style="width: 80%">
-    <pre id="generate_and_rank" class="pseudocode">
-        \begin{algorithm}
-            \caption{Generate \& Rank}
-            \begin{algorithmic}
-                \FUNCTION{GenerateAndRank}{$\theta_e,\theta_d,\theta_v,\mathcal{D}$}
-                    \FOR{some epochs}
-                        \STATE Fine-tuning Encoder $\theta_e$ and Decoder $\theta_d$ on $\mathcal{D}$ with generation loss $J_{\rm GEN}$
-                    \ENDFOR
+                \FUNCTION{CoTraining}{$D,k$}
+                    \STATE $D_1\gets D_L$
+                    \STATE $D_2\gets D_L$
                     \REPEAT
-                        \STATE $\mathcal{D}'\gets$ \CALL{ExpBank}{$\mathcal{D}$}
-                        \STATE Train $\theta_e,\theta_d,\theta_v$ with respect to the joint loss $J_{\rm GEN}+J_{\rm RANK}$ on $\mathcal{D}'$
+                        \STATE Train $M_1$ and $M_2$ on $D_1$ and $D_2$, respectively.
+                        \STATE $D'_1\gets$ \CALL{PseudoLabel}{$M_1,D_U,D_1,k$}
+                        \STATE $D'_2\gets$ \CALL{PseudoLabel}{$M_2,D_U,D_2,k$}
+                        \STATE $D_1\gets D_1\cup D'_1$
+                        \STATE $D_2\gets D_2\cup D'_2$
                     \UNTIL{done}
                 \ENDFUNCTION
             \end{algorithmic}
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('generate_and_rank');</script>
-<hr>
-
-<h1>个人看法</h1>
-<p>论文要解决的问题是 “数学表达式中的小错误就会导致整个表达式错误”，为什么加了一个 Ranker 并使用联合损失来训练 Generator 和 Ranker 就可以解决这个问题？</p>
+<script>render_pseudocode('co-training', reset=true);</script>

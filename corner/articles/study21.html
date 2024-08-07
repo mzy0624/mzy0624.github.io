@@ -1,47 +1,77 @@
-<h1>Actor-Critic</h1>
-<p>Actor-Critic 算法融合了 Value-based 和 Policy-based，其中 Actor 需要根据策略采取让 Critic 满意的动作，Critic 需要准确估计出 Actor 所采取的动作的价值。假设 Actor 为 $\pi_\theta$，Critic 为 $V_\phi$，其中 $\theta$ 和 $\phi$ 为参数，则基础的 Actor-Critic 算法就是在 Policy Gradient 上的延伸：</p>
+<h1>解决了什么问题</h1>
+<p>大模型做代码生成任务的效果还不是很好，早期直接通过 prompt 的方法效果是最差的，而基于检索 (Retrieval) 的方法（即利用相关问题及其解决方案来指导大模型）可以提升效果，但仍然有限。自我反思 (Reflexion) 是一种可行的方法，它通过迭代评估生成的代码与测试用例的匹配度，反思错误并进行相应的修改。为了突破以上方法的局限性，作者提出了 MapCoder (<b>M</b>ulti-<b>A</b>gent <b>P</b>rompting Based Code Generation)，它结合了上述方法，用四个 agents 来模拟人类写代码的整个过程。</p>
+<h1>The Pipeline of MapCoder</h1>
+<p>下图是 MapCoder 的总览：共有四个 Agents：Retrieval Agent、Planning Agent、Coder Agent 和 Debugging Agent，MapCoder 利用 pipeline 上游的 agent 的上下文学习信号来增强下游 agent 的能力。</p>
+<div style="text-align: center;">
+    <img src="files/study30/1.png" width="90%"/>
+</div>
+<h2>Retrieval Agent</h2>
+<p>Retrieval Agent 用来 “回忆” 过去相关的解决问题的示例，类似于人类的记忆。对于一个问题描述，Retrieval Agent 首先生成相似和不同的问题描述及其解决方案，以促进问题规划的逆向工程；然后逐步生成每个问题的代码，并允许后处理以生成相应的规划；最后生成相关算法并提供相应的教学指导，使得它能够深入理解底层算法，并生成算法上相似的示例。</p>
 <p>
-    在时刻 $t$，状态为 $s_t$，首先 Actor 根据策略 $\pi_\theta$ 选择动作 $a_t$ 并执行，然后观察奖励 $r_t$ 和新的状态 $s_{t+1}$；Critic 估计 $s_t$ 和 $s_{t+1}$ 的价值，分别为 $V_\phi(s_t)$ 和 $V_\phi(s_{t+1})$。此时计算时序差分 (Temporal Difference, TD) 损失：
-    $$\delta_t=r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$$
-    Actor 用策略梯度的方式更新即可，而 Critic 类似目标网络，使用梯度下降更新：
-    $$\mathcal{L}_\theta=\delta_t\log p_\theta(a_t\mid s_t),\quad\mathcal{L}_\phi=\dfrac{1}{2}\delta_t^2$$
-    Critic 将 $r_t+\gamma V_\phi(s_{t+1})$ 作为 TD 目标，不会产生梯度，所以：
-    $$\nabla_\theta\mathcal{L}_\theta=\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t),\quad\nabla_\phi\mathcal{L}_\phi=-\delta_t\nabla_\phi V_\phi(s_t)$$
-    优于 Actor 和 Critic 分别采用梯度上升和梯度下降的方式更新，所以参数的更新为：
-    $$\theta=\theta+\alpha_\theta\delta_t\nabla_\theta\log p_\theta(a_t\mid s_t)$$
-    $$\phi=\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$$
-    Reinforce 算法基于采样，只能在序列结束后进行更新，这同时也要求任务具有有限的步数，而 Actor-Critic 算法则可以在每一步之后都进行更新，并且不对任务的步数做限制。用 Python 实现了 <a href="https://github.com/mzy0624/Reinforcement_Learning/blob/main/PolicyBased/ActorCritic.py" target="_blank">Actor-Critic 算法</a>。
+    即对于原问题描述 $x$，Retrieval Agent 会生成 $k$ 个相似和不同的问题及其元数据：$E=\{(\hat{x}_i,\hat{p}_i,\hat{c}_i)\}_{i=1}^k$，其中 $\hat{x}_i$ 为问题描述，$\hat{p}_i$ 和 $\hat{c}_i$ 为其对应的规划和代码：
+    $$E={\rm RetrievalAgent}(x,k)$$
 </p>
+<h2>Planning Agent</h2>
+<p>
+    Planning Agent 用来为原问题 $x$ 生成目标规划 $p$。具体的说，对于 Retrieval Agent 生成的每一个示例 $(\hat{x}_i,\hat{p}_i,\hat{c}_i)$，Planning Agent 都参考该示例为原问题生成一个 step-by-step 的规划 $p_i$。但并非所有 Retrieval Agent 生成的示例对原问题都具有同等贡献，所以 Planning Agent 生成 $p_i$ 的同时，还要生成 $p_i$ 的置信度得分 $s_i$，即：
+    $$P=\{(p_i,s_i)\}_{i=1}^k={\rm PlanningAgent}(E)$$
+    其中 $s_1\geqslant s_2\geqslant\cdots\geqslant s_k$，即按照规划的置信度分数排序。
+</p>
+<h2>Coding Agent</h2>
+<p>
+    Coding Agent 基于一个 Planning Agent 生成的规划为原问题生成代码，即：
+    $$c={\rm CodingAgent}(x,p)$$
+    生成的代码 $c$ 在样例上测试，如果测试失败，则将其传给 Debugging Agent，否则该代码将作为最终解决方案返回。
+</p>
+<h2>Debugging Agent</h2>
+<p>
+    Debugging Agent 基于生成 $c$ 的规划以及测试信息 $log$ 为 $c$ 进行调试，从而生成新的代码 $c'$，即：
+    $$c'={\rm DebuggingAgent}(x,c,p,log)$$
+    调试后的代码 $c'$ 在样例上测试，如果测试成功，则将其作为最终解决方案返回，否则重复该过程（最多重复 $t$ 次）。
+</p>
+<hr>
+<h1>Dynamic Agent Traversal</h1>
+<p>Dynamic Agent Traversal 始于 Planning Agent，它为原始问题生成 $k$ 个规划及其置信度得分，这些规划被存储，且置信度得分最高的一个被输入到 Coding Agent，然后 Coding Agent 基于这个规划生成代码并测试，如果测试通过，就返回该代码，否则代码将随着规划被一起输入到 Debugging Agent 中，Debugging Agent 迭代地调试（最多 $t$ 次），如果调试成功，代码被返回，否则用 Planning Agent 生成的置信度次高的规划重复上述过程，直到所有的规划都失败，该过程的流程图为：</p>
+<div style="text-align: center;">
+    <img src="./files/study30/2.png" width="90%" />
+</div>
+<hr>
+<h1>MapCoder 的伪代码</h1>
+<p>原文的伪代码有一些小错误，按照自己的理解重写了一个：</p>
 <div style="width: 80%">
-    <pre id="actor-critic" class="pseudocode">
+    <pre id="MapCoder" class="pseudocode">
         \begin{algorithm}
-            \caption{Actor-Critic}
+            \caption{MapCoder}
             \begin{algorithmic}
-                \FOR{$t\gets 1\cdots T$}
-                    \STATE Sample action $a_t$ from $\pi_\theta(a_t\mid s_t)$ and execute it
-                    \STATE Observe reward $r_t$ and next state $s_{t+1}$
-                    
-                    \STATE Estimate value $V_\phi(s_t)$ and $V_\phi(s_{t+1})$
-                    \STATE Compute TD error: $\delta_t\gets r_t+\gamma V_\phi(s_{t+1})-V_\phi(s_t)$
-                    \STATE $\phi\gets\phi+\alpha_\phi\delta_t\nabla_\phi V_\phi(s_t)$
-                    
-                    \STATE Compute policy gradient: $\nabla_\theta J(\theta) \gets \delta_t \nabla_\theta \log \pi_\theta(a_t | s_t)$
-                    \STATE $\theta\gets\theta+\alpha_\theta\nabla_\theta J(\theta)$                    
-                \ENDFOR
+                \STATE $k$ and $t$ are hyper-parameters
+                \FUNCTION{DynamicAgentTraversal}{$x,E$}
+                    \STATE $\{(p_i,s_i)\}_{i=1}^k\gets{\rm PlanningAgent}(E)$ where $s_1\geqslant s_2\geqslant\cdots\geqslant s_k$
+                    \FOR{$i\gets 1\cdots k$}
+                        \STATE $c\gets{\rm CodingAgent}(x,p_i)$
+                        \STATE $passed,log\gets{\rm Test}(c,samples)$
+                        \IF{$passed$}
+                            \STATE\RETURN $c$
+                        \ELSE
+                            \FOR{$j\gets 1\cdots t$}
+                                \STATE $c'\gets{\rm DebuggingAgent}(x,c,p_i,log)$
+                                \STATE $passed,log\gets{\rm Test}(c',samples)$
+                                \IF{$pass$}
+                                    \STATE\RETURN $c'$
+                                \ENDIF
+                            \ENDFOR
+                        \ENDIF
+                    \ENDFOR
+                    \STATE\RETURN $c$
+                \ENDFUNCTION
+                \FUNCTION{MapCoder}{$x$}
+                    \STATE $E\gets{\rm RetrievalAgent}(x)$
+                    \STATE\RETURN\CALL{DynamicAgentTraversal}{$x,E$}
+                \ENDFUNCTION
             \end{algorithmic}
         \end{algorithm}
     </pre>
 </div>
-<script>render_pseudocode('actor-critic', reset=true);</script>
+<script>render_pseudocode('MapCoder', reset=true);</script>
 <hr>
-
-<h1>Advantage Actor-Critic (A2C)</h1>
-<p>
-    优势函数 $A(s,a)=Q(s,a)-V(s)$ 衡量了动作 $a$ 在状态 $s$ 下相对于其他动作的价值，在 A2C 中，会使用优势函数来更新策略：
-    $$\mathcal{L}_\theta=A(s_t,a_t)\log p_\theta(a_t\mid s_t)$$
-    但实际上好多 A2C 的实现都是用 TD 损失 $\delta_t$ 来估计优势函数 $A(s_t,a_t)$ 的值。
-</p>
-<hr>
-
-<h1>Asynchronous Advantage Actor-Critic (A3C)</h1>
-<p>Te Be Done</p>
+<h1>个人看法</h1>
+<p>感觉思路挺好的，就是写的有点绕，看了好几遍才看懂。一个问题就是时间复杂度，原文说是 $O(kt)$，但其实文章中 $k$ 和 $t$ 都是非常小的值，例如在 HumanEval 数据集上进行推理，$k=t=5$，这样的话把 agent 的推理时间算成 $O(1)$ 似乎有点不合适，更何况这里还不止一个 agent。而且平时使用大模型的时候生成都要等好几秒，再加好几倍的时间恐怕体验感是有点差。</p>
