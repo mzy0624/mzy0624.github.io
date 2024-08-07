@@ -122,38 +122,6 @@
     $$p_1^*\in\mathop{\arg\max}_{p_1\in\Delta_1}\min_{p_2\in\Delta_2}U(p_1,q_2),\ p_2^*\in\mathop{\arg\min}_{p_2\in\Delta_2}\max_{p_1\in\Delta_1}U(p_1,p_2)$$
 </p>
 
-<script>
-    append_elem('study21-table-1', create_game_table([
-        ['2, 0',     '1, 1',     '4, 2'],
-        ['3, 1',     '1, 2',     '2, 3'],
-        ['1, 3',     '0, 2',     '3, 0'],
-    ]));
-    append_elem('study21-table-2', create_game_table([
-        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, 2'],
-        ['<u>3</u>, 1', '<u>1</u>, 2', '2, 3'],
-        ['1, 3',        '0, 2',        '3, 0'],
-    ]));
-    append_elem('study21-table-3', create_game_table([
-        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, <u>2</u>'],
-        ['<u>3</u>, 1', '<u>1</u>, 2', '2, <u>3</u>'],
-        ['1, <u>3</u>', '0, 2',        '3, 0'],
-    ]));
-    append_elem('study21-table-4', create_game_table([
-        ['1, 2', '0, 4'],
-        ['0, 5', '3, 2'],
-    ], [], [], mixed=true));
-    append_elem('study21-table-5', create_game_table([
-        [2, 6, 1],
-        [3, 1, 4],
-        [4, 3, 6]
-    ]));
-    append_elem('study21-table-6', create_game_table([
-        [1, 1, 8],
-        [5, 2, 4],
-        [7, 0, 0]
-    ]));
-    
-</script>
 <hr>
 
 <h1>非完全信息静态博弈</h1>
@@ -215,24 +183,6 @@
     \end{array}\right.$$
     联立这三个方程即可解得纳什均衡解 $(q_1,(q_2,q_2'))$。
 </p>
-
-<script>
-    append_elem('study22-table-1', create_game_table(
-        [['1, 2', '0, 0'], ['0, 0', '2, 1']], 
-        [['$B$', '$D$'], ['$B$', '$D$']], 
-        ['Boy', 'Girl']
-    ));
-    append_elem('study22-table-2', create_game_table(
-        [['2, 1', '0, 0'], ['0, 0', '1, 2']], 
-        [['$B$', '$D$'], ['$B$', '$D$']], 
-        ['Boy', 'Girl $p$']
-    ));
-    append_elem('study22-table-3', create_game_table(
-        [['2, 0', '0, 2'], ['0, 1', '1, 0']], 
-        [['$B$', '$D$'], ['$B$', '$D$']], 
-        ['Boy', 'Girl $1-p$']
-    ));
-</script>
 <hr>
 
 <h1>完全信息动态博弈</h1>
@@ -258,6 +208,46 @@
 </p>
 <h2>例子：Entry Game</h2>
 <p>公司 G 试图进入某市场，该市场的另一家公司 B 可以选择对立 (F) 或者合作 (C)，这样可以画出一颗博弈树：</p>
+<style>
+    .dash {
+        stroke: black;
+        stroke-width: 2;
+        stroke-dasharray: 10,5;
+    }
+    .node {
+        fill: black;
+        stroke: black;
+        stroke-width: 2;
+    }
+    .red-node {
+        fill: red;
+        stroke: red;
+        stroke-width: 2;
+    }
+    .blue-node {
+        fill: blue;
+        stroke: blue;
+        stroke-width: 2;
+    }
+    .text {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-anchor: middle;
+    }
+    .red-text {
+        fill: red;
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-anchor: middle;
+    }
+    .blue-text {
+        fill: blue;
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-anchor: middle;
+    }
+</style>
+
 <div style="text-align: center; margin-top: -1em;">
     <svg width="400" height="300">
         <!-- Circles & Texts -->
@@ -346,18 +336,6 @@
 <h2>动态博弈的纳什均衡</h2>
 <p>动态博弈和静态博弈的纳什均衡定义是一样的，求解动态博弈的纳什均衡的方法：<b>诱导静态博弈</b>。动态博弈可以转化为静态博弈，根据每个玩家的纯策略组合，得到相应的收益，从而计算诱导收益矩阵，例如上面的博弈树对应的诱导收益矩阵为：</p>
 <div id="study23-table-1"></div>
-<script>
-    append_elem("study23-table-1", create_game_table(
-        [
-            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
-            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
-            ['5, 5', '2, 10', '5, 5', '2, 10'], 
-            ['5, 5', '1, 0',  '5, 5', '1, 0'], 
-        ],
-        [['AG', 'AH', 'BG', 'BH'], ['CE', 'CF', 'DE', 'DF']],
-        ['1','2']
-    ))
-</script>
 
 <p>然后就可以通过静态博弈的方法求解动态博弈的纳什均衡为 $\rm (AG,CF),(AH,CF),(BH,CE)$，但是这样求出来的纳什均衡的有些策略是不可信的，例如 AH 肯定不是纳什均衡，因为 AG 优于 AH。为了避免这些不可信的解，需要找出另一种均衡，让所有均衡都是可信的，即<b>子博弈完美均衡</b>。</p>
 <p><b>子博弈 (Subgame)</b>：由一个动态博弈的第一阶段以后得任意阶段开始的后续博弈阶段构成的，包含初始信息集和进行博弈所需要的全部信息，能自成一个博弈的原博弈的一部分，称为原动态博弈的一个子博弈。</p>
@@ -413,20 +391,6 @@
 <h2>主从博弈 (Stackelberg Game)</h2>
 <p>Leader 先做决策，Follower 后做决策，如下面的收益矩阵：</p>
 <div id="study23-table-2" style="margin-top: -1em;"></div>
-<script>
-    append_elem("study23-table-2", create_game_table(
-        [
-            ['$L_{11},R_{11}$', '$L_{12},R_{12}$', '$\\cdots$', '$L_{1n},R_{1n}$'], 
-            ['$L_{21},R_{21}$', '$L_{22},R_{22}$', '$\\cdots$', '$L_{2n},R_{2n}$'], 
-            ['$\\vdots$',       '$\\vdots$',       '$\\ddots$', '$\\vdots$'], 
-            ['$L_{m1},R_{m1}$', '$L_{m2},R_{m2}$', '$\\cdots$', '$L_{mn},R_{mn}$'], 
-        ],
-        [['$a_{11}$', '$a_{12}$', '$\\vdots$', '$a_{1m}$'], ['$a_{21}$', '$a_{22}$', '$\\cdots$', '$a_{2n}$']],
-        ['Leader','Follower'], 
-        true,
-        [['$p_{11}$', '$p_{12}$', '', '$p_{1m}$'], ['$p_{21}$', '$p_{22}$', '', '$p_{2n}$']],
-    ));
-</script>
 <p>
     使用线性规划求解 Stackelberg Equilibrium：
     $$\max_{p_1}p_1Lp_2^{\rm T}\quad {\rm s.t.}\ p_2=\mathop{\arg\max}_{p_2}p_1Rp_2^{\rm T}$$
@@ -442,7 +406,117 @@
     </div>
 </div>
 <!-- <div id="study23-table-3" style="margin-top: -1em;"></div> -->
-<script>append_elem("study23-table-3", create_game_table([['$1,1$', '$3,0$'], ['$0,0$', '$2,1$']]));</script>
+<script>
+    function create_game_table(U, A=[], name=[], mixed=false, p=[]) {
+        // Two players
+        U = U.map(u => u.map(String));
+        let shape = [U.length, U[0].length];
+        if (A.length == 0) {
+            [1, 2].forEach(i => A.push(Array.from({ length : shape[i - 1] }, (_, j) => `\$a_{${i}${j + 1}}\$`)));
+        }
+        if (mixed) {
+            if (p.length == 0) {
+                [1, 2].forEach(i => p.push(Array.from({ length : shape[i - 1] }, (_, j) => `\$p_{${i}${j + 1}}\$`)));
+            }
+            A = A.map((a, i) => a.map((_, j) => _ + ' ' + p[i][j]));
+        }
+        if (name.length == 0) {
+            [1, 2].forEach(i => name.push(`Player ${i}`));
+        }
+        let blank = ['', {'style' : {'border' : 'none'}}];
+        let table = [];
+        table.push([blank, blank, [name[1], {
+            'colspan' : shape[1], 
+            'style' : {
+                'border' : 'none', 
+                'padding' : '0'
+            }
+        }]]);
+        table.push([blank, blank].concat(A[1].map(a => [a, blank[1]])));
+        for (let i = 0; i < shape[0]; i++) {
+            let _ = [];
+            if (i == 0) {
+                _.push([name[0], {
+                    'rowspan' : shape[0],
+                    'style' : {
+                        'border' : 'none', 
+                        'vertical-align' : 'middle', 
+                        'padding' : '0'
+                    }
+                }]);
+            }
+            table.push(_.concat([[A[0][i], blank[1]]].concat(U[i])));
+        }
+        return new Table(table, {'class' : 'game-table'});
+    }
+    append_elem('study21-table-1', create_game_table([
+        ['2, 0',     '1, 1',     '4, 2'],
+        ['3, 1',     '1, 2',     '2, 3'],
+        ['1, 3',     '0, 2',     '3, 0'],
+    ]));
+    append_elem('study21-table-2', create_game_table([
+        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, 2'],
+        ['<u>3</u>, 1', '<u>1</u>, 2', '2, 3'],
+        ['1, 3',        '0, 2',        '3, 0'],
+    ]));
+    append_elem('study21-table-3', create_game_table([
+        ['2, 0',        '<u>1</u>, 1', '<u>4</u>, <u>2</u>'],
+        ['<u>3</u>, 1', '<u>1</u>, 2', '2, <u>3</u>'],
+        ['1, <u>3</u>', '0, 2',        '3, 0'],
+    ]));
+    append_elem('study21-table-4', create_game_table([
+        ['1, 2', '0, 4'],
+        ['0, 5', '3, 2'],
+    ], [], [], mixed=true));
+    append_elem('study21-table-5', create_game_table([
+        [2, 6, 1],
+        [3, 1, 4],
+        [4, 3, 6]
+    ]));
+    append_elem('study21-table-6', create_game_table([
+        [1, 1, 8],
+        [5, 2, 4],
+        [7, 0, 0]
+    ]));
+    append_elem('study22-table-1', create_game_table(
+        [['1, 2', '0, 0'], ['0, 0', '2, 1']], 
+        [['$B$', '$D$'], ['$B$', '$D$']], 
+        ['Boy', 'Girl']
+    ));
+    append_elem('study22-table-2', create_game_table(
+        [['2, 1', '0, 0'], ['0, 0', '1, 2']], 
+        [['$B$', '$D$'], ['$B$', '$D$']], 
+        ['Boy', 'Girl $p$']
+    ));
+    append_elem('study22-table-3', create_game_table(
+        [['2, 0', '0, 2'], ['0, 1', '1, 0']], 
+        [['$B$', '$D$'], ['$B$', '$D$']], 
+        ['Boy', 'Girl $1-p$']
+    ));
+    append_elem("study23-table-1", create_game_table(
+        [
+            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
+            ['3, 8', '3, 8',  '8, 3', '8, 3'], 
+            ['5, 5', '2, 10', '5, 5', '2, 10'], 
+            ['5, 5', '1, 0',  '5, 5', '1, 0'], 
+        ],
+        [['AG', 'AH', 'BG', 'BH'], ['CE', 'CF', 'DE', 'DF']],
+        ['1','2']
+    ))
+    append_elem("study23-table-2", create_game_table(
+        [
+            ['$L_{11},R_{11}$', '$L_{12},R_{12}$', '$\\cdots$', '$L_{1n},R_{1n}$'], 
+            ['$L_{21},R_{21}$', '$L_{22},R_{22}$', '$\\cdots$', '$L_{2n},R_{2n}$'], 
+            ['$\\vdots$',       '$\\vdots$',       '$\\ddots$', '$\\vdots$'], 
+            ['$L_{m1},R_{m1}$', '$L_{m2},R_{m2}$', '$\\cdots$', '$L_{mn},R_{mn}$'], 
+        ],
+        [['$a_{11}$', '$a_{12}$', '$\\vdots$', '$a_{1m}$'], ['$a_{21}$', '$a_{22}$', '$\\cdots$', '$a_{2n}$']],
+        ['Leader','Follower'], 
+        true,
+        [['$p_{11}$', '$p_{12}$', '', '$p_{1m}$'], ['$p_{21}$', '$p_{22}$', '', '$p_{2n}$']],
+    ));
+    append_elem("study23-table-3", create_game_table([['$1,1$', '$3,0$'], ['$0,0$', '$2,1$']]));
+</script>
 <p>
     若 $p_1=(p,1-p)$，则 $p_1L=(p,p+2),p_1R=(p,1-p)$：
     <ul>

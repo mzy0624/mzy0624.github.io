@@ -702,43 +702,6 @@ code {
     }
 }
 
-.dash {
-    stroke: black;
-    stroke-width: 2;
-    stroke-dasharray: 10,5;
-}
-.node {
-    fill: black;
-    stroke: black;
-    stroke-width: 2;
-}
-.red-node {
-    fill: red;
-    stroke: red;
-    stroke-width: 2;
-}
-.blue-node {
-    fill: blue;
-    stroke: blue;
-    stroke-width: 2;
-}
-.text {
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    text-anchor: middle;
-}
-.red-text {
-    fill: red;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    text-anchor: middle;
-}
-.blue-text {
-    fill: blue;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    text-anchor: middle;
-}
 
 .Paper {
     display: inline-block;
