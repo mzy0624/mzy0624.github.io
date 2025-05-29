@@ -4,7 +4,7 @@ let publications = [
         "publish": [
             "The 42-nd International Conference on Machine Learning", // The full name of conference or journal (optional year)
             "ICML 2025", // The short name of it (optional year)
-            "A" // A/B/C or empty
+            "" // A/B/C or empty
         ],
         "authors": "Author1, Author2, ...",
         "type": "e.g., Learnware / ABL / Code",

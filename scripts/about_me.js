@@ -13,6 +13,18 @@ function social_media(src) {
     return icon;
 }
 
+function logo_image(name, url, id='') {
+    let logo = new Img(`./images/${name}.png`, {'id': id});
+    let anchor = new Anchor(url, logo);
+    return anchor;
+}
+
+const logos = [
+    [new Img('./images/lamda.png'), 'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
+    [new Img('./images/njuai.png'), 'https://ai.nju.edu.cn/'],
+    [new Img('./images/nju.png'),   'https://www.nju.edu.cn']
+];
+
 append_elem('page', new Div([
     new Img('./images/avatar.png', {'class' : 'avatar', 'title' : 'This photo was taken in 2025-05-11.'}),
     new Div([
@@ -37,7 +49,7 @@ append_elem('page', new Div([
         ], {'style' : {'margin' : '0 0 1vw 0'}}),
         new Head(`Supervisor: Professor ${getAnchor('lim')}`, 3)
     ], {'class' : 'icontent'}),
-    new Div([getAnchor('lamdalogo'), new Br(), getAnchor('njulogo')]),
+    new Div(logos.map(logo => new Anchor(logo[1], logo[0])), {'class' : 'logos'}),
 ], {'class' : 'flex-information'}));
 
 append_elem('page', new Div([

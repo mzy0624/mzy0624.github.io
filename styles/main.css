@@ -1,24 +1,25 @@
 html {
     box-sizing: border-box;
-    background-color: #fff;
     position: relative;
-
     -webkit-animation: intro 0.3s both;
     animation: intro 0.3s both;
     -webkit-animation-delay: 0.45s;
     animation-delay: 0.45s;
-
 }
 
 body {
     margin: 0;
     padding: 0;
-    /* padding-bottom: 7vw; */
-    color: #494e52;
+    /* color: light.css / dark.css */
     font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
     line-height: 1.8vw;
     user-select: none;
 }
+
+* {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 
 a {
     color: #52adc8;
@@ -32,6 +33,7 @@ img {
     height: auto;
     vertical-align: middle;
     border: 0;
+    transition: transform 0.5s ease-in-out;
     -ms-interpolation-mode: bicubic;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
@@ -106,7 +108,7 @@ address {
     padding: 1.2vw;
     margin-bottom: 1.3vw;
     border: 0.02vw solid #ddd;
-    background: #fff;
+    /* background-color: light.css / dark.css */
     box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
     border-radius: 0.5vw;
 }
@@ -149,7 +151,7 @@ address {
     padding: 1vw;
     margin: 0.7vw;
     border: 0.02vw solid #ddd;
-    background: #fff;
+    /* background-color: light.css / dark.css */
     box-shadow: 0 0.1vw 0.3vw  rgba(0, 0, 0, 0.1);
     border-radius: 0.5vw;
     font-size: 1vw;
@@ -175,7 +177,7 @@ address {
     margin: 0 0 1vw 0;
     padding: 1.5vw;
     border: 0.02vw solid #ddd;
-    background: #fff;
+    /* background-color: light.css / dark.css */
     box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
     border-radius: 0.5vw;
 }
@@ -197,15 +199,21 @@ address {
     font-size: 1.2vw;
 }
 
-.logoimage {
-    width: 17vw;
-    height: auto;
-    transition: transform 0.5s ease;
+.logos {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    align-items: center;
+}
+
+.logos img {
+    width: 15vw;
+    transition: transform 0.3s ease;
     cursor: default;
 }
 
-.logoimage:hover {
-    transform: scale(1.1);
+.logos img:hover {
+    transform: scale(1.05);
 }
 
 .image {
@@ -285,14 +293,14 @@ address {
     padding: 1.1vw;
     font-size: 2vw;
     font-weight: bold;
-    background-color: #fafafa;
+    /* background-color: light.css / dark.css */
 }
 
 footer {
     padding: 1vw;
     font-size: 1vw;
     color: #9ba1a6;
-    background-color: #f2f3f3;
+    /* background-color: light.css / dark.css */
     border-top: 0.05vw solid #bdc1c4;
 }
 

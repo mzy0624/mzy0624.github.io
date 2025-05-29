@@ -1,6 +1,6 @@
-function icons(str) {
+function icons(str, suffix='svg') {
     // return new Img(`icons/${str}.svg`, {'class' : 'icons'});
-    return `<img class="icon" src="icons/${str}.svg"/>`;
+    return `<img class="icon" src="icons/${str}.${suffix}"/>`;
 }
 
 let URLs = {
@@ -17,18 +17,20 @@ let URLs = {
     'ins'       : [icons('ins'),                                                        'https://www.instagram.com/mzy0624/'],
     'lab'       : ['🪦',                                                                'https://j.map.baidu.com/8a/A1aK'],
     'lamda'     : ['LAMDA Group',                                                       'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
-    'lamdalogo' : ['<img src="images/lamda.jpg" class="logoimage">',                    'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
+    'lamdalogo' : ['<img src="images/lamda.png" class="logoimage">',                    'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
+    'lamdadark' : ['<img src="images/lamda-dark.png" class="logoimage">',               'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
     'lamdamail' : [`${icons('lamda')} maozy@lamda.nju.edu.cn`,                          'mailto:maozy@lamda.nju.edu.cn'],
     'lim'       : ['Ming Li',                                                           'https://ai.nju.edu.cn/lim/index.htm'],
     'neo'       : ['NEO Hurricane 3',                                                   'http://www.dhs-sports.com/c8f809c3-110f-5b2c-3afc-89deed24c7a1/38909872-582a-5564-0e9e-ead1085c2b85.shtml'],
     'nju'       : ['Nanjing University',                                                'https://www.nju.edu.cn'],
     'njuai'     : ['School of Artificial Intelligence, Nanjing University',             'https://ai.nju.edu.cn'],
+    'njuailogo' : ['<img src="images/njuai.png" class="logoimage">',                    'https://ai.nju.edu.cn'],
     'njulogo'   : ['<img src="images/nju_name.jpg" class="logoimage">',                 'https://www.nju.edu.cn'],
     'orcid'     : [`${icons('orcid')} ORCID`,                                           'https://orcid.org/0000-0002-2143-2625'],
     'ps'        : ['Problem Solving',                                                   'http://cslabcms.nju.edu.cn/problem_solving/index.php/%E9%A6%96%E9%A1%B5'],
     'Rozena'    : [`Rozena`,                                                            'https://www.butterfly-global.com/cn/products/detail/06020.html'],
     'skl'       : ['State Key Laboratory for Novel Software Technology',                'https://keysoftlab.nju.edu.cn'],
-    'smail'     : [`${icons('nju')} maozy@smail.nju.edu.cn`,                            'mailto:maozy@smail.nju.edu.cn'],
+    'smail'     : [`${icons('nju', 'png')} maozy@smail.nju.edu.cn`,                     'mailto:maozy@smail.nju.edu.cn'],
     'yinhe'     : ['Yinhe MC-2',                                                        'http://www.yinhe1986.cn/prod_view.aspx?TypeId=678&Id=750'],
     'zhihu'     : [icons('zhihu'),                                                      'https://www.zhihu.com/people/mzy0624'],
     'zhouzh'    : ['Zhi-Hua Zhou',                                                      'https://cs.nju.edu.cn/zhouzh/index.htm'],
@@ -86,11 +88,11 @@ function update_styles(styles, key, value) {
     styles.push(new_style);
 }
 
-
 function set_style(element, styles) {
     if (typeof(element) == 'string') {  // id
         element = document.getElementById(element);
     }
+    // element.getAttribute and element.setAttribute are visible even if type(element) != BaseElement
     let existing_styles = element.getAttribute('style');    // 'k1: v1; k2: v2'
     if (existing_styles == null || existing_styles == '') {
         existing_styles = [];
