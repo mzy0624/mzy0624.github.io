@@ -60,5 +60,5 @@ append_elem('page', new Div([
 
 append_elem('page', new Div([
     new Head('📚 Research Interests'),
-    new Para('My research interests include <b>Machine Learning</b> and <b>Data Mining</b>, especially <b>Software Mining</b>.', {'style' : {'margin' : '0'}})
+    new Para('My research interests include <b>Machine Learning</b> and <b>Data Mining</b>, especially <b>Learnware</b>.', {'style' : {'margin' : '0'}})
 ], {'class' : 'column'}));

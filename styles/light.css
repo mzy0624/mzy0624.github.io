@@ -5,14 +5,17 @@ body {
 
 .column {
     background: #fff;
+    box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);       /* dark */
 }
 
 .basic-item {
     background: #fff;
+    box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
 }
 
 .flex-information {
     background: #fff;
+    box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
 }
 
 .button {
