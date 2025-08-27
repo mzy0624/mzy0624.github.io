@@ -33,7 +33,16 @@ let Volunteers_div = new Div([
     new Div(Volunteers.map(vol => new VolunteerItem(...vol)), {'class' : ['basic-items', 'Volunteers']})
 ], {'class' : ['column', 'sub-column']});
 
+let Reviewers = [
+    ['AAAI', getAnchor('AAAI2026')],
+]
+
+let Reviewers_div = new Div([
+    new Head('🧑‍⚖️ Reviewers', 2),
+    new Div(Reviewers.map(rev => new ReviewerItem(...rev)), {'class' : ['basic-items', 'Reviewers']})
+], {'class' : ['column', 'sub-column']});
+
 append_elem('page', new Div(
-    [new Head('⚡ Services'), TAs_div, Volunteers_div],
+    [new Head('⚡ Services'), TAs_div, Volunteers_div, Reviewers_div],
     {'class' : 'column'}
 ));

@@ -5,7 +5,7 @@ let skills_and_hobbies = [
     ['Vim', '2020'],
     ['Linux', '2020', `Especially ${icons('ubuntu')} Ubuntu.`],
     ['Python', '2021'],
-    ['HTML', '2023', `With a little ${icons('CSS')} CSS.`],
+    ['HTML', '2023'],
     ['JavaScript', '2023'],
     ['Java', '2023'],
     ['Table Tennis', 'Primary School', new Ul([

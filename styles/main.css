@@ -140,6 +140,10 @@ address {
     grid-template-columns: repeat(4, 1fr);
 }
 
+.basic-items.Reviewers {
+    grid-template-columns: repeat(8, 1fr);
+}
+
 .basic-items.Correspondence {
     grid-template-columns: repeat(2, 1fr);
 }
@@ -307,16 +311,17 @@ footer cite {
 }
 
 .popup {
-    position: absolute; /* 使其可以绝对定位 */
+    position: absolute;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 1vw;
     border-radius: 0.5vw;
-    display: none;  /* 初始状态下隐藏 */
-    z-index: 1000;  /* 确保显示在最上层 */
-    width: fit-content;
-    white-space: nowrap;
-    /* max-width: 1000vw; */
+    display: none;
+    z-index: 1000;
+    max-width: 50vw;
+    width: auto;
+    word-wrap: break-word;
+    box-sizing: border-box;
     font-size: 1vw;
 }
 

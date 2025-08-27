@@ -54,7 +54,7 @@ append_elem('page', new Div([
 
 append_elem('page', new Div([
     new Head('🪪 About Me'),
-    new Para(`Currently, I am a second-year Ph.D. student in ${getAnchor('njuai')}, and I am also a member of ${getAnchor('lamda')}, which is led by Professor ${getAnchor('zhouzh')}.`, {'style' : {'margin' : '0'}}),
+    new Para(`I am a third-year Ph.D. student in the ${getAnchor('njuai')}, and a member of ${getAnchor('lamda')}, led by Professor ${getAnchor('zhouzh')}.`, {'style' : {'margin' : '0'}}),
     new Para(`I got my Bachelor of Science (B.Sc.) degree from ${getAnchor('cs')} in June 2023. In the same year, I was admitted to pursue Ph.D. degree in Nanjing University without entrance examination.`, {'style' : {'margin' : '0'}})
 ], {'class' : 'column'}));
 

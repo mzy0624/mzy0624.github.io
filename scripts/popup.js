@@ -11,8 +11,10 @@ function move_popup_to(elem, popup_content) {
         update_html(popup, popup_content);
         set_style(popup, {
             'display' : 'block',
-            'top' : `${item_bottom}px`
+            'top' : `${item_bottom}px`,
+            'left': '0' // temperarily set to 0, will be adjusted later
         });
+        void popup.offsetWidth;
         const popup_width = popup.offsetWidth;
         set_style(popup, {
             'left' : item_left + popup_width >= window_width ?
@@ -66,6 +68,12 @@ class VolunteerItem extends PopupItem {
             new Ul(activities)
         );
         // add_class(this, 'Volunteer');
+    }
+}
+
+class ReviewerItem extends PopupItem {
+    constructor(item, years) {
+        super(new Head(`${icons(item)} ${item}`, 3), new Ul(years));
     }
 }
 
