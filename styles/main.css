@@ -1,3 +1,21 @@
+:root {
+    --text-color: #494e52;
+    --bg-color: #fff;
+    --card-bg: #fff;
+    --shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
+    --masthead-bg: #fafafa;
+    --footer-bg: #f2f3f3;
+}
+
+[data-theme="dark"] {
+    --text-color: #ececec;
+    --bg-color: black;
+    --card-bg: #2b2b2b;
+    --shadow: 0 0.1vw 0.3vw rgb(120, 120, 120);
+    --masthead-bg: #1a1a1a;
+    --footer-bg: #111111;
+}
+
 html {
     box-sizing: border-box;
     position: relative;
@@ -10,16 +28,13 @@ html {
 body {
     margin: 0;
     padding: 0;
-    /* color: light.css / dark.css */
-    font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
+    color: var(--text-color);
+    font-family: Helvetica;
     line-height: 2vw;
     user-select: none;
-}
-
-* {
+    background-color: var(--bg-color);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
-
 
 a {
     color: #52adc8;
@@ -107,8 +122,9 @@ address {
     padding: 1.4vw;
     margin-bottom: 1.3vw;
     border: 0.02vw solid #ddd;
-    /* background-color and box-shadow: light.css / dark.css */
+    background-color: var(--card-bg);
     border-radius: 0.5vw;
+    transition: background-color 0.3s ease;
 }
 
 .column > p {
@@ -154,10 +170,11 @@ address {
     padding: 1vw;
     margin: 0.7vw;
     border: 0.02vw solid #ddd;
-    /* background-color and box-shadow: light.css / dark.css */
+    background-color: var(--card-bg);
     border-radius: 0.5vw;
     font-size: 1.2vw;
     transition: transform 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
 .basic-item > h3 {
@@ -165,7 +182,7 @@ address {
 }
 
 .basic-item.more {
-    box-shadow: 0 0.1vw 0.3vw #52adc8;
+    box-shadow: 0 0.1vw 0.3vw #00aaff;
 }
 
 .basic-item:hover {
@@ -183,8 +200,9 @@ address {
     margin: 0 0 1vw 0;
     padding: 1.5vw;
     border: 0.02vw solid #ddd;
-    /* background-color and box-shadow: light.css / dark.css */
+    background-color: var(--card-bg);
     border-radius: 0.5vw;
+    transition: background-color 0.3s ease;
 }
 
 .avatar {
@@ -217,21 +235,22 @@ address {
     transform: scale(1.05);
 }
 
-
 .masthead {
     border-bottom: 0.1vw solid #cdcdcd;
     padding: 1.1vw;
     font-size: 2.2vw;
     font-weight: bold;
-    /* background-color: light.css / dark.css */
+    background-color: var(--masthead-bg);
+    transition: background-color 0.3s ease;
 }
 
 footer {
     padding: 1vw;
     font-size: 1vw;
     color: #9ba1a6;
-    /* background-color: light.css / dark.css */
+    background-color: var(--footer-bg);
     border-top: 0.05vw solid #bdc1c4;
+    transition: background-color 0.3s ease;
 }
 
 footer cite {
