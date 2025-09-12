@@ -1,9 +1,9 @@
 let skills_and_hobbies = [
     ['C',   '2019'],
     ['C++', '2019'],
-    ['LaTeX', '2019', `My first encounter with LaTeX was in ${getAnchor('ps')} class, where homework needs to be done in LaTeX.`],
+    ['LaTeX', '2019'], //`My first encounter with LaTeX was in ${getAnchor('ps')} class, where homework needs to be done in LaTeX.`],
     ['Vim', '2020'],
-    ['Linux', '2020', `Especially ${icons('ubuntu')} Ubuntu.`],
+    ['Linux', '2020', `Especially Ubuntu.`],
     ['Python', '2021'],
     ['HTML', '2023'],
     ['JavaScript', '2023'],
@@ -11,18 +11,16 @@ let skills_and_hobbies = [
     ['Table Tennis', 'Primary School', new Ul([
         'Playing Style: Right-hand, Handshake Grip, Offensive.',
         'Favorite players: Ma Long, Fan Zhendong, Zhang Jike.',
-        // 'I have served as an umpire for dozens of matches.',
         new Div([
             'Racket Configurations',
             new Ul([
                 `Blade: ${getAnchor('fzd')}.<br>
                  Rubber: ${getAnchor('neo')} (Forehand); ${getAnchor('d09c')} (Backhand).`,
-                `Previously used: ${getAnchor('5X')}, ${getAnchor('yinhe')}.`,
-                // 'Just for fun 🤣: Hurricane Hide, Viscaria Hurricane Long.',
+                `Previously used: ${getAnchor('5X')}, ${getAnchor('yinhe')}.`
             ])
         ]),
     ])],
-    ['Singing', '2015', 'Favorites: Jay Chou, JJ Lin, Jason Zhang, BEYOND, Eason Chan, Taylor Swift, ...'],
+    ['Singing', '2014', 'Favorites: Jay Chou, JJ Lin, Jason Zhang, BEYOND, Eason Chan, Taylor Swift, ...'],
     ['Body Building', '2018'],
     ['Running', '2022', new Ul([
         '1km:  PB 3m16s (2024-01-12).',

@@ -55,10 +55,6 @@ append_elem('page', new Div([
 append_elem('page', new Div([
     new Head('🪪 About Me'),
     new Para(`I am a third-year Ph.D. student in the ${getAnchor('njuai')}, and a member of ${getAnchor('lamda')}, led by Professor ${getAnchor('zhouzh')}.`, {'style' : {'margin' : '0'}}),
-    new Para(`I got my Bachelor of Science (B.Sc.) degree from ${getAnchor('cs')} in June 2023. In the same year, I was admitted to pursue Ph.D. degree in Nanjing University without entrance examination.`, {'style' : {'margin' : '0'}})
-], {'class' : 'column'}));
-
-append_elem('page', new Div([
-    new Head('📚 Research Interests'),
-    new Para('My research interests include <b>Machine Learning</b> and <b>Data Mining</b>, especially <b>Learnware</b>.', {'style' : {'margin' : '0'}})
+    new Para(`I got my Bachelor of Science (B.Sc.) degree from ${getAnchor('cs')} in June 2023. In the same year, I was admitted to pursue Ph.D. degree in Nanjing University without entrance examination.`, {'style' : {'margin' : '0'}}),
+    new Para('My research interests include <b>Machine Learning</b> and <b>Data Mining</b>, especially <b>Learnware Paradigm</b>.', {'style' : {'margin' : '0'}})
 ], {'class' : 'column'}));

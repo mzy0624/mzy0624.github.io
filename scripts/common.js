@@ -488,3 +488,7 @@ function new_NS_element(namespace_URI, qualified_name, attributes={}) {
     set_attributes(elem, attributes);
     return elem;
 }
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

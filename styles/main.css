@@ -12,7 +12,7 @@ body {
     padding: 0;
     /* color: light.css / dark.css */
     font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
-    line-height: 1.8vw;
+    line-height: 2vw;
     user-select: none;
 }
 
@@ -24,6 +24,31 @@ body {
 a {
     color: #52adc8;
     text-decoration: none;
+}
+
+h1 {
+    font-size: 1.9vw;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.6vw;
+    margin: 0;
+}
+
+h3 {
+    font-size: 1.4vw;
+    margin: 0;
+}
+
+@-webkit-keyframes intro {
+    0%   { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+@keyframes intro {
+    0%   { opacity: 0 }
+    100% { opacity: 1 }
 }
 
 img {
@@ -41,43 +66,17 @@ img {
     user-select: none; /* Standard syntax */
 }
 
-h1 {
-    font-size: 1.7vw;
-    margin: 0;
-}
-
-h2 {
-    font-size: 1.4vw;
-    margin: 0;
-}
-
-h3 {
-    font-size: 1.2vw;
-    margin: 0;
-}
-
-@-webkit-keyframes intro {
-    0%   { opacity: 0 }
-    100% { opacity: 1 }
-}
-
-@keyframes intro {
-    0%   { opacity: 0 }
-    100% { opacity: 1 }
-}
-
 .icon {
     display: inline-block;
     fill: currentColor;
-    width:  1.3vw;
-    height: 1.3vw;
+    width:  1.5vw;
+    height: 1.5vw;
     margin: 0 0.1vw 0.3vw 0.1vw;
     line-height: 1;
     vertical-align: middle;
     transition: fill 0.3s ease-in-out;
     pointer-events: none;
 }
-
 
 #main {
     max-width: auto;
@@ -92,7 +91,7 @@ h3 {
 
 @media (min-width: 70vw) {
     .page {
-        width: 91%;
+        width: 96%;
         margin: 0 auto;
         padding-left: 1%;
         padding-right: 1%;
@@ -105,7 +104,7 @@ address {
 
 .column {
     display: grid;
-    padding: 1.2vw;
+    padding: 1.4vw;
     margin-bottom: 1.3vw;
     border: 0.02vw solid #ddd;
     /* background-color and box-shadow: light.css / dark.css */
@@ -113,7 +112,7 @@ address {
 }
 
 .column > p {
-    font-size: 1.2vw;
+    font-size: 1.3vw;
     /* U R D L */
     padding: 1vw 0 0 1vw;
 }
@@ -151,13 +150,18 @@ address {
 .basic-item {
     display: flex;
     flex-direction: column;
+    gap: 0.4vw;
     padding: 1vw;
     margin: 0.7vw;
     border: 0.02vw solid #ddd;
     /* background-color and box-shadow: light.css / dark.css */
     border-radius: 0.5vw;
-    font-size: 1vw;
+    font-size: 1.2vw;
     transition: transform 0.3s ease;
+}
+
+.basic-item > h3 {
+    font-size: 1.25vw;
 }
 
 .basic-item.more {
@@ -183,12 +187,8 @@ address {
     border-radius: 0.5vw;
 }
 
-.flex-information.publication {
-    margin: 1vw 1vw 0 1vw;
-}
-
 .avatar {
-    width: 23vw;
+    width: 25vw;
     height: auto;
 }
 
@@ -197,7 +197,7 @@ address {
     flex-direction: column; /* 垂直排列 */
     margin-left: 3vw; /* 右侧内容与图片间距 */
     width: 40%;
-    font-size: 1.2vw;
+    font-size: 1.3vw;
 }
 
 .logos {
@@ -208,7 +208,7 @@ address {
 }
 
 .logos img {
-    width: 15vw;
+    width: 17vw;
     transition: transform 0.3s ease;
     cursor: default;
 }
@@ -217,41 +217,59 @@ address {
     transform: scale(1.05);
 }
 
-.image {
-    width: 9.5vw; /* 图片宽度 */
-    height: auto;
+
+.masthead {
+    border-bottom: 0.1vw solid #cdcdcd;
+    padding: 1.1vw;
+    font-size: 2.2vw;
+    font-weight: bold;
+    /* background-color: light.css / dark.css */
 }
 
-.content {
-    display: flex;
-    flex-direction: column; /* 垂直排列 */
-    margin-left: 1vw; /* 右侧内容与图片间距 */
-    width: 100%; /* 保证 content 宽度适应父容器 */
+footer {
+    padding: 1vw;
+    font-size: 1vw;
+    color: #9ba1a6;
+    /* background-color: light.css / dark.css */
+    border-top: 0.05vw solid #bdc1c4;
+}
+
+footer cite {
+    font-size: 1.7vw;
+    font-weight: bold;
+}
+
+.popup {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1vw;
+    border-radius: 0.5vw;
+    display: none;
+    z-index: 1000;
+    max-width: 55vw;
+    width: auto;
+    word-wrap: break-word;
+    box-sizing: border-box;
     font-size: 1vw;
 }
 
-.row {
-    /* display: flex; */
-    justify-content: space-between; /* 左右两部分 */
-    margin: 0.3vw 0; /* 行间距 */
-    flex-wrap: wrap; /* 自动换行 */
+ul {
+    padding-left: 1vw;
+    margin: 0;
 }
 
-.row button:last-child {
-    float: right; /* 第二个 span 右对齐 */
-    flex-shrink: 0; /* 防止缩小 */
-}
 
 .button {
     padding: 0.3vw 0.6vw;
     border: none;
-    border-radius: 0.3vw;
-    font-size: 0.8vw;
+    border-radius: 0.7vw;
+    font-size: 1vw;
     transition: transform 0.5s ease;
     color: #fff;
     background-color: black;
     font-weight: bold;
-    margin: 0 1vw 0 0.5vw;
+    margin-right: 1.3vw;
 }
 
 .button:hover {
@@ -268,64 +286,10 @@ address {
     transform: scale(1.2);
 }
 
-
 .button.link {
     background-color: #4CAF50;
 }
 
 .button a {
     color: inherit;
-}
-
-.button.A {
-    background-color: #ffd700;
-}
-
-.button.B {
-    background-color: #c0c0c0;
-}
-
-.button.C {
-    background-color: #cd7f32;
-}
-
-.masthead {
-    border-bottom: 0.1vw solid #cdcdcd;
-    padding: 1.1vw;
-    font-size: 2vw;
-    font-weight: bold;
-    /* background-color: light.css / dark.css */
-}
-
-footer {
-    padding: 1vw;
-    font-size: 1vw;
-    color: #9ba1a6;
-    /* background-color: light.css / dark.css */
-    border-top: 0.05vw solid #bdc1c4;
-}
-
-footer cite {
-    font-size: 1.35vw;
-    font-weight: bold;
-}
-
-.popup {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 1vw;
-    border-radius: 0.5vw;
-    display: none;
-    z-index: 1000;
-    max-width: 50vw;
-    width: auto;
-    word-wrap: break-word;
-    box-sizing: border-box;
-    font-size: 1vw;
-}
-
-ul {
-    padding-left: 1vw;
-    margin: 0;
 }

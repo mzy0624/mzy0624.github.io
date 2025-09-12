@@ -3,15 +3,16 @@ popup.addEventListener('mouseenter', () => {});
 popup.addEventListener('mouseleave', () => { set_display(popup, 'none')});
 function move_popup_to(elem, popup_content) {
     elem.addEventListener('mouseenter', () => {
-        const item_top = elem.offsetTop;
-        const item_left = elem.offsetLeft;
+        const current = elem.offsetParent;
+        const item_top =  elem.offsetTop  + current.offsetTop;
+        const item_left = elem.offsetLeft + current.offsetLeft;
         const item_bottom = item_top + elem.offsetHeight;
         const item_right = item_left + elem.offsetWidth;
         const window_width = window.innerWidth;
         update_html(popup, popup_content);
         set_style(popup, {
             'display' : 'block',
-            'top' : `${item_bottom}px`,
+            'top' : `${item_bottom + 8}px`,
             'left': '0' // temperarily set to 0, will be adjusted later
         });
         void popup.offsetWidth;

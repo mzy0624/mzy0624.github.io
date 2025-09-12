@@ -1,0 +1,62 @@
+.flex-information.publication {
+    position: relative;
+    margin: 1vw 1vw 0 1vw;
+}
+
+.paper-info {
+    display: flex;
+    flex-direction: column; /* 垂直排列 */
+    margin-left: 1.5vw;
+    width: 80%; /* 保证 content 宽度适应父容器 */
+    font-size: 1.3vw;
+    gap: 1vw;
+}
+
+.paper-image {
+    width: 15vw; /* 图片宽度 */
+    height: auto;
+}
+
+.bib-text {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.ccf-rank {
+    --f: 0.5vw; /* control the folded part*/
+    --r: 0.5vw; /* control the ccf-rank shape */
+    --t: 0.5vw; /* control the distance from the top */
+
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    font-size: 1vw;
+    inset: var(--t) calc(-1 * var(--f)) auto auto;
+    padding: 0 1vw var(--f) calc(1vw + var(--r));
+    clip-path:
+        polygon(0 0, 100% 0, 100% calc(100% - var(--f)),
+        calc(100% - var(--f)) 100%,
+        calc(100% - var(--f)) calc(100% - var(--f)),
+        0 calc(100% - var(--f)),
+        var(--r) calc(50% - var(--f) / 2));
+    box-shadow: 0 calc(-1 * var(--f)) 0 inset #0005;
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.ccf-rank:hover {
+    transform: scale(1.05);
+}
+
+.ccf-rank.A {
+    background-color: #ffd700;
+}
+
+.ccf-rank.B {
+    background-color: #c0c0c0;
+}
+
+.ccf-rank.C {
+    background-color: #cd7f32;
+}
+
