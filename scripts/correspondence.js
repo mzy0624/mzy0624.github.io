@@ -2,7 +2,7 @@ append_elem('page', new Div([
     new Head('🏫 Correspondence'),
     new Div([
         new CorrItem(
-            `${getAnchor('lab')} Laboratory`,
+            '🪦 Laboratory',
             new BaseElement('address', [
                 '810, Jingwen Student Activity Center', new Br(),
                 'Nanjing University Xianlin Campus.'

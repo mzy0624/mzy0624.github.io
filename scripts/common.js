@@ -4,7 +4,7 @@ function icons(str, suffix='svg') {
 }
 
 let URLs = {
-    'AAAI2026'  : ['2026',                                                                'https://aaai.org/conference/aaai/aaai-26/'],
+    'AAAI2026'  : ['2026 (Program Committee)',                                            'https://aaai.org/conference/aaai/aaai-26/'],
     'AI'        : ['Artificial Intelligence',                                             'https://ai.nju.edu.cn'],
     'ai'        : ['School of Artificial Intelligence',                                   'https://ai.nju.edu.cn'],
     'bilibili'  : [icons('bilibili'),                                                     'https://space.bilibili.com/454302264'],
@@ -16,7 +16,6 @@ let URLs = {
     'gmail'     : [`${icons('gmail')} mzy0624@gmail.com`,                                 'mailto:mzy0624@gmail.com'],
     'H3'        : [`Hurricane 3`,                                                         'http://www.dhs-sports.com/c8f809c3-110f-5b2c-3afc-89deed24c7a1/114ae0da-41c7-3b21-7d94-9c860cecbab5.shtml'],
     'ins'       : [icons('ins'),                                                          'https://www.instagram.com/mzy0624/'],
-    'lab'       : ['🪦',                                                                  'https://j.map.baidu.com/8a/A1aK'],
     'lamda'     : ['LAMDA Group',                                                         'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
     'lamdalogo' : ['<img src="images/lamda.png" class="logoimage">',                      'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
     'lamdadark' : ['<img src="images/lamda-dark.png" class="logoimage">',                 'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],

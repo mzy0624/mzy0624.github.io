@@ -15,6 +15,9 @@
 .paper-image {
     width: 15vw; /* 图片宽度 */
     height: auto;
+    border-radius: 0.5vw;
+    /* box-shadow: 0.5vw 0.5vw 0.3vw rgba(0, 0, 0, 0.3); */
+    box-shadow: var(--shadow);
 }
 
 .bib-text {

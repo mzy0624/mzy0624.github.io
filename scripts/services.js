@@ -38,7 +38,7 @@ let Reviewers = [
 ]
 
 let Reviewers_div = new Div([
-    new Head('🧑‍⚖️ Reviewers', 2),
+    new Head('🧑‍⚖️ Academic Services', 2),
     new Div(Reviewers.map(rev => new ReviewerItem(...rev)), {'class' : ['basic-items', 'Reviewers']})
 ], {'class' : ['column', 'sub-column']});
 

@@ -12,7 +12,7 @@ function move_popup_to(elem, popup_content) {
         update_html(popup, popup_content);
         set_style(popup, {
             'display' : 'block',
-            'top' : `${item_bottom + 8}px`,
+            'top' : `${item_bottom + 5}px`,
             'left': '0' // temperarily set to 0, will be adjusted later
         });
         void popup.offsetWidth;
@@ -30,7 +30,7 @@ function move_popup_to(elem, popup_content) {
     });
 }
 
-class PopupItem extends Div{
+class PopupItem extends Div {
     constructor(title, popup_content='', more=[]) {
         super([title, ...more], {'class' : 'basic-item'});
         if (popup_content) {
@@ -81,6 +81,6 @@ class ReviewerItem extends PopupItem {
 class CorrItem extends PopupItem {
     constructor(c_type, content) {
         super(new Head(c_type, 3), '', [content]);
-        // add_class(this, 'Correspondence');
+        add_class(this, 'Correspondence');
     }
 }

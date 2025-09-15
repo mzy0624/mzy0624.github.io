@@ -2,7 +2,7 @@
     --text-color: #494e52;
     --bg-color: #fff;
     --card-bg: #fff;
-    --shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
+    --shadow: 0.3vw 0.2vw 0.2vw rgba(0, 0, 0, 0.3);
     --masthead-bg: #fafafa;
     --footer-bg: #f2f3f3;
 }
@@ -11,7 +11,7 @@
     --text-color: #ececec;
     --bg-color: black;
     --card-bg: #2b2b2b;
-    --shadow: 0 0.1vw 0.3vw rgb(120, 120, 120);
+    --shadow: 0.3vw 0.2vw 0.2vw rgb(120, 120, 120);
     --masthead-bg: #1a1a1a;
     --footer-bg: #111111;
 }
@@ -163,9 +163,14 @@ address {
     grid-template-columns: repeat(2, 1fr);
 }
 
+.basic-item.Correspondence:hover {
+    transform: none;
+}
+
 .basic-item {
     display: flex;
     flex-direction: column;
+    position: relative;
     gap: 0.4vw;
     padding: 1vw;
     margin: 0.7vw;
@@ -173,8 +178,8 @@ address {
     background-color: var(--card-bg);
     border-radius: 0.5vw;
     font-size: 1.2vw;
-    transition: transform 0.3s ease;
-    transition: background-color 0.3s ease;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .basic-item > h3 {
@@ -182,10 +187,10 @@ address {
 }
 
 .basic-item.more {
-    box-shadow: 0 0.1vw 0.3vw #00aaff;
+    box-shadow: 0.3vw 0.2vw 0.2vw rgba(0, 150, 255, 0.3);
 }
 
-.basic-item:hover {
+.basic-item.more:hover {
     transform: scale(1.04);
 }
 
@@ -208,6 +213,7 @@ address {
 .avatar {
     width: 25vw;
     height: auto;
+    border-radius: 0.5vw;
 }
 
 .icontent {
