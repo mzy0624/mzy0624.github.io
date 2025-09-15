@@ -24,11 +24,12 @@ const logos = [
     [new Img('./images/njuai.png'), 'https://ai.nju.edu.cn/'],
     [new Img('./images/nju.png'),   'https://www.nju.edu.cn']
 ];
+const name_img = new Img('./images/name_light.png', {'class' : 'name'});
 
 append_elem('page', new Div([
     new Img('./images/avatar.png', {'class' : 'avatar', 'title' : 'This photo was taken in 2025-05-11.'}),
     new Div([
-        new Head('Zi-Yu Mao (毛子钰)'),
+        new Head(['Zi-Yu Mao', name_img]),
         new Div([
             new Span([
                 '🧑‍🎓 Ph.D. Student ',
