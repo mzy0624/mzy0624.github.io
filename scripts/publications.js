@@ -52,9 +52,9 @@ function publication_parser(pub) {
 let pub_div = new Div(new Head('📄 Publications'), {'class' : 'column'});
 
 /* If there is no paper */
-// pub_div.append(new Div(new Head("Under review ...", 3), {'class' : ['flex-information', 'publication']}));
+pub_div.append(new Div(new Head("Under review ...", 3), {'class' : ['flex-information', 'publication']}));
 /* Else */
-publications.forEach(pub => pub_div.append(publication_parser(pub)));
+// publications.forEach(pub => pub_div.append(publication_parser(pub)));
 /* EndIf */
 
 append_elem('page', pub_div);
