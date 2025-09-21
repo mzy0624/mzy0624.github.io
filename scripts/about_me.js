@@ -27,7 +27,7 @@ const logos = [
 const name_img = new Img('./images/name_light.png', {'class' : 'name'});
 
 append_elem('page', new Div([
-    new Img('./images/avatar.png', {'class' : 'avatar', 'title' : 'This photo was taken in 2025-05-11.'}),
+    new Img('./images/avatar.png', {'class' : ['avatar', 'thumbnail'], 'onclick' : `enlarge_img('images/avatar.png')`}),
     new Div([
         new Head(['Zi-Yu Mao', name_img]),
         new Div([

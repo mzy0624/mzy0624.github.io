@@ -2,7 +2,7 @@
     --text-color: #494e52;
     --bg-color: #fff;
     --card-bg: #fff;
-    --shadow: 0.3vw 0.2vw 0.2vw rgba(0, 0, 0, 0.3);
+    --shadow: 0.2vw 0.2vw 0.3vw 0.2vw rgba(0, 0, 0, 0.2);
     --masthead-bg: #fafafa;
     --footer-bg: #f2f3f3;
 }
@@ -11,7 +11,7 @@
     --text-color: #ececec;
     --bg-color: black;
     --card-bg: #2b2b2b;
-    --shadow: 0.3vw 0.2vw 0.2vw rgb(120, 120, 120);
+    --shadow: 0.2vw 0.2vw 0.3vw 0.2vw rgb(120, 120, 120);
     --masthead-bg: #1a1a1a;
     --footer-bg: #111111;
 }
@@ -187,11 +187,12 @@ address {
 }
 
 .basic-item.more {
-    box-shadow: 0.3vw 0.2vw 0.2vw rgba(0, 150, 255, 0.3);
+    box-shadow: 0.2vw 0.2vw 0.3vw 0.2vw rgba(0, 150, 255, 0.3);
 }
 
 .basic-item.more:hover {
     transform: scale(1.04);
+    box-shadow: 0.2vw 0.2vw 0.3vw 0.3vw rgba(0, 150, 255, 0.3);
 }
 
 .basic-item:hover .tooltip {
