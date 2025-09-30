@@ -213,8 +213,9 @@ address {
 
 .avatar {
     width: 25vw;
-    height: auto;
+    height: 25vw;
     border-radius: 0.5vw;
+    object-fit: cover;
 }
 
 .name {
