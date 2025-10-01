@@ -24,7 +24,7 @@ const logos = [
     [new Img('./images/njuai.png'), 'https://ai.nju.edu.cn/'],
     [new Img('./images/nju.png'),   'https://www.nju.edu.cn']
 ];
-const name_img = new Img('./images/name_light.png', {'class' : 'name'});
+const name_img = new Img('./images/name-light.png', {'class' : 'name'});
 
 append_elem('page', new Div([
     new Img('./images/avatar.png', {'class' : ['avatar', 'thumbnail'], 'onclick' : `enlarge_img('images/avatar.png')`}),

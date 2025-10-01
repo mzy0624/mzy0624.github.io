@@ -17,8 +17,6 @@ let URLs = {
     'H3'        : [`Hurricane 3`,                                                         'http://www.dhs-sports.com/c8f809c3-110f-5b2c-3afc-89deed24c7a1/114ae0da-41c7-3b21-7d94-9c860cecbab5.shtml'],
     'ins'       : [icons('ins'),                                                          'https://www.instagram.com/mzy0624/'],
     'lamda'     : ['LAMDA Group',                                                         'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
-    'lamdalogo' : ['<img src="images/lamda.png" class="logoimage">',                      'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
-    'lamdadark' : ['<img src="images/lamda-dark.png" class="logoimage">',                 'https://www.lamda.nju.edu.cn/CH.MainPage.ashx'],
     'lamdamail' : [`${icons('lamda')} maozy@lamda.nju.edu.cn`,                            'mailto:maozy@lamda.nju.edu.cn'],
     'lim'       : ['Ming Li',                                                             'https://ai.nju.edu.cn/lim/index.htm'],
     'neo'       : ['NEO Hurricane 3',                                                     'http://www.dhs-sports.com/c8f809c3-110f-5b2c-3afc-89deed24c7a1/38909872-582a-5564-0e9e-ead1085c2b85.shtml'],
