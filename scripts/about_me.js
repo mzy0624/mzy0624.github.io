@@ -33,10 +33,10 @@ append_elem('page', new Div([
         new Div([
             new Span([
                 '🧑‍🎓 Ph.D. Student ',
-                social_media('github'),
-                social_media('zhihu'),
-                social_media('bilibili'),
-                social_media('ins')
+                // social_media('github'),
+                // social_media('zhihu'),
+                // social_media('bilibili'),
+                // social_media('ins')
             ]),                       new Br(),
             getAnchor('lamda'),       new Br(),
             getAnchor('ai'),          new Br(),
