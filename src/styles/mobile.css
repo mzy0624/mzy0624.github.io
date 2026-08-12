@@ -567,6 +567,7 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    cursor: zoom-out;
     backdrop-filter: blur(8px);
     transition: opacity 180ms ease, visibility 180ms ease;
   }
@@ -810,13 +811,13 @@
   }
 
   .image-lightbox {
-    padding: 54px 8px 8px;
+    padding: 8px;
   }
 
   .image-lightbox > img {
     width: 100%;
     max-width: 100%;
-    max-height: calc(100dvh - 62px);
+    max-height: calc(100dvh - 16px);
     border-radius: 14px;
   }
 

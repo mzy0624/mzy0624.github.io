@@ -2,11 +2,6 @@ import { element } from '../api/dom.js';
 
 export function createImageLightbox() {
   const enlargedImage = element('img', { attributes: { alt: '' } });
-  const closeButton = element('button', {
-    className: 'image-lightbox-close',
-    text: '×',
-    attributes: { type: 'button', 'aria-label': 'Close enlarged image' },
-  });
   const overlay = element(
     'div',
     {
@@ -14,11 +9,11 @@ export function createImageLightbox() {
       attributes: {
         role: 'dialog',
         'aria-modal': 'true',
-        'aria-label': 'Enlarged image',
+        'aria-label': 'Enlarged image. Click anywhere or press Escape to close.',
         'aria-hidden': 'true',
+        tabindex: '-1',
       },
     },
-    closeButton,
     enlargedImage,
   );
   let returnFocus = null;
@@ -47,19 +42,16 @@ export function createImageLightbox() {
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('has-lightbox');
-    closeButton.focus();
+    overlay.focus({ preventScroll: true });
   }
 
-  closeButton.addEventListener('click', close);
-  overlay.addEventListener('click', (event) => {
-    if (event.target === overlay) close();
-  });
+  overlay.addEventListener('click', close);
   document.addEventListener('keydown', (event) => {
     if (!overlay.classList.contains('is-open')) return;
     if (event.key === 'Escape') close();
     if (event.key === 'Tab') {
       event.preventDefault();
-      closeButton.focus();
+      overlay.focus({ preventScroll: true });
     }
   });
   document.body.append(overlay);

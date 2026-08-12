@@ -567,6 +567,7 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    cursor: zoom-out;
     backdrop-filter: blur(8px);
     transition: opacity 180ms ease, visibility 180ms ease;
   }
