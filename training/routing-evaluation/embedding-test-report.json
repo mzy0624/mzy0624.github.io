@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "config": {
+    "schemaVersion": 1,
+    "modelId": "Xenova/all-MiniLM-L6-v2",
+    "threshold": 0.544,
+    "scoring": {
+      "aggregation": "top_k_mean",
+      "topK": 5
+    },
+    "calibratedOn": "training/routing-evaluation/calibration.jsonl",
+    "prototypeManifest": "data/question-bank-embeddings.json"
+  },
+  "metrics": {
+    "threshold": 0.544,
+    "accuracy": 0.86,
+    "macroF1": 0.8776205347633921,
+    "knownMacroF1": 0.8811493426878043,
+    "unknown": {
+      "precision": 0.9562043795620438,
+      "recall": 0.7359550561797753,
+      "f1": 0.8317460317460317,
+      "support": 178
+    },
+    "hardNegativeAccuracy": 0.6307692307692307,
+    "crossLabelHardNegativeAccuracy": 0.9285714285714286,
+    "crossLabelHardNegativeCount": 14,
+    "perLabel": {
+      "identity_general": {
+        "precision": 1,
+        "recall": 0.625,
+        "f1": 0.7692307692307693,
+        "support": 16
+      },
+      "portrait": {
+        "precision": 0.8181818181818182,
+        "recall": 1,
+        "f1": 0.9,
+        "support": 18
+      },
+      "identity_contact": {
+        "precision": 0.8421052631578947,
+        "recall": 0.8888888888888888,
+        "f1": 0.8648648648648649,
+        "support": 18
+      },
+      "education": {
+        "precision": 0.8095238095238095,
+        "recall": 0.9444444444444444,
+        "f1": 0.8717948717948718,
+        "support": 18
+      },
+      "research": {
+        "precision": 0.8181818181818182,
+        "recall": 1,
+        "f1": 0.9,
+        "support": 18
+      },
+      "learnware": {
+        "precision": 0.6153846153846154,
+        "recall": 1,
+        "f1": 0.761904761904762,
+        "support": 16
+      },
+      "model_capability_mining": {
+        "precision": 0.6923076923076923,
+        "recall": 1,
+        "f1": 0.8181818181818181,
+        "support": 18
+      },
+      "papers": {
+        "precision": 0.9411764705882353,
+        "recall": 1,
+        "f1": 0.9696969696969697,
+        "support": 16
+      },
+      "skills": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "support": 18
+      },
+      "hobbies": {
+        "precision": 0.8571428571428571,
+        "recall": 1,
+        "f1": 0.923076923076923,
+        "support": 18
+      },
+      "services": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "support": 16
+      },
+      "internship": {
+        "precision": 0.6153846153846154,
+        "recall": 1,
+        "f1": 0.761904761904762,
+        "support": 16
+      },
+      "correspondence": {
+        "precision": 0.8421052631578947,
+        "recall": 1,
+        "f1": 0.9142857142857143,
+        "support": 16
+      },
+      "unknown": {
+        "precision": 0.9562043795620438,
+        "recall": 0.7359550561797753,
+        "f1": 0.8317460317460317,
+        "support": 178
+      }
+    }
+  }
+}

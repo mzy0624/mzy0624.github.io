@@ -1,0 +1,548 @@
+{
+  "schemaVersion": 1,
+  "selectionMetric": "maximum macroF1 subject to unknown recall >= 0.75",
+  "selected": {
+    "config": {
+      "schemaVersion": 1,
+      "modelId": "Xenova/all-MiniLM-L6-v2",
+      "threshold": 0.544,
+      "scoring": {
+        "aggregation": "top_k_mean",
+        "topK": 5
+      },
+      "calibratedOn": "training/routing-evaluation/calibration.jsonl",
+      "prototypeManifest": "data/question-bank-embeddings.json"
+    },
+    "metrics": {
+      "threshold": 0.544,
+      "accuracy": 0.835,
+      "macroF1": 0.8560182629170221,
+      "knownMacroF1": 0.8593078975992398,
+      "unknown": {
+        "precision": 0.8881578947368421,
+        "recall": 0.75,
+        "f1": 0.8132530120481929,
+        "support": 180
+      },
+      "hardNegativeAccuracy": 0.6307692307692307,
+      "crossLabelHardNegativeAccuracy": 0.75,
+      "crossLabelHardNegativeCount": 12,
+      "perLabel": {
+        "identity_general": {
+          "precision": 1,
+          "recall": 0.8333333333333334,
+          "f1": 0.9090909090909091,
+          "support": 18
+        },
+        "portrait": {
+          "precision": 1,
+          "recall": 0.8125,
+          "f1": 0.896551724137931,
+          "support": 16
+        },
+        "identity_contact": {
+          "precision": 0.875,
+          "recall": 0.875,
+          "f1": 0.875,
+          "support": 16
+        },
+        "education": {
+          "precision": 0.9411764705882353,
+          "recall": 1,
+          "f1": 0.9696969696969697,
+          "support": 16
+        },
+        "research": {
+          "precision": 0.9444444444444444,
+          "recall": 0.9444444444444444,
+          "f1": 0.9444444444444444,
+          "support": 18
+        },
+        "learnware": {
+          "precision": 0.6153846153846154,
+          "recall": 0.8888888888888888,
+          "f1": 0.7272727272727274,
+          "support": 18
+        },
+        "model_capability_mining": {
+          "precision": 0.6153846153846154,
+          "recall": 1,
+          "f1": 0.761904761904762,
+          "support": 16
+        },
+        "papers": {
+          "precision": 0.5454545454545454,
+          "recall": 0.75,
+          "f1": 0.631578947368421,
+          "support": 16
+        },
+        "skills": {
+          "precision": 0.8888888888888888,
+          "recall": 1,
+          "f1": 0.9411764705882353,
+          "support": 16
+        },
+        "hobbies": {
+          "precision": 1,
+          "recall": 1,
+          "f1": 1,
+          "support": 16
+        },
+        "services": {
+          "precision": 0.8823529411764706,
+          "recall": 0.8333333333333334,
+          "f1": 0.8571428571428571,
+          "support": 18
+        },
+        "internship": {
+          "precision": 0.6666666666666666,
+          "recall": 1,
+          "f1": 0.8,
+          "support": 18
+        },
+        "correspondence": {
+          "precision": 0.8823529411764706,
+          "recall": 0.8333333333333334,
+          "f1": 0.8571428571428571,
+          "support": 18
+        },
+        "unknown": {
+          "precision": 0.8881578947368421,
+          "recall": 0.75,
+          "f1": 0.8132530120481929,
+          "support": 180
+        }
+      }
+    }
+  },
+  "candidates": [
+    {
+      "scoring": {
+        "aggregation": "top_k_mean",
+        "topK": 5
+      },
+      "metrics": {
+        "threshold": 0.544,
+        "accuracy": 0.835,
+        "macroF1": 0.8560182629170221,
+        "knownMacroF1": 0.8593078975992398,
+        "unknown": {
+          "precision": 0.8881578947368421,
+          "recall": 0.75,
+          "f1": 0.8132530120481929,
+          "support": 180
+        },
+        "hardNegativeAccuracy": 0.6307692307692307,
+        "crossLabelHardNegativeAccuracy": 0.75,
+        "crossLabelHardNegativeCount": 12,
+        "perLabel": {
+          "identity_general": {
+            "precision": 1,
+            "recall": 0.8333333333333334,
+            "f1": 0.9090909090909091,
+            "support": 18
+          },
+          "portrait": {
+            "precision": 1,
+            "recall": 0.8125,
+            "f1": 0.896551724137931,
+            "support": 16
+          },
+          "identity_contact": {
+            "precision": 0.875,
+            "recall": 0.875,
+            "f1": 0.875,
+            "support": 16
+          },
+          "education": {
+            "precision": 0.9411764705882353,
+            "recall": 1,
+            "f1": 0.9696969696969697,
+            "support": 16
+          },
+          "research": {
+            "precision": 0.9444444444444444,
+            "recall": 0.9444444444444444,
+            "f1": 0.9444444444444444,
+            "support": 18
+          },
+          "learnware": {
+            "precision": 0.6153846153846154,
+            "recall": 0.8888888888888888,
+            "f1": 0.7272727272727274,
+            "support": 18
+          },
+          "model_capability_mining": {
+            "precision": 0.6153846153846154,
+            "recall": 1,
+            "f1": 0.761904761904762,
+            "support": 16
+          },
+          "papers": {
+            "precision": 0.5454545454545454,
+            "recall": 0.75,
+            "f1": 0.631578947368421,
+            "support": 16
+          },
+          "skills": {
+            "precision": 0.8888888888888888,
+            "recall": 1,
+            "f1": 0.9411764705882353,
+            "support": 16
+          },
+          "hobbies": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1,
+            "support": 16
+          },
+          "services": {
+            "precision": 0.8823529411764706,
+            "recall": 0.8333333333333334,
+            "f1": 0.8571428571428571,
+            "support": 18
+          },
+          "internship": {
+            "precision": 0.6666666666666666,
+            "recall": 1,
+            "f1": 0.8,
+            "support": 18
+          },
+          "correspondence": {
+            "precision": 0.8823529411764706,
+            "recall": 0.8333333333333334,
+            "f1": 0.8571428571428571,
+            "support": 18
+          },
+          "unknown": {
+            "precision": 0.8881578947368421,
+            "recall": 0.75,
+            "f1": 0.8132530120481929,
+            "support": 180
+          }
+        }
+      }
+    },
+    {
+      "scoring": {
+        "aggregation": "top_k_mean",
+        "topK": 3
+      },
+      "metrics": {
+        "threshold": 0.597,
+        "accuracy": 0.8325,
+        "macroF1": 0.842075533923588,
+        "knownMacroF1": 0.8433443138139534,
+        "unknown": {
+          "precision": 0.8658536585365854,
+          "recall": 0.7888888888888889,
+          "f1": 0.8255813953488372,
+          "support": 180
+        },
+        "hardNegativeAccuracy": 0.6846153846153846,
+        "crossLabelHardNegativeAccuracy": 0.75,
+        "crossLabelHardNegativeCount": 12,
+        "perLabel": {
+          "identity_general": {
+            "precision": 1,
+            "recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "support": 18
+          },
+          "portrait": {
+            "precision": 0.8125,
+            "recall": 0.8125,
+            "f1": 0.8125,
+            "support": 16
+          },
+          "identity_contact": {
+            "precision": 0.8666666666666667,
+            "recall": 0.8125,
+            "f1": 0.8387096774193549,
+            "support": 16
+          },
+          "education": {
+            "precision": 1,
+            "recall": 0.9375,
+            "f1": 0.967741935483871,
+            "support": 16
+          },
+          "research": {
+            "precision": 0.9411764705882353,
+            "recall": 0.8888888888888888,
+            "f1": 0.9142857142857143,
+            "support": 18
+          },
+          "learnware": {
+            "precision": 0.6153846153846154,
+            "recall": 0.8888888888888888,
+            "f1": 0.7272727272727274,
+            "support": 18
+          },
+          "model_capability_mining": {
+            "precision": 0.6153846153846154,
+            "recall": 1,
+            "f1": 0.761904761904762,
+            "support": 16
+          },
+          "papers": {
+            "precision": 0.625,
+            "recall": 0.625,
+            "f1": 0.625,
+            "support": 16
+          },
+          "skills": {
+            "precision": 0.8888888888888888,
+            "recall": 1,
+            "f1": 0.9411764705882353,
+            "support": 16
+          },
+          "hobbies": {
+            "precision": 1,
+            "recall": 0.9375,
+            "f1": 0.967741935483871,
+            "support": 16
+          },
+          "services": {
+            "precision": 0.8823529411764706,
+            "recall": 0.8333333333333334,
+            "f1": 0.8571428571428571,
+            "support": 18
+          },
+          "internship": {
+            "precision": 0.6666666666666666,
+            "recall": 1,
+            "f1": 0.8,
+            "support": 18
+          },
+          "correspondence": {
+            "precision": 1,
+            "recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "support": 18
+          },
+          "unknown": {
+            "precision": 0.8658536585365854,
+            "recall": 0.7888888888888889,
+            "f1": 0.8255813953488372,
+            "support": 180
+          }
+        }
+      }
+    },
+    {
+      "scoring": {
+        "aggregation": "max",
+        "topK": 1
+      },
+      "metrics": {
+        "threshold": 0.613,
+        "accuracy": 0.8375,
+        "macroF1": 0.8372285114398543,
+        "knownMacroF1": 0.8366836756086501,
+        "unknown": {
+          "precision": 0.9155844155844156,
+          "recall": 0.7833333333333333,
+          "f1": 0.844311377245509,
+          "support": 180
+        },
+        "hardNegativeAccuracy": 0.676923076923077,
+        "crossLabelHardNegativeAccuracy": 0.75,
+        "crossLabelHardNegativeCount": 12,
+        "perLabel": {
+          "identity_general": {
+            "precision": 0.7647058823529411,
+            "recall": 0.7222222222222222,
+            "f1": 0.7428571428571428,
+            "support": 18
+          },
+          "portrait": {
+            "precision": 0.7619047619047619,
+            "recall": 1,
+            "f1": 0.8648648648648648,
+            "support": 16
+          },
+          "identity_contact": {
+            "precision": 0.8666666666666667,
+            "recall": 0.8125,
+            "f1": 0.8387096774193549,
+            "support": 16
+          },
+          "education": {
+            "precision": 1,
+            "recall": 0.9375,
+            "f1": 0.967741935483871,
+            "support": 16
+          },
+          "research": {
+            "precision": 0.8095238095238095,
+            "recall": 0.9444444444444444,
+            "f1": 0.8717948717948718,
+            "support": 18
+          },
+          "learnware": {
+            "precision": 0.6153846153846154,
+            "recall": 0.8888888888888888,
+            "f1": 0.7272727272727274,
+            "support": 18
+          },
+          "model_capability_mining": {
+            "precision": 0.6153846153846154,
+            "recall": 1,
+            "f1": 0.761904761904762,
+            "support": 16
+          },
+          "papers": {
+            "precision": 0.6666666666666666,
+            "recall": 0.625,
+            "f1": 0.6451612903225806,
+            "support": 16
+          },
+          "skills": {
+            "precision": 0.8888888888888888,
+            "recall": 1,
+            "f1": 0.9411764705882353,
+            "support": 16
+          },
+          "hobbies": {
+            "precision": 1,
+            "recall": 0.875,
+            "f1": 0.9333333333333333,
+            "support": 16
+          },
+          "services": {
+            "precision": 0.8888888888888888,
+            "recall": 0.8888888888888888,
+            "f1": 0.8888888888888888,
+            "support": 18
+          },
+          "internship": {
+            "precision": 0.6923076923076923,
+            "recall": 1,
+            "f1": 0.8181818181818181,
+            "support": 18
+          },
+          "correspondence": {
+            "precision": 1,
+            "recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "support": 18
+          },
+          "unknown": {
+            "precision": 0.9155844155844156,
+            "recall": 0.7833333333333333,
+            "f1": 0.844311377245509,
+            "support": 180
+          }
+        }
+      }
+    },
+    {
+      "scoring": {
+        "aggregation": "top_k_mean",
+        "topK": 2
+      },
+      "metrics": {
+        "threshold": 0.588,
+        "accuracy": 0.825,
+        "macroF1": 0.8299343963975507,
+        "knownMacroF1": 0.8300989990486288,
+        "unknown": {
+          "precision": 0.9072847682119205,
+          "recall": 0.7611111111111111,
+          "f1": 0.8277945619335347,
+          "support": 180
+        },
+        "hardNegativeAccuracy": 0.6307692307692307,
+        "crossLabelHardNegativeAccuracy": 0.5833333333333334,
+        "crossLabelHardNegativeCount": 12,
+        "perLabel": {
+          "identity_general": {
+            "precision": 1,
+            "recall": 0.7222222222222222,
+            "f1": 0.8387096774193548,
+            "support": 18
+          },
+          "portrait": {
+            "precision": 0.6956521739130435,
+            "recall": 1,
+            "f1": 0.8205128205128205,
+            "support": 16
+          },
+          "identity_contact": {
+            "precision": 0.8666666666666667,
+            "recall": 0.8125,
+            "f1": 0.8387096774193549,
+            "support": 16
+          },
+          "education": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1,
+            "support": 16
+          },
+          "research": {
+            "precision": 0.8888888888888888,
+            "recall": 0.8888888888888888,
+            "f1": 0.8888888888888888,
+            "support": 18
+          },
+          "learnware": {
+            "precision": 0.6153846153846154,
+            "recall": 0.8888888888888888,
+            "f1": 0.7272727272727274,
+            "support": 18
+          },
+          "model_capability_mining": {
+            "precision": 0.6153846153846154,
+            "recall": 1,
+            "f1": 0.761904761904762,
+            "support": 16
+          },
+          "papers": {
+            "precision": 0.55,
+            "recall": 0.6875,
+            "f1": 0.6111111111111112,
+            "support": 16
+          },
+          "skills": {
+            "precision": 0.8888888888888888,
+            "recall": 1,
+            "f1": 0.9411764705882353,
+            "support": 16
+          },
+          "hobbies": {
+            "precision": 1,
+            "recall": 0.875,
+            "f1": 0.9333333333333333,
+            "support": 16
+          },
+          "services": {
+            "precision": 0.875,
+            "recall": 0.7777777777777778,
+            "f1": 0.823529411764706,
+            "support": 18
+          },
+          "internship": {
+            "precision": 0.6428571428571429,
+            "recall": 1,
+            "f1": 0.782608695652174,
+            "support": 18
+          },
+          "correspondence": {
+            "precision": 0.875,
+            "recall": 0.7777777777777778,
+            "f1": 0.823529411764706,
+            "support": 18
+          },
+          "unknown": {
+            "precision": 0.9072847682119205,
+            "recall": 0.7611111111111111,
+            "f1": 0.8277945619335347,
+            "support": 180
+          }
+        }
+      }
+    }
+  ]
+}

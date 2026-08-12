@@ -5,7 +5,9 @@ node_modules/
 dist/
 coverage/
 training/routing-dataset/
-training/routing-evaluation/
+training/routing-evaluation/*
+!training/routing-evaluation/embedding-calibration-report.json
+!training/routing-evaluation/embedding-test-report.json
 
 # Generated data indexes
 src/data/publication-resources.generated.json
