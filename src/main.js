@@ -3,6 +3,7 @@ import './styles/desktop.css';
 import './styles/mobile.css';
 import { AcademicAgent } from './api/academic-agent.js';
 import { mount } from './api/dom.js';
+import { preloadProfileImages } from './api/image-preloader.js';
 import { createAcademicAgentApp } from './app.js';
 import { answers, commonRepeatAnswers, labels } from './data/intents.js';
 import { profile } from './data/profile.js';
@@ -30,3 +31,4 @@ const agent = new AcademicAgent({
 const app = createAcademicAgentApp({ agent, profile });
 
 mount(document.getElementById('app'), app);
+preloadProfileImages(profile);

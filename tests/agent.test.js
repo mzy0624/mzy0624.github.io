@@ -913,5 +913,9 @@ test('uses a short image process and emits exactly one image for an image reques
   assert.equal(events.filter((event) => event.type === 'image-start').length, 1);
   assert.equal(events.filter((event) => event.type === 'image-progress').length, 1);
   assert.equal(events.filter((event) => event.type === 'image').length, 1);
+  assert.equal(
+    events.find((event) => event.type === 'image-start').value.src,
+    'assets/photo.png',
+  );
   assert.ok(!events.some((event) => event.type === 'blocks'));
 });

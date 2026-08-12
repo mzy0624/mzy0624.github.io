@@ -89,7 +89,7 @@ export function createAcademicAgentApp({ agent, profile }) {
         if (event.type === 'emphasis-list-token') response.appendEmphasisListToken(event.value);
         if (event.type === 'emphasis-list-item-end') response.endEmphasisListItem();
         if (event.type === 'emphasis-list-end') response.endEmphasisList();
-        if (event.type === 'image-start') response.showImageProcess(event.message);
+        if (event.type === 'image-start') response.showImageProcess(event.message, event.value);
         if (event.type === 'image-progress') response.updateImageProcess(event.message);
         if (event.type === 'image') await response.appendImage(event.value);
         if (event.type === 'done') {

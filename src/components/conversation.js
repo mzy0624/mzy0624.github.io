@@ -1,4 +1,5 @@
 import { asset, element } from '../api/dom.js';
+import { preloadImage } from '../api/image-preloader.js';
 import { getTypingDelay } from '../api/typing-speed.js';
 import { renderAnswerBlocks } from './answers.js';
 import { createFollowUpSuggestions } from './follow-up-suggestions.js';
@@ -101,6 +102,7 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
     let loader = null;
     let thinkingProcess = null;
     let imageProcess = null;
+    let imagePreload = null;
     let emphasisList = null;
     let emphasisListItem = null;
     let emphasisListStrong = null;
@@ -263,7 +265,13 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
           ),
         );
       },
-      showImageProcess(message) {
+      showImageProcess(message, image) {
+        if (image) {
+          imagePreload = preloadImage(image.src, { fetchPriority: 'high' });
+          if (image.fullSrc && image.fullSrc !== image.src) {
+            preloadImage(image.fullSrc, { fetchPriority: 'low' });
+          }
+        }
         imageProcess = element(
           'div',
           { className: 'image-process', attributes: { role: 'status' } },
@@ -293,10 +301,12 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
           fullSrc: asset(image.fullSrc || image.src),
           alt: image.alt,
         };
-        const result = element('img', {
-          className: 'image-result',
-          attributes: { src: resolvedImage.src, alt: resolvedImage.alt },
-        });
+        const preloaded = await (imagePreload
+          || preloadImage(image.src, { fetchPriority: 'high' }));
+        const result = preloaded.image || element('img');
+        result.className = 'image-result';
+        result.src = resolvedImage.src;
+        result.alt = resolvedImage.alt;
         const trigger = element(
           'button',
           {
@@ -311,13 +321,15 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
           },
           result,
         );
-        await new Promise((resolve) => {
-          result.addEventListener('load', resolve, { once: true });
-          result.addEventListener('error', resolve, { once: true });
-          if (result.complete) resolve();
-        });
+        if (!preloaded.loaded && !result.complete) {
+          await new Promise((resolve) => {
+            result.addEventListener('load', resolve, { once: true });
+            result.addEventListener('error', resolve, { once: true });
+          });
+        }
         imageProcess?.remove();
         imageProcess = null;
+        imagePreload = null;
         content.append(trigger);
         requestAnimationFrame(() => result.classList.add('is-visible'));
       },

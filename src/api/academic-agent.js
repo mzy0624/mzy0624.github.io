@@ -384,7 +384,7 @@ export class AcademicAgent {
     if (response.image) {
       const [preparingDelay, finishingDelay] = getImageProcessDelays(this.random);
       yield* streamAnswerTokens(response, this.typingDelay);
-      yield { type: 'image-start', message: 'Preparing image' };
+      yield { type: 'image-start', message: 'Preparing image', value: response.image };
       await wait(preparingDelay);
       yield { type: 'image-progress', message: 'Almost ready' };
       await wait(finishingDelay);
