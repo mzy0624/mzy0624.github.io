@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "description": "Authoritative semantic boundaries for the question-bank router.",
+  "rules": [
+    "A question form is not accepted or rejected globally; each label defines its own scope.",
+    "A question may enter a label only when it matches the label's overall intent or an explicitly accepted scope.",
+    "Questions assigned to another label must not be duplicated across label banks.",
+    "Unknown is a fallback decision and does not have a positive question bank."
+  ],
+  "labels": [
+    {
+      "labelId": "identity_general",
+      "answerId": "identity_general",
+      "representativeQuestion": "Who are you?",
+      "description": "Requests for Zi-Yu Mao to give a general self-introduction.",
+      "answerContains": [
+        "Name",
+        "Ph.D. student status",
+        "School of Artificial Intelligence, Nanjing University",
+        "LAMDA Group",
+        "Supervisor Ming Li"
+      ],
+      "include": [
+        "Questions asking who Zi-Yu Mao is",
+        "Requests to introduce himself",
+        "Interrogative, imperative or declarative requests for a general self-introduction"
+      ],
+      "exclude": [
+        "Questions that are not synonymous with a general self-introduction",
+        "Questions about one specific identity fact such as name, university, group, supervisor or Ph.D. status",
+        "Factual Yes/No identity questions",
+        "Questions belonging to another label",
+        "What do you currently do?"
+      ]
+    },
+    {
+      "labelId": "portrait",
+      "answerId": "portrait",
+      "representativeQuestion": "Show me a photo of you.",
+      "description": "Requests to see a photo of Zi-Yu Mao or learn what he looks like.",
+      "include": [
+        "Direct requests to show a photo, picture or portrait",
+        "Requests to see what Zi-Yu Mao looks like",
+        "Yes/No-form requests whose actual purpose is to see a photo"
+      ],
+      "exclude": [
+        "General self-introduction questions",
+        "Questions about when, where or why the existing photo was taken",
+        "Questions about singing",
+        "Requests for a video",
+        "Requests to generate a new image"
+      ]
+    },
+    {
+      "labelId": "identity_contact",
+      "answerId": "identity_contact",
+      "representativeQuestion": "How can I contact you?",
+      "description": "Requests for a way to contact Zi-Yu Mao or for any of his email addresses.",
+      "include": [
+        "General requests for contact information",
+        "Requests for all email addresses",
+        "Requests for one specific LAMDA, NJU or Gmail address",
+        "Yes/No-form requests whose purpose is to obtain an email address"
+      ],
+      "exclude": [
+        "Questions about a physical correspondence address",
+        "Questions about a phone number, home address or social media account",
+        "Questions about contacting another person or organization",
+        "Requests to arrange an in-person meeting"
+      ]
+    },
+    {
+      "labelId": "education",
+      "answerId": "education",
+      "representativeQuestion": "Tell me about your education.",
+      "description": "Requests for an overall account of Zi-Yu Mao's educational background and academic journey.",
+      "include": [
+        "General requests to introduce the complete educational background",
+        "Requests for an overview or summary of the academic journey",
+        "Yes/No-form requests whose actual purpose is a complete education introduction"
+      ],
+      "exclude": [
+        "Questions about one specific university, department, major, degree or date",
+        "Factual Yes/No questions about education",
+        "Questions about grades, courses or GPA",
+        "Ambiguous questions such as What did you study? or Where did you study?",
+        "Questions belonging to another label"
+      ]
+    },
+    {
+      "labelId": "research",
+      "answerId": "research",
+      "representativeQuestion": "What are your research interests?",
+      "description": "Requests for an overall introduction to Zi-Yu Mao's research interests, directions or areas.",
+      "include": [
+        "General questions about research interests",
+        "Requests for an overview of research directions or fields",
+        "Requests for the overall focus of the Ph.D. research"
+      ],
+      "exclude": [
+        "Questions about Learnware specifically",
+        "Questions about Model Capability Mining specifically",
+        "Questions about one project, experiment or research problem",
+        "Questions about publications, collaborators or future work",
+        "Factual Yes/No questions about one research topic"
+      ]
+    },
+    {
+      "labelId": "learnware",
+      "answerId": "learnware",
+      "representativeQuestion": "What is the Learnware Paradigm?",
+      "description": "Requests for a definition or brief introduction to the Learnware Paradigm.",
+      "include": [
+        "Questions asking what Learnware is",
+        "Requests to define, explain or briefly introduce Learnware",
+        "Questions about the basic idea or meaning of Learnware",
+        "Yes/No-form requests whose actual purpose is an explanation"
+      ],
+      "exclude": [
+        "Questions about mechanisms, implementations, components or examples",
+        "Questions about applications, benefits, limitations or comparisons",
+        "Questions about Learnware publications or why Zi-Yu Mao studies it",
+        "Factual Yes/No questions"
+      ]
+    },
+    {
+      "labelId": "model_capability_mining",
+      "answerId": "model_capability_mining",
+      "representativeQuestion": "What is Model Capability Mining?",
+      "description": "Requests for a definition or brief introduction to Model Capability Mining.",
+      "include": [
+        "Questions asking what Model Capability Mining is",
+        "Requests to define, explain or briefly introduce Model Capability Mining",
+        "Questions about its basic idea or meaning",
+        "Yes/No-form requests whose actual purpose is an explanation"
+      ],
+      "exclude": [
+        "Questions using only the ambiguous abbreviation MCM",
+        "Questions about Model Capability Representation or model capability in general",
+        "Questions about methods, measurements, applications, examples or limitations",
+        "Questions about related publications or why Zi-Yu Mao studies it",
+        "Factual Yes/No questions"
+      ]
+    },
+    {
+      "labelId": "papers",
+      "answerId": "papers",
+      "representativeQuestion": "How about your publications?",
+      "description": "Questions about Zi-Yu Mao's general publication record or requests to view his papers.",
+      "include": [
+        "Requests to show or list published papers",
+        "General questions about publication history",
+        "Questions about recent or latest publications",
+        "Yes/No questions asking whether Zi-Yu Mao has published any papers"
+      ],
+      "exclude": [
+        "Questions asking for an exact publication count",
+        "Questions restricted to a venue, topic, authorship type or another publication attribute",
+        "Questions about one specific paper",
+        "Requests for a specific paper resource, summary, method or experimental result"
+      ]
+    },
+    {
+      "labelId": "skills",
+      "answerId": "skills",
+      "representativeQuestion": "What technical skills do you have?",
+      "description": "General questions about Zi-Yu Mao's complete technical skill set.",
+      "include": [
+        "Requests to show or introduce the complete technical skill set",
+        "General questions about technical abilities or the technical toolkit",
+        "Yes/No questions asking whether Zi-Yu Mao has technical skills"
+      ],
+      "exclude": [
+        "Questions limited to programming languages, development tools, operating systems or editors",
+        "Questions about one specific skill",
+        "Questions about proficiency, years of experience or the strongest skill",
+        "Requests to perform a programming task or teach a technical tool",
+        "Questions about non-technical skills"
+      ]
+    },
+    {
+      "labelId": "hobbies",
+      "answerId": "hobbies",
+      "representativeQuestion": "What are your hobbies?",
+      "description": "Requests for an overall introduction to Zi-Yu Mao's hobbies and interests outside research.",
+      "include": [
+        "General requests to introduce all hobbies or personal interests",
+        "Questions about activities outside research or in free time",
+        "Yes/No questions asking whether Zi-Yu Mao has hobbies"
+      ],
+      "exclude": [
+        "Questions about one specific hobby such as singing or running",
+        "Questions about artists, songs, running records or injuries",
+        "Questions about food, pets, weekends or unrelated personal preferences"
+      ]
+    },
+    {
+      "labelId": "services",
+      "answerId": "services",
+      "representativeQuestion": "How about your service experience?",
+      "description": "General questions about Zi-Yu Mao's overall service or academic service experience.",
+      "include": [
+        "Requests for an overview of service experience",
+        "General questions about academic service experience",
+        "General Yes/No questions about having service or academic service experience"
+      ],
+      "exclude": [
+        "Questions limited to teaching assistant experience",
+        "Questions limited to program committee experience",
+        "Questions about one named service event, course, semester, teacher or responsibility",
+        "Questions about volunteer, community or customer service"
+      ]
+    },
+    {
+      "labelId": "internship",
+      "answerId": "internship",
+      "representativeQuestion": "How about your internship experience?",
+      "description": "General questions about Zi-Yu Mao's overall internship experience or background.",
+      "include": [
+        "Requests for an overview of internship experience",
+        "General questions about internship history or background",
+        "Yes/No questions asking whether Zi-Yu Mao has internship experience"
+      ],
+      "exclude": [
+        "Questions about one company, organization, position or supervisor",
+        "Questions about internship dates, duration, responsibilities or projects",
+        "Questions about seeking or applying for an internship"
+      ],
+      "response": {
+        "mode": "tracked",
+        "text": "NULL"
+      }
+    },
+    {
+      "labelId": "correspondence",
+      "answerId": "correspondence",
+      "representativeQuestion": "What is your correspondence address?",
+      "description": "Requests for Zi-Yu Mao's correspondence, laboratory, mailing or postal address.",
+      "include": [
+        "General questions about the correspondence address",
+        "Questions about the laboratory address alone",
+        "Questions about the mailing or postal address alone",
+        "Requests to show both laboratory and mailing addresses"
+      ],
+      "exclude": [
+        "Questions about email addresses or phone numbers",
+        "Questions about a private or home address",
+        "Questions about the current real-time location",
+        "Requests for visiting directions"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "modelId": "Xenova/all-MiniLM-L6-v2",
+  "threshold": 0.544,
+  "scoring": {
+    "aggregation": "top_k_mean",
+    "topK": 5
+  },
+  "calibratedOn": "training/routing-evaluation/calibration.jsonl",
+  "prototypeManifest": "data/question-bank-embeddings.json"
+}

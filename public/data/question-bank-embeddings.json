@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "modelId": "Xenova/all-MiniLM-L6-v2",
+  "dtype": "q8",
+  "pooling": "mean",
+  "normalized": true,
+  "dimensions": 384,
+  "totalPrototypes": 570,
+  "questionBankSha256": "4063bf47842b36d899d913f5370f057a97d536a45b85fa73fad81f09de04a4e2",
+  "embeddingsSha256": "4e47a197a8b39e1f4179726c5aa972c19b2969e14d80d93f2a3a2f6d1b424824",
+  "labels": [
+    {
+      "labelId": "identity_general",
+      "start": 0,
+      "count": 46
+    },
+    {
+      "labelId": "portrait",
+      "start": 46,
+      "count": 47
+    },
+    {
+      "labelId": "identity_contact",
+      "start": 93,
+      "count": 50
+    },
+    {
+      "labelId": "education",
+      "start": 143,
+      "count": 49
+    },
+    {
+      "labelId": "research",
+      "start": 192,
+      "count": 42
+    },
+    {
+      "labelId": "learnware",
+      "start": 234,
+      "count": 42
+    },
+    {
+      "labelId": "model_capability_mining",
+      "start": 276,
+      "count": 42
+    },
+    {
+      "labelId": "papers",
+      "start": 318,
+      "count": 42
+    },
+    {
+      "labelId": "skills",
+      "start": 360,
+      "count": 42
+    },
+    {
+      "labelId": "hobbies",
+      "start": 402,
+      "count": 42
+    },
+    {
+      "labelId": "services",
+      "start": 444,
+      "count": 42
+    },
+    {
+      "labelId": "internship",
+      "start": 486,
+      "count": 42
+    },
+    {
+      "labelId": "correspondence",
+      "start": 528,
+      "count": 42
+    }
+  ]
+}

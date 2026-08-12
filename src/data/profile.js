@@ -1,0 +1,194 @@
+import { publications } from './publications.js';
+
+const aaai2026Url = 'https://aaai.org/conference/aaai/aaai-26/';
+
+export const profile = Object.freeze({
+  name: 'Zi-Yu Mao',
+  emails: [
+    {
+      label: 'LAMDA Mail',
+      address: 'maozy@lamda.nju.edu.cn',
+      icon: 'assets/icons/lamda.svg',
+    },
+    {
+      label: 'NJU Mail',
+      address: 'maozy@smail.nju.edu.cn',
+      icon: 'assets/icons/nju.png',
+    },
+    {
+      label: 'Gmail',
+      address: 'mzy0624@gmail.com',
+      icon: 'assets/icons/email.svg',
+    },
+  ],
+  affiliations: [
+    {
+      name: 'LAMDA Group',
+      logo: 'assets/affiliations/lamda.png',
+      url: 'https://www.lamda.nju.edu.cn/CH.MainPage.ashx',
+    },
+    {
+      name: 'School of Artificial Intelligence, Nanjing University',
+      logo: 'assets/affiliations/njuai.png',
+      url: 'https://ai.nju.edu.cn',
+    },
+    {
+      name: 'Nanjing University',
+      logo: 'assets/affiliations/nju.png',
+      url: 'https://www.nju.edu.cn',
+    },
+  ],
+  correspondence: {
+    laboratory: [
+      'A434, School of Artificial Intelligence',
+      'Nanjing University Xianlin Campus.',
+    ],
+    mailAddress: [
+      'Zi-Yu Mao',
+      'State Key Laboratory for Novel Software Technology',
+      'Nanjing University Xianlin Campus Mailbox 603',
+      '163 Xianlin Avenue, Qixia District, Nanjing 210023, China.',
+    ],
+  },
+  links: {
+    github: 'https://github.com/mzy0624',
+    googleScholar: 'https://scholar.google.com/citations?user=Nkg5p6wAAAAJ',
+    schoolAI: 'https://ai.nju.edu.cn',
+    nju: 'https://www.nju.edu.cn',
+    lamda: 'https://www.lamda.nju.edu.cn/CH.MainPage.ashx',
+    zhiHuaZhou: 'https://cs.nju.edu.cn/zhouzh/index.htm',
+    mingLi: 'https://ai.nju.edu.cn/lim/index.htm',
+    csDepartment: 'https://cs.nju.edu.cn',
+  },
+  education: [
+    {
+      degree: 'Ph.D. Student',
+      period: '2023 – Present',
+      icon: 'assets/icons/nju.png',
+      details: [
+        [
+          { text: 'School of Artificial Intelligence', hrefKey: 'schoolAI' },
+          ', ',
+          { text: 'Nanjing University', hrefKey: 'nju' },
+          '.',
+        ],
+        [
+          { text: 'LAMDA Group', hrefKey: 'lamda' },
+          ' · Supervised by Professor ',
+          { text: 'Ming Li', hrefKey: 'mingLi' },
+          '.',
+        ],
+      ],
+    },
+    {
+      degree: 'Bachelor of Science (B.Sc.)',
+      period: '2019 – 2023',
+      icon: 'assets/icons/nju.png',
+      details: [
+        [
+          { text: 'Department of Computer Science and Technology', hrefKey: 'csDepartment' },
+          ' (elite program), ',
+          { text: 'Nanjing University', hrefKey: 'nju' },
+          '.',
+        ],
+      ],
+    },
+  ],
+  skills: [
+    { name: 'C', since: '2019', icon: 'assets/icons/c.svg' },
+    { name: 'C++', since: '2019', icon: 'assets/icons/cpp.svg' },
+    { name: 'LaTeX', since: '2019', icon: 'assets/icons/latex.svg' },
+    { name: 'Vim', since: '2020', icon: 'assets/icons/vim.svg' },
+    {
+      name: 'Linux',
+      since: '2020',
+      note: 'Especially Ubuntu.',
+      icon: 'assets/icons/linux.svg',
+    },
+    { name: 'Python', since: '2021', icon: 'assets/icons/python.svg' },
+    { name: 'HTML', since: '2023', icon: 'assets/icons/html.svg' },
+    { name: 'JavaScript', since: '2023', icon: 'assets/icons/javascript.svg' },
+    { name: 'Java', since: '2023', icon: 'assets/icons/java.svg' },
+  ],
+  hobbies: [
+    {
+      name: 'Table Tennis',
+      since: 'Primary School',
+      icon: 'assets/icons/table-tennis.svg',
+      details: [
+        'Playing style: Right-hand, handshake grip, offensive.',
+        'Favorite players: Ma Long, Fan Zhendong, and Zhang Jike.',
+        'Racket: Fan Zhendong ALC blade; NEO Hurricane 3 forehand rubber; Dignics 09C backhand rubber.',
+        'Previously used: Hurricane Long 5X.',
+      ],
+    },
+    {
+      name: 'Singing',
+      since: '2014',
+      icon: 'assets/icons/singing.svg',
+      details: [
+        'My favorite artists include Jay Chou, JJ Lin, BEYOND, Eason Chan, Michael Jackson, Justin Bieber, Jason Zhang, and Taylor Swift.',
+        {
+          content: [
+            'I am the ',
+            { text: 'Champion', strong: true },
+            " of the 14th Cantonese Singing Competition at Nanjing University in 2026.",
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Body Building',
+      since: '2018',
+      icon: 'assets/icons/body-building.svg',
+      details: [],
+    },
+    {
+      name: 'Running',
+      since: '2022',
+      icon: 'assets/icons/running.svg',
+      details: [
+        '1 km personal best: 3m16s (2024-01-12).',
+        '10 km personal best: 44m43s (2023-08-07).',
+        'I am recovering from a knee injury (since July 2024).',
+      ],
+    },
+  ],
+  services: {
+    academic: [
+      {
+        role: 'Program Committee',
+        organization: 'AAAI 2026',
+        icon: 'assets/icons/aaai.svg',
+        url: aaai2026Url,
+      },
+    ],
+    teachingAssistants: [
+      {
+        course: 'C Programming Language',
+        teacher: 'Hengfeng Wei',
+        semesters: ['Fall 2021', 'Fall 2022', 'Fall 2023'],
+        icon: 'assets/icons/c.svg',
+      },
+      {
+        course: 'Python',
+        teacher: 'Ye Tao',
+        semesters: ['Fall 2021'],
+        icon: 'assets/icons/python.svg',
+      },
+      {
+        course: 'Python',
+        teacher: 'Li Zhang',
+        semesters: ['Spring 2022', 'Fall 2022', 'Spring 2023', 'Spring 2024'],
+        icon: 'assets/icons/python.svg',
+      },
+      {
+        course: 'Programming Training',
+        teacher: 'Zhen Wu',
+        semesters: ['Summer 2024'],
+        icon: 'assets/icons/programming-training.svg',
+      },
+    ],
+  },
+  publications,
+});

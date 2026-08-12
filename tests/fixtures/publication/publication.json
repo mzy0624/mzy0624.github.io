@@ -1,0 +1,19 @@
+{
+  "id": "example-paper",
+  "type": "conference",
+  "title": "An Example Paper",
+  "authors": [
+    "Zi-Yu Mao",
+    "Coauthor"
+  ],
+  "firstAuthorCount": 2,
+  "venue": "Example Conference",
+  "venueShort": "EXAMPLE 2027",
+  "year": "2027",
+  "topic": "Machine Learning",
+  "summary": "A fixture used to validate the publication import script.",
+  "resources": {
+    "code": "https://github.com/example/repository",
+    "official": "https://example.com/paper"
+  }
+}

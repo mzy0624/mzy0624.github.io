@@ -1,0 +1,18 @@
+{
+  "id": "paper-id",
+  "type": "conference",
+  "title": "Paper Title",
+  "authors": [
+    "Zi-Yu Mao",
+    "Coauthor"
+  ],
+  "firstAuthorCount": 1,
+  "venue": "Proceedings of the Full Conference or Journal Name, City, Country, 2027.",
+  "venueShort": "VENUE 2027",
+  "year": "2027",
+  "topic": "Research Topic",
+  "summary": "A concise TL;DR of the paper.",
+  "resources": {
+    "official": "https://example.com/paper"
+  }
+}

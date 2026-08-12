@@ -1,0 +1,29 @@
+{
+  "name": "ziyu-academic-agent",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  },
+  "scripts": {
+    "data:generate": "node scripts/generate-routing-dataset.mjs",
+    "evaluation:generate": "node scripts/generate-routing-evaluation.mjs",
+    "embeddings:generate": "node scripts/generate-question-bank-embeddings.mjs",
+    "embedding:calibrate": "node scripts/calibrate-embedding-router.mjs",
+    "embedding:prepare": "npm run evaluation:generate && npm run embeddings:generate && npm run embedding:calibrate",
+    "publication:manage": "node scripts/manage-publications.mjs",
+    "publication:add": "node scripts/add-publication.mjs",
+    "publication:sync": "node scripts/sync-publication-resources.mjs",
+    "predev": "npm run publication:sync",
+    "dev": "vite",
+    "prebuild": "npm run publication:sync",
+    "build": "vite build",
+    "preview": "vite preview",
+    "pretest": "npm run publication:sync && npm run data:generate && npm run evaluation:generate",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "vite": "^7.1.1"
+  }
+}
