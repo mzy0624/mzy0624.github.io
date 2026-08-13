@@ -49,9 +49,12 @@ export function createSuggestions({ initialTopics, onAsk, onReplace, onShuffle }
       element('span', { text: 'Try asking' }),
       element(
         'button',
-        { className: 'shuffle-button', attributes: { type: 'button' }, events: { click: onShuffle } },
+        {
+          className: 'shuffle-button',
+          attributes: { type: 'button', 'aria-label': 'Shuffle suggested questions', title: 'Shuffle' },
+          events: { click: onShuffle },
+        },
         element('span', { className: 'shuffle-glyph', text: '↻', attributes: { 'aria-hidden': 'true' } }),
-        'Shuffle',
       ),
     ),
     grid,

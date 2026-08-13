@@ -60,6 +60,18 @@ export const profile = Object.freeze({
     mingLi: 'https://ai.nju.edu.cn/lim/index.htm',
     csDepartment: 'https://cs.nju.edu.cn',
   },
+  socialProfiles: [
+    {
+      label: 'GitHub',
+      hrefKey: 'github',
+      icon: 'assets/icons/github.svg',
+    },
+    {
+      label: 'Google Scholar',
+      hrefKey: 'googleScholar',
+      icon: 'assets/icons/google-scholar.svg',
+    },
+  ],
   education: [
     {
       degree: 'Ph.D. Student',

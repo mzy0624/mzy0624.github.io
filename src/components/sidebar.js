@@ -1,4 +1,5 @@
 import { asset, clear, element } from '../api/dom.js';
+import { createProfileMenus } from './profile-menus.js';
 
 const MOBILE_SIDEBAR_QUERY = '(max-width: 900px)';
 
@@ -73,7 +74,8 @@ export function createSidebar({
           className: 'sidebar-profile-avatar',
           attributes: { src: asset('assets/avatar.png'), alt: '' },
         }),
-        element('span', { text: profile.name }),
+        element('span', { className: 'sidebar-profile-name', text: profile.name }),
+        createProfileMenus(profile, 'sidebar'),
       ),
       collapse,
     ),

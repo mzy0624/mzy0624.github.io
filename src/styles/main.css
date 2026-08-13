@@ -263,8 +263,8 @@ textarea:focus-visible {
   min-width: 0;
   min-height: 44px;
   align-items: center;
-  gap: 11px;
-  padding: 3px 6px;
+  gap: 10px;
+  padding: 3px 4px;
   color: #3f413b;
   font-size: 14px;
   font-weight: 620;
@@ -276,6 +276,44 @@ textarea:focus-visible {
   white-space: nowrap;
 }
 
+.sidebar-profile > .sidebar-profile-name {
+  flex: 1 1 auto;
+}
+
+.profile-menus {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-identity .header-menu:first-child .header-menu-trigger-emoji {
+  transform: translateX(2px);
+}
+
+.header-identity .header-menu:last-child .header-menu-trigger-emoji {
+  transform: translateX(-2px);
+}
+
+.sidebar-profile .profile-menus {
+  gap: 1px;
+}
+
+.sidebar-profile .header-menu-trigger {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.sidebar-profile .header-menu-trigger-emoji {
+  font-size: 16px;
+}
+
+.sidebar-profile .header-popover {
+  right: auto;
+  left: 0;
+}
+
 .sidebar-profile-avatar {
   width: 36px;
   height: 36px;
@@ -284,7 +322,7 @@ textarea:focus-visible {
   object-fit: cover;
 }
 
-.page:not(.sidebar-expanded) .brand {
+.page:not(.sidebar-expanded) .header-identity {
   view-transition-name: profile-identity;
 }
 
@@ -346,19 +384,18 @@ html:active-view-transition .header-identity {
   padding-left: 76px;
 }
 
-.email-menu {
+.header-menu {
   position: relative;
 }
 
-.email-menu:hover .email-trigger,
-.email-menu:focus-within .email-trigger,
-.profile-icon-link:hover {
+.header-menu:hover .header-menu-trigger,
+.header-menu:focus-within .header-menu-trigger {
   border-color: var(--border-strong);
   background: rgba(255, 255, 255, 0.72);
   transform: translateY(-1px);
 }
 
-.email-popover::before {
+.header-popover::before {
   content: '';
   position: absolute;
   right: 0;
@@ -367,7 +404,7 @@ html:active-view-transition .header-identity {
   height: 13px;
 }
 
-.email-popover-title {
+.header-popover-title {
   margin: 2px 7px 7px;
   color: var(--muted);
   font-size: 11px;
@@ -376,7 +413,7 @@ html:active-view-transition .header-identity {
   text-transform: uppercase;
 }
 
-.email-option {
+.header-menu-option {
   display: flex;
   align-items: center;
   gap: 11px;
@@ -387,26 +424,26 @@ html:active-view-transition .header-identity {
   transition: background 140ms ease;
 }
 
-.email-option:hover,
-.email-option:focus-visible {
+.header-menu-option:hover,
+.header-menu-option:focus-visible {
   background: var(--panel-muted);
 }
 
-.email-option img {
+.header-menu-option img {
   width: 25px;
   height: 25px;
   flex: 0 0 25px;
   object-fit: contain;
 }
 
-.email-option span,
-.email-option small,
-.email-option strong {
+.header-menu-option span,
+.header-menu-option small,
+.header-menu-option strong {
   display: block;
   min-width: 0;
 }
 
-.email-option small {
+.header-menu-option small {
   color: var(--muted);
   font-size: 10px;
   font-weight: 720;
@@ -414,13 +451,17 @@ html:active-view-transition .header-identity {
   text-transform: uppercase;
 }
 
-.email-option strong {
+.header-menu-option strong {
   margin-top: 1px;
   overflow: hidden;
   font-size: 13px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.header-menu-option--single-line strong {
+  margin-top: 0;
 }
 
 .hero {
@@ -484,8 +525,10 @@ html:active-view-transition .header-identity {
 .shuffle-button {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 4px;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   border: 0;
   color: var(--faint);
   background: transparent;
@@ -502,7 +545,7 @@ html:active-view-transition .header-identity {
 }
 
 .shuffle-glyph {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 400;
   line-height: 1;
 }

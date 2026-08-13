@@ -797,7 +797,7 @@ test('correspondence keeps both original address blocks without icon metadata', 
   assert.doesNotMatch(JSON.stringify(profile.correspondence), /icon|\.svg/);
 });
 
-test('header profile data includes three emails and both icon links', () => {
+test('header profile data includes three emails and both social profiles', () => {
   assert.deepEqual(
     profile.emails.map(({ address }) => address),
     ['maozy@lamda.nju.edu.cn', 'maozy@smail.nju.edu.cn', 'mzy0624@gmail.com'],
@@ -806,6 +806,17 @@ test('header profile data includes three emails and both icon links', () => {
   assert.ok(profile.emails.every(({ icon }) => /\.(svg|png)$/.test(icon)));
   assert.equal(profile.links.github, 'https://github.com/mzy0624');
   assert.match(profile.links.googleScholar, /^https:\/\/scholar\.google\.com\//);
+  assert.deepEqual(
+    profile.socialProfiles.map(({ label, hrefKey, icon }) => ({ label, hrefKey, icon })),
+    [
+      { label: 'GitHub', hrefKey: 'github', icon: 'assets/icons/github.svg' },
+      {
+        label: 'Google Scholar',
+        hrefKey: 'googleScholar',
+        icon: 'assets/icons/google-scholar.svg',
+      },
+    ],
+  );
 });
 
 test('sidebar affiliations preserve LAMDA, NJUAI, and NJU order', () => {
