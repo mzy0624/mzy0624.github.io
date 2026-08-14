@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { thinkingDetails } from '../src/data/thinking-details.js';
+import { thinkingDetails, thinkingMoments } from '../src/data/thinking-details.js';
 import { AcademicAgent } from '../src/api/academic-agent.js';
 import { answers, commonRepeatAnswers, intents } from '../src/data/intents.js';
 import { groupPublications } from '../src/data/publication-groups.js';
@@ -113,16 +113,23 @@ test('direct questions can take the one-second loading branch', async () => {
   assert.ok(answerIndex > endIndex);
 });
 
-test('thinking emits its duration and placeholder detail before the answer', async () => {
-  const samples = [0.9, 0.5, 0];
+test('ordinary thinking emits two stages and its detail before the answer', async () => {
+  const samples = [0.8, 0.5, 0];
   const agent = createAgent({ processRandom: () => samples.shift() });
   const events = [];
   for await (const event of agent.ask('Who are you?', 'identity_general')) events.push(event);
   const startIndex = events.findIndex(({ type }) => type === 'thinking-start');
+  const updateIndex = events.findIndex(({ type }) => type === 'thinking-update');
   const endIndex = events.findIndex(({ type }) => type === 'thinking-end');
   const answerIndex = events.findIndex(({ type }) => type === 'token' || type === 'blocks');
 
   assert.equal(startIndex, 0);
+  assert.deepEqual(events[startIndex], { type: 'thinking-start', message: 'Thinking' });
+  assert.deepEqual(events[updateIndex], {
+    type: 'thinking-update',
+    message: thinkingMoments[0].status,
+  });
+  assert.ok(updateIndex > startIndex);
   assert.ok(endIndex > startIndex);
   assert.ok(answerIndex > endIndex);
   assert.deepEqual(events[endIndex], {
@@ -130,6 +137,63 @@ test('thinking emits its duration and placeholder detail before the answer', asy
     durationSeconds: 3.5,
     detail: thinkingDetails[0],
   });
+});
+
+test('long thinking emits three stages for a normal answer', async () => {
+  const samples = [0.95, 0.5, 0];
+  const agent = createAgent({ processRandom: () => samples.shift() });
+  const events = [];
+  for await (const event of agent.ask('Who are you?', 'identity_general')) events.push(event);
+
+  assert.deepEqual(
+    events.filter(({ type }) => type.startsWith('thinking-')),
+    [
+      { type: 'thinking-start', message: 'Thinking' },
+      { type: 'thinking-update', message: thinkingMoments[0].status },
+      { type: 'thinking-update', message: 'Organizing the answer' },
+      { type: 'thinking-end', durationSeconds: 7.5, detail: thinkingDetails[0] },
+    ],
+  );
+});
+
+test('unknown and repeated answers skip every thinking branch', async () => {
+  const unknownSamples = [0.8];
+  const unknownAgent = createAgent({
+    typingDelay: 0,
+    random: () => 0,
+    processRandom: () => unknownSamples.shift(),
+  });
+  const unknownEvents = [];
+  for await (const event of unknownAgent.ask('Explain relativity.', 'unknown')) {
+    unknownEvents.push(event);
+  }
+
+  assert.equal(
+    unknownEvents.some(({ message }) => message === 'Organizing the answer'),
+    false,
+  );
+  assert.equal(unknownEvents.some(({ type }) => type.startsWith('thinking-')), false);
+
+  const repeatSamples = [0, 0.8];
+  const repeatAgent = createAgent({
+    typingDelay: 0,
+    random: () => 0,
+    processRandom: () => repeatSamples.shift(),
+  });
+  for await (const _event of repeatAgent.ask('Who are you?', 'identity_general')) {
+    // Establish the answer count before asking the repeated question.
+  }
+  const repeatEvents = [];
+  for await (const event of repeatAgent.ask('Who are you?', 'identity_general')) {
+    repeatEvents.push(event);
+  }
+
+  assert.equal(
+    repeatEvents.some(({ message }) => message === 'Organizing the answer'),
+    false,
+  );
+  assert.equal(repeatEvents.some(({ type }) => type.startsWith('thinking-')), false);
+  assert.equal(repeatEvents.find(({ type }) => type === 'done').isRepeatResponse, true);
 });
 
 test('returns unique suggestions and respects exclusions', () => {
@@ -607,8 +671,8 @@ test('education uses structured, reverse-chronological degree entries with NJU l
   assert.deepEqual(
     profile.education.map(({ degree, period }) => ({ degree, period })),
     [
-      { degree: 'Ph.D. Student', period: '2023 – Present' },
-      { degree: 'Bachelor of Science (B.Sc.)', period: '2019 – 2023' },
+      { degree: 'Ph.D. Student', period: 'September 2023 – Present' },
+      { degree: 'Bachelor of Science (B.Sc.)', period: 'September 2019 – June 2023' },
     ],
   );
   assert.ok(profile.education.every(({ icon }) => icon === 'assets/icons/nju.png'));
@@ -748,7 +812,7 @@ test('hobbies preserve every original item, detail, and SVG icon', () => {
 test('services include program committee and complete TA metadata with SVG icons', () => {
   const services = intents.find(({ id }) => id === 'services');
 
-  assert.deepEqual(services.displayPrompts, ['What academic service have you done?']);
+  assert.deepEqual(services.displayPrompts, ['How about your academic service experience?']);
   assert.equal(
     answerForQuestion(services).variants[0].text,
     'My academic service experience includes the roles of conference reviewer and teaching assistant.',
@@ -757,7 +821,6 @@ test('services include program committee and complete TA metadata with SVG icons
     role: 'Program Committee',
     organization: 'AAAI 2026',
     icon: 'assets/icons/aaai.svg',
-    url: 'https://aaai.org/conference/aaai/aaai-26/',
   });
   assert.deepEqual(
     profile.services.teachingAssistants.map(({ course, teacher, semesters }) => ({

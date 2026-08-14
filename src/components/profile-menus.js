@@ -1,10 +1,10 @@
 import { asset, element } from '../api/dom.js';
 
-function createProfileMenu({ id, label, title, emoji, items, compact = false }) {
+function createProfileMenu({ id, label, title, emoji, items }) {
   const popover = element(
     'div',
     {
-      className: `header-popover${compact ? ' header-popover--compact' : ''}`,
+      className: 'header-popover',
       attributes: { id, role: 'menu', 'aria-label': label },
     },
     element('p', { className: 'header-popover-title', text: title }),
@@ -71,7 +71,7 @@ export function createProfileMenus(profile, idPrefix) {
       id: `${idPrefix}-email-popover`,
       label: 'Show email addresses',
       title: 'Email me',
-      emoji: '📬',
+      emoji: '📧',
       items: profile.emails.map((email) => ({
         href: `mailto:${email.address}`,
         icon: email.icon,
@@ -84,11 +84,10 @@ export function createProfileMenus(profile, idPrefix) {
       label: 'Show external profiles',
       title: 'Find me online',
       emoji: '🔗',
-      compact: true,
       items: profile.socialProfiles.map((socialProfile) => ({
-      href: profile.links[socialProfile.hrefKey],
-      icon: socialProfile.icon,
-      text: socialProfile.label,
+        href: profile.links[socialProfile.hrefKey],
+        icon: socialProfile.icon,
+        text: socialProfile.label,
         external: true,
       })),
     }),

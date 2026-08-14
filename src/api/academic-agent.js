@@ -359,7 +359,13 @@ export class AcademicAgent {
       }
     }
 
-    const process = sampleResponseProcess(this.processRandom);
+    const { response, isRepeatResponse } = this.selectAnswer(routed.answerId);
+    const answer = this.answersById.get(routed.answerId);
+    const allowThinking = answer.repeatMode !== 'stateless' && !isRepeatResponse;
+    const process = sampleResponseProcess(this.processRandom, {
+      allowThinking,
+      allowLongThinking: allowThinking,
+    });
     if (process.mode === 'immediate') {
       if (loaderVisible) yield { type: 'loading-end' };
     } else if (process.mode === 'loading') {
@@ -369,17 +375,24 @@ export class AcademicAgent {
       yield { type: 'loading-end' };
     } else {
       if (loaderVisible) yield { type: 'loading-end' };
-      yield { type: 'thinking-start' };
-      const duration = process.durationMs * this.responseProcessTimeScale;
-      if (duration > 0) await wait(duration);
+      const stageDuration = (
+        process.durationMs
+        * this.responseProcessTimeScale
+        / process.stageMessages.length
+      );
+      yield { type: 'thinking-start', message: process.stageMessages[0] };
+      for (let index = 0; index < process.stageMessages.length; index += 1) {
+        if (index > 0) {
+          yield { type: 'thinking-update', message: process.stageMessages[index] };
+        }
+        if (stageDuration > 0) await wait(stageDuration);
+      }
       yield {
         type: 'thinking-end',
         durationSeconds: process.durationSeconds,
         detail: process.detail,
       };
     }
-
-    const { response, isRepeatResponse } = this.selectAnswer(routed.answerId);
 
     if (response.image) {
       const [preparingDelay, finishingDelay] = getImageProcessDelays(this.random);

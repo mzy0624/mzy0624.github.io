@@ -154,17 +154,25 @@ function publicationEntry(publication, profileName) {
   return element(
     'article',
     { className: 'publication-entry' },
-    element('h2', { text: publication.title }),
-    publicationAuthors(publication, profileName),
+    element('h2', { className: 'publication-title', text: publication.title }),
     element(
-      'p',
-      { className: 'publication-venue' },
-      publication.type === 'preprint'
-        ? null
-        : element('span', { className: 'publication-venue-prefix', text: 'In: ' }),
-      element('em', { text: publication.venue }),
+      'div',
+      { className: 'publication-copy' },
+      publicationAuthors(publication, profileName),
+      element(
+        'p',
+        { className: 'publication-venue' },
+        publication.type === 'preprint'
+          ? null
+          : element('span', { className: 'publication-venue-prefix', text: 'In: ' }),
+        element('em', { text: publication.venue }),
+      ),
     ),
-    publicationActions(publication),
+    element(
+      'div',
+      { className: 'publication-details' },
+      publicationActions(publication),
+    ),
   );
 }
 
@@ -373,11 +381,7 @@ const blockRenderers = {
             element(
               'div',
               { className: 'service-copy' },
-              element(
-                'h3',
-                {},
-                externalLink(service.organization, service.url),
-              ),
+              element('h3', { text: service.organization }),
               element('p', {}, element('strong', { text: 'Role: ' }), service.role),
             ),
           ),
@@ -414,8 +418,8 @@ const blockRenderers = {
 
   correspondence(profile) {
     const addresses = [
-      ['Laboratory', profile.correspondence.laboratory],
-      ['Mail Address', profile.correspondence.mailAddress],
+      ['🏣 Laboratory', profile.correspondence.laboratory],
+      ['📪 Mailing Address', profile.correspondence.mailAddress],
     ];
 
     return element(

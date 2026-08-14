@@ -171,7 +171,10 @@ const labelDefinitions = [
   // Research, publications, skills, life, and contact
   {
     id: 'research',
-    prompt: 'What are your research interests?',
+    displayPrompts: [
+      'What are your research interests?',
+      'What are your main research areas?',
+    ],
     icon: '🔬',
     iconType: 'emoji',
     keywords: [
@@ -243,7 +246,10 @@ const labelDefinitions = [
   },
   {
     id: 'papers',
-    prompt: 'How about your publications?',
+    displayPrompts: [
+      'How about your publications?',
+      'What papers have you published?',
+    ],
     icon: '📑',
     iconType: 'emoji',
     keywords: [
@@ -295,7 +301,7 @@ const labelDefinitions = [
   },
   {
     id: 'services',
-    prompt: 'What academic service have you done?',
+    prompt: 'How about your academic service experience?',
     icon: '💁',
     iconType: 'emoji',
     keywords: [

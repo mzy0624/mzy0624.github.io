@@ -201,7 +201,6 @@ async function collectPublication(terminal, catalog, existing = null) {
   for (const key of Object.keys(resourceLabels)) {
     resourceChanges[key] = await askResource(terminal, key, id, existing);
   }
-
   const resources = { ...(existing?.resources || {}), official };
   for (const [key, change] of Object.entries(resourceChanges)) {
     if (change.mode === 'external') resources[key] = change.value;

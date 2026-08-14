@@ -1,7 +1,5 @@
 import { publications } from './publications.js';
 
-const aaai2026Url = 'https://aaai.org/conference/aaai/aaai-26/';
-
 export const profile = Object.freeze({
   name: 'Zi-Yu Mao',
   emails: [
@@ -75,7 +73,7 @@ export const profile = Object.freeze({
   education: [
     {
       degree: 'Ph.D. Student',
-      period: '2023 – Present',
+      period: 'September 2023 – Present',
       icon: 'assets/icons/nju.png',
       details: [
         [
@@ -94,7 +92,7 @@ export const profile = Object.freeze({
     },
     {
       degree: 'Bachelor of Science (B.Sc.)',
-      period: '2019 – 2023',
+      period: 'September 2019 – June 2023',
       icon: 'assets/icons/nju.png',
       details: [
         [
@@ -172,7 +170,6 @@ export const profile = Object.freeze({
         role: 'Program Committee',
         organization: 'AAAI 2026',
         icon: 'assets/icons/aaai.svg',
-        url: aaai2026Url,
       },
     ],
     teachingAssistants: [

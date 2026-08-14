@@ -101,6 +101,7 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
     let activeStrong = null;
     let loader = null;
     let thinkingProcess = null;
+    let thinkingLabel = null;
     let imageProcess = null;
     let imagePreload = null;
     let emphasisList = null;
@@ -128,11 +129,12 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
         loader.remove();
         loader = null;
       },
-      showThinking() {
+      showThinking(message = 'Thinking') {
+        thinkingLabel = element('span', { text: message });
         thinkingProcess = element(
           'div',
           { className: 'thinking-process', attributes: { role: 'status' } },
-          element('span', { text: 'Thinking' }),
+          thinkingLabel,
           element(
             'span',
             { className: 'process-dots', attributes: { 'aria-hidden': 'true' } },
@@ -141,10 +143,18 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
         );
         content.append(thinkingProcess);
       },
+      updateThinking(message) {
+        if (!thinkingProcess || !thinkingLabel) {
+          this.showThinking(message);
+          return;
+        }
+        thinkingLabel.textContent = message;
+      },
       hideThinking() {
         if (!thinkingProcess) return;
         thinkingProcess.remove();
         thinkingProcess = null;
+        thinkingLabel = null;
       },
       finishThinking(durationSeconds, detail) {
         this.hideThinking();

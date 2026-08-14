@@ -76,7 +76,8 @@ export function createAcademicAgentApp({ agent, profile }) {
       for await (const event of agent.ask(prompt, requestedIntentId)) {
         if (event.type === 'loading-start') response.showLoader();
         if (event.type === 'loading-end') response.hideLoader();
-        if (event.type === 'thinking-start') response.showThinking();
+        if (event.type === 'thinking-start') response.showThinking(event.message);
+        if (event.type === 'thinking-update') response.updateThinking(event.message);
         if (event.type === 'thinking-end') {
           response.finishThinking(event.durationSeconds, event.detail);
         }
