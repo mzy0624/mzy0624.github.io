@@ -1,5 +1,6 @@
 import { asset, element } from '../api/dom.js';
 import { selectHeroGreeting } from '../data/hero-greetings.js';
+import { site } from '../data/site.js';
 import { createProfileMenus } from './profile-menus.js';
 
 export function createHeader(profile) {
@@ -11,12 +12,12 @@ export function createHeader(profile) {
       { className: 'header-identity' },
       element(
         'a',
-        { className: 'brand', attributes: { href: './', 'aria-label': 'Zi-Yu Mao home' } },
+        { className: 'brand', attributes: { href: './', 'aria-label': `${site.owner.name} home` } },
         element('img', {
           className: 'brand-avatar',
-          attributes: { src: asset('assets/avatar.png'), alt: '' },
+          attributes: { src: asset(site.assets.avatar), alt: '' },
         }),
-        element('span', { className: 'brand-title', text: 'Zi-Yu Mao' }),
+        element('span', { className: 'brand-title', text: site.owner.name }),
       ),
       createProfileMenus(profile, 'header'),
     ),

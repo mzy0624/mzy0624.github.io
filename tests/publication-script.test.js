@@ -20,7 +20,7 @@ test('publication script validates a manifest and places it first during dry run
   assert.equal(plan.position, 1);
   assert.equal(plan.record.id, 'example-paper');
   assert.equal(plan.record.type, 'conference');
-  assert.deepEqual(plan.record.authors, ['Zi-Yu Mao', 'Coauthor']);
+  assert.deepEqual(plan.record.authors, ['Example Author', 'Coauthor']);
   assert.equal(plan.record.firstAuthorCount, 2);
   assert.deepEqual(plan.record.resources, {
     code: 'https://github.com/example/repository',

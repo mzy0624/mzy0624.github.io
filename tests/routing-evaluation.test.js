@@ -27,9 +27,9 @@ function normalizeText(text) {
     .replace(/\s+/g, ' ');
 }
 
-const boundaries = readJson('training/label-boundaries.json');
-const questionBank = readJson('training/question-bank.json');
-const source = readJson('training/routing-evaluation-source.json');
+const boundaries = readJson('content/router/label-boundaries.json');
+const questionBank = readJson('content/router/question-bank.json');
+const source = readJson('content/router/routing-evaluation-source.json');
 const records = readJsonLines('training/routing-evaluation/all.jsonl');
 const calibrationRecords = readJsonLines('training/routing-evaluation/calibration.jsonl');
 const testRecords = readJsonLines('training/routing-evaluation/test.jsonl');

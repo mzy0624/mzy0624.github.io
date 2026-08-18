@@ -1,12 +1,11 @@
 import { asset } from './dom.js';
+import { site } from '../data/site.js';
 
 const preloadCache = new Map();
 const imageFieldNames = new Set(['icon', 'logo']);
 
 export const persistentUiImageAssets = Object.freeze([
-  'assets/avatar.png',
-  'assets/icons/github.svg',
-  'assets/icons/google-scholar.svg',
+  site.assets.avatar,
 ]);
 
 function collectImageFields(value, paths) {

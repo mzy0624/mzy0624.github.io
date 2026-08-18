@@ -1,4 +1,4 @@
-import publicationRecords from './publications.json' with { type: 'json' };
+import publicationRecords from '../../content/publications.json' with { type: 'json' };
 import detectedResources from './publication-resources.generated.json' with { type: 'json' };
 
 const defaultFilenames = Object.freeze({

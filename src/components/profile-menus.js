@@ -1,6 +1,7 @@
 import { asset, element } from '../api/dom.js';
+import { site } from '../data/site.js';
 
-function createProfileMenu({ id, label, title, emoji, items }) {
+function createProfileMenu({ id, label, title, emoji, icon, items }) {
   const popover = element(
     'div',
     {
@@ -42,11 +43,16 @@ function createProfileMenu({ id, label, title, emoji, items }) {
         'aria-controls': id,
       },
     },
-    element('span', {
-      className: 'header-menu-trigger-emoji',
-      text: emoji,
-      attributes: { 'aria-hidden': 'true' },
-    }),
+    icon
+      ? element('img', {
+        className: 'header-menu-trigger-icon',
+        attributes: { src: asset(icon), alt: '', 'aria-hidden': 'true' },
+      })
+      : element('span', {
+        className: 'header-menu-trigger-emoji',
+        text: emoji,
+        attributes: { 'aria-hidden': 'true' },
+      }),
   );
   const menu = element('div', { className: 'header-menu' }, trigger, popover);
 
@@ -83,7 +89,7 @@ export function createProfileMenus(profile, idPrefix) {
       id: `${idPrefix}-social-popover`,
       label: 'Show external profiles',
       title: 'Find me online',
-      emoji: '🔗',
+      icon: site.assets.externalLink,
       items: profile.socialProfiles.map((socialProfile) => ({
         href: profile.links[socialProfile.hrefKey],
         icon: socialProfile.icon,

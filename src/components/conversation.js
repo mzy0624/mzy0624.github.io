@@ -5,6 +5,7 @@ import { renderAnswerBlocks } from './answers.js';
 import { createFollowUpSuggestions } from './follow-up-suggestions.js';
 import { createImageLightbox } from './image-lightbox.js';
 import { createRoutingExplanationTrigger } from './routing-explanation.js';
+import { site } from '../data/site.js';
 
 const TEXT_NODE = 3;
 const ELEMENT_NODE = 1;
@@ -85,12 +86,12 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
       element(
         'div',
         { className: 'mini-agent', attributes: { 'aria-hidden': 'true' } },
-        element('img', { attributes: { src: asset('assets/avatar.png'), alt: '' } }),
+        element('img', { attributes: { src: asset(site.assets.avatar), alt: '' } }),
       ),
       element(
         'div',
         { className: 'agent-answer' },
-        element('div', { className: 'agent-name', text: 'MZY' }),
+        element('div', { className: 'agent-name', text: site.agentName }),
         content,
       ),
     );

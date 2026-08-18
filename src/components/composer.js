@@ -1,6 +1,7 @@
 import { element } from '../api/dom.js';
+import { site } from '../data/site.js';
 
-export const COMPOSER_PLACEHOLDER = 'Ask anything about MZY...';
+export const COMPOSER_PLACEHOLDER = site.composerPlaceholder;
 
 export function createComposer({ onSubmit }) {
   const input = element('textarea', {

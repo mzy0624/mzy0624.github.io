@@ -78,7 +78,7 @@
 
 ## 生成与验证
 
-维护问题时修改 `routing-evaluation-source.json`，然后运行：
+维护问题时修改 `../content/router/routing-evaluation-source.json`，然后运行：
 
 ```bash
 npm run evaluation:generate

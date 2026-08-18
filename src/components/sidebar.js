@@ -1,5 +1,6 @@
 import { asset, clear, element } from '../api/dom.js';
 import { createProfileMenus } from './profile-menus.js';
+import { site } from '../data/site.js';
 
 const MOBILE_SIDEBAR_QUERY = '(max-width: 900px)';
 
@@ -19,6 +20,67 @@ function affiliationLink(affiliation) {
     element('img', {
       attributes: { src: asset(affiliation.logo), alt: affiliation.name },
     }),
+  );
+}
+
+function sourceRepositoryLink() {
+  if (!site.sourceRepository?.enabled) return null;
+  const tooltipId = 'source-repository-tooltip';
+  const tooltip = element('span', {
+    className: 'sidebar-source-tooltip',
+    text: site.sourceRepository.tooltip,
+    attributes: { id: tooltipId, role: 'tooltip', 'aria-live': 'polite' },
+  });
+  let easterEggTimer = null;
+
+  const resetTooltip = () => {
+    globalThis.clearTimeout(easterEggTimer);
+    easterEggTimer = null;
+    tooltip.textContent = site.sourceRepository.tooltip;
+  };
+
+  const startEasterEggTimer = () => {
+    resetTooltip();
+    const easterEgg = site.sourceRepository.easterEgg;
+    if (!easterEgg?.enabled) return;
+    easterEggTimer = globalThis.setTimeout(() => {
+      tooltip.textContent = easterEgg.message;
+      easterEggTimer = null;
+    }, easterEgg.delayMs);
+  };
+
+  return element(
+    'div',
+    {
+      className: 'sidebar-source',
+      events: {
+        pointerenter: startEasterEggTimer,
+        pointerleave: resetTooltip,
+        focusin: startEasterEggTimer,
+        focusout: resetTooltip,
+      },
+    },
+    element(
+      'a',
+      {
+        className: 'sidebar-source-link',
+        attributes: {
+          href: site.sourceRepository.url,
+          target: '_blank',
+          rel: 'noreferrer',
+          'aria-label': site.sourceRepository.ariaLabel,
+          'aria-describedby': tooltipId,
+        },
+      },
+      element('img', {
+        attributes: {
+          src: asset(site.assets.externalLink),
+          alt: '',
+          'aria-hidden': 'true',
+        },
+      }),
+    ),
+    tooltip,
   );
 }
 
@@ -72,7 +134,7 @@ export function createSidebar({
         { className: 'sidebar-profile' },
         element('img', {
           className: 'sidebar-profile-avatar',
-          attributes: { src: asset('assets/avatar.png'), alt: '' },
+          attributes: { src: asset(site.assets.avatar), alt: '' },
         }),
         element('span', { className: 'sidebar-profile-name', text: profile.name }),
         createProfileMenus(profile, 'sidebar'),
@@ -84,15 +146,22 @@ export function createSidebar({
     element(
       'div',
       { className: 'sidebar-bottom' },
+      site.identityAffiliationLogos
+        ? null
+        : element(
+          'nav',
+          { className: 'sidebar-affiliations', attributes: { 'aria-label': 'Academic affiliations' } },
+          profile.affiliations.map(affiliationLink),
+        ),
       element(
-        'nav',
-        { className: 'sidebar-affiliations', attributes: { 'aria-label': 'Academic affiliations' } },
-        profile.affiliations.map(affiliationLink),
+        'div',
+        { className: 'sidebar-footer' },
+        element('p', {
+          className: 'sidebar-copyright',
+          text: `© ${site.copyrightStartYear}–${new Date().getFullYear()} ${site.owner.name}`,
+        }),
+        sourceRepositoryLink(),
       ),
-      element('p', {
-        className: 'sidebar-copyright',
-        text: `© 2023–${new Date().getFullYear()} Zi-Yu Mao`,
-      }),
     ),
   );
   const node = element('div', { className: 'sidebar-system' }, backdrop, sidebar, open);

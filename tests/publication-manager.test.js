@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import publications from '../content/publications.json' with { type: 'json' };
 
 const execFileAsync = promisify(execFile);
 
@@ -12,9 +13,11 @@ test('publication manager offers a standalone read-only list command', async () 
     { cwd: process.cwd() },
   );
 
-  assert.match(stdout, /Identifying Learnwares via Reduced Neural Conditional Mean Embedding/);
-  assert.match(stdout, /ID: rncme/);
-  assert.match(stdout, /ICML 2026/);
+  publications.forEach((publication) => {
+    assert.ok(stdout.includes(publication.title));
+    assert.ok(stdout.includes(`ID: ${publication.id}`));
+    assert.ok(stdout.includes(publication.venueShort));
+  });
 });
 
 test('publication manager documents its interactive and direct commands', async () => {

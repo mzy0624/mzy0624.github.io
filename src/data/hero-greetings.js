@@ -1,9 +1,6 @@
-export const heroGreetings = Object.freeze([
-  'What would you like to discover?',
-  'What would you like to explore?',
-  'What are you curious about?',
-  'What shall we explore?',
-]);
+import { site } from './site.js';
+
+export const heroGreetings = site.heroGreetings;
 
 export function selectHeroGreeting(random = Math.random) {
   if (typeof random !== 'function') {

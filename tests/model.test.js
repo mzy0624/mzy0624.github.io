@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { intents } from '../src/data/intents.js';
+import questionContent from '../content/questions.json' with { type: 'json' };
 import { IntentModel } from '../src/models/intent-model.js';
 import {
   DeterministicIntentModel,
@@ -105,7 +106,7 @@ test('applies label-specific boundaries to general Yes/No questions', async () =
     assert.equal(result.intent.id, expectedIntentId, prompt);
   }
 
-  const identityFact = await model.predict('Are you a member of the LAMDA Group?');
+  const identityFact = await model.predict(questionContent.nearScopePrompts[0].en);
   assert.equal(identityFact.intent.id, 'unknown');
 });
 
@@ -126,14 +127,13 @@ test('prioritizes an explicit image request over general identity wording', asyn
   assert.equal(result.intent.id, 'portrait');
 });
 
-const researchCases = [
-  ['What are your research interests?', 'research'],
-  ['你的研究方向是什么？', 'research'],
-  ['What is the Learnware Paradigm?', 'learnware'],
-  ['什么是 Learnware？', 'learnware'],
-  ['What is Model Capability Mining?', 'model_capability_mining'],
-  ['什么是模型能力挖掘？', 'model_capability_mining'],
-];
+const researchCases = ['research', 'learnware', 'model_capability_mining'].flatMap((labelId) => {
+  const label = questionContent.labels.find(({ id }) => id === labelId);
+  return [
+    [label.trainingQuestions.en[0], labelId],
+    [label.trainingQuestions.zh[0], labelId],
+  ];
+});
 
 test('routes every selected research sub-intent', async () => {
   for (const [prompt, expectedIntentId] of researchCases) {

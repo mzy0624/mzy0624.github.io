@@ -22,10 +22,12 @@ import {
 } from './lib/publication-resources.mjs';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
-const catalogPath = path.join(projectRoot, 'src/data/publications.json');
+const catalogPath = path.join(projectRoot, 'content/publications.json');
+const sitePath = path.join(projectRoot, 'content/site.json');
 const assetsRoot = path.join(projectRoot, 'public/assets/publications');
 const backupsRoot = path.join(projectRoot, 'publication-backups');
-const selfName = 'Zi-Yu Mao';
+const siteContent = JSON.parse(await readFile(sitePath, 'utf8'));
+const selfName = siteContent.owner.publicationName;
 const publicationTypeLabels = Object.freeze({
   preprint: 'Preprint',
   conference: 'Conference Paper',
@@ -65,7 +67,7 @@ async function isFile(filePath) {
 
 async function readCatalog() {
   const catalog = JSON.parse(await readFile(catalogPath, 'utf8'));
-  if (!Array.isArray(catalog)) throw new Error('publications.json must contain an array.');
+  if (!Array.isArray(catalog)) throw new Error('content/publications.json must contain an array.');
   return catalog;
 }
 

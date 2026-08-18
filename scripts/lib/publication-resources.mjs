@@ -16,7 +16,7 @@ async function isFile(filePath) {
 }
 
 export async function detectPublicationResources(root = projectRoot) {
-  const catalogPath = path.join(root, 'src/data/publications.json');
+  const catalogPath = path.join(root, 'content/publications.json');
   const assetsRoot = path.join(root, 'public/assets/publications');
   const catalog = JSON.parse(await readFile(catalogPath, 'utf8'));
   const detected = {};

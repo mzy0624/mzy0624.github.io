@@ -3,9 +3,9 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const sourcePath = resolve(projectRoot, 'training/routing-evaluation-source.json');
-const boundaryPath = resolve(projectRoot, 'training/label-boundaries.json');
-const questionBankPath = resolve(projectRoot, 'training/question-bank.json');
+const sourcePath = resolve(projectRoot, 'content/router/routing-evaluation-source.json');
+const boundaryPath = resolve(projectRoot, 'content/router/label-boundaries.json');
+const questionBankPath = resolve(projectRoot, 'content/router/question-bank.json');
 const routingDatasetPath = resolve(projectRoot, 'training/routing-dataset/all.jsonl');
 const outputDirectory = resolve(projectRoot, 'training/routing-evaluation');
 const outputPath = resolve(outputDirectory, 'all.jsonl');
@@ -231,7 +231,7 @@ const categoryCounts = Object.fromEntries(
 );
 const stats = {
   schemaVersion: 1,
-  generatedFrom: 'training/routing-evaluation-source.json',
+  generatedFrom: 'content/router/routing-evaluation-source.json',
   totalRecords: records.length,
   semanticGroups: new Set(records.map(({ semantic_group: semanticGroup }) => semanticGroup)).size,
   variantsPerGroup: 2,

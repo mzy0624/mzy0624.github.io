@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "owner": {
+    "name": "Zi-Yu Mao",
+    "nativeName": "毛子钰",
+    "publicationName": "Zi-Yu Mao"
+  },
+  "agentName": "MZY",
+  "pageTitle": "Zi-Yu Mao",
+  "description": "Explore Zi-Yu Mao's research, publications, experience, and interests.",
+  "copyrightStartYear": 2023,
+  "composerPlaceholder": "Ask anything about MZY...",
+  "identityAffiliationLogos": true,
+  "assets": {
+    "avatar": "assets/avatar.png",
+    "externalLink": "assets/icons/external-link.svg"
+  },
+  "sourceRepository": {
+    "enabled": true,
+    "ariaLabel": "Open source repository",
+    "url": "https://github.com/mzy0624/mzy0624.github.io",
+    "tooltip": "I built this site from scratch and made it open source. If you like it, consider giving it a star on GitHub.",
+    "easterEgg": {
+      "enabled": true,
+      "delayMs": 3000,
+      "message": "Still here? You might as well give it a star. ⭐"
+    }
+  },
+  "heroGreetings": [
+    "What would you like to discover?",
+    "What would you like to explore?",
+    "What are you curious about?",
+    "What shall we explore?"
+  ]
+}

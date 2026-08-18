@@ -5,7 +5,10 @@ import { AcademicAgent } from '../src/api/academic-agent.js';
 import { answers, commonRepeatAnswers, intents } from '../src/data/intents.js';
 import { groupPublications } from '../src/data/publication-groups.js';
 import { profile } from '../src/data/profile.js';
-import publicationRecords from '../src/data/publications.json' with { type: 'json' };
+import answerContent from '../content/answers.json' with { type: 'json' };
+import profileContent from '../content/profile.json' with { type: 'json' };
+import questionContent from '../content/questions.json' with { type: 'json' };
+import publicationRecords from '../content/publications.json' with { type: 'json' };
 import { suggestionPlacements } from '../src/data/suggestion-placements.js';
 import { DeterministicIntentModel } from '../src/models/deterministic-intent-model.js';
 
@@ -325,28 +328,8 @@ test('contact follow-up renders the configured email list with its local logos',
   const contact = intents.find(({ id }) => id === 'identity_contact');
   const contactAnswer = answerForQuestion(contact);
 
-  assert.equal(
-    contactAnswer.variants[0].text,
-    'You can reach me at any of the following email addresses:',
-  );
   assert.deepEqual(contactAnswer.variants[0].blocks, [{ type: 'emails' }]);
-  assert.deepEqual(profile.emails.map(({ label, address, icon }) => ({ label, address, icon })), [
-    {
-      label: 'LAMDA Mail',
-      address: 'maozy@lamda.nju.edu.cn',
-      icon: 'assets/icons/lamda.svg',
-    },
-    {
-      label: 'NJU Mail',
-      address: 'maozy@smail.nju.edu.cn',
-      icon: 'assets/icons/nju.png',
-    },
-    {
-      label: 'Gmail',
-      address: 'mzy0624@gmail.com',
-      icon: 'assets/icons/email.svg',
-    },
-  ]);
+  assert.deepEqual(profile.emails, profileContent.emails);
 });
 
 test('separates question metadata from the answer catalog', () => {
@@ -577,17 +560,18 @@ test('streams a routed answer variant through the public Agent API', async () =>
     .map((event) => event.value)
     .join('');
 
+  const configuredAnswer = answerForQuestion('research').variants[0];
+  assert.equal(text, configuredAnswer.text);
   assert.equal(
-    text,
-    'My research interests include Machine Learning and Data Mining, especially:',
+    strongText,
+    configuredAnswer.content.filter(({ strong }) => strong).map(({ text: value }) => value).join(''),
   );
-  assert.equal(strongText, 'Machine LearningData Mining');
   assert.equal(
     events
       .filter(({ type }) => type === 'emphasis-list-token')
       .map(({ value }) => value)
       .join(''),
-    'Learnware ParadigmModel Capability Mining',
+    configuredAnswer.blocks[0].items.join(''),
   );
   assert.equal(events.filter(({ type }) => type === 'emphasis-list-start').length, 1);
   assert.equal(events.filter(({ type }) => type === 'emphasis-list-item-start').length, 2);
@@ -599,20 +583,16 @@ test('streams a routed answer variant through the public Agent API', async () =>
   assert.equal(done.modelId, 'deterministic-keyword-v1');
 });
 
-test('explains Learnware with its centered formula before the main answer', async () => {
+test('streams a configured leading statement before its answer text', async () => {
   const answer = answerForQuestion('learnware').variants[0];
-  assert.match(answer.text, /^The Learnware Paradigm provides a framework/);
-  assert.deepEqual(answer.blocks, [{
-    type: 'statement',
-    position: 'before',
-    text: 'Learnware = Model + Specification',
-    strong: true,
-    centered: true,
-  }]);
+  const statement = answer.blocks.find(({ type }) => type === 'statement');
+  assert.ok(answer.text.length > 0);
+  assert.equal(statement.position, 'before');
 
   const agent = createAgent();
   const events = [];
-  for await (const event of agent.ask('What is the Learnware Paradigm?', 'learnware')) {
+  const prompt = intents.find(({ id }) => id === 'learnware').displayPrompts[0];
+  for await (const event of agent.ask(prompt, 'learnware')) {
     events.push(event);
   }
   const formulaIndex = events.findIndex(({ type }) => type === 'blocks');
@@ -621,19 +601,10 @@ test('explains Learnware with its centered formula before the main answer', asyn
   assert.ok(textIndex > formulaIndex);
 });
 
-test('explains Model Capability Mining and connects it to Learnware specifications', () => {
+test('preserves configured rich emphasis in the second research sub-answer', () => {
   const answer = answerForQuestion('model_capability_mining').variants[0];
-  assert.match(answer.text, /^Model Capability Mining studies how to discover/);
-  assert.match(answer.text, /abstract, latent, and high-dimensional functional capabilities/);
-  assert.match(answer.text, /serve as specifications in the Learnware Paradigm/);
-  assert.deepEqual(
-    answer.content.filter(({ strong }) => strong).map(({ text }) => text),
-    [
-      'Model Capability Mining',
-      'abstract, latent, and high-dimensional functional capabilities',
-      'Learnware Paradigm',
-    ],
-  );
+  assert.ok(answer.text.length > 0);
+  assert.ok(answer.content.some(({ strong }) => strong));
 });
 
 test('marks every structured profile answer for token-paced block rendering', async () => {
@@ -665,17 +636,10 @@ test('marks every structured profile answer for token-paced block rendering', as
   }
 });
 
-test('education uses structured, reverse-chronological degree entries with NJU logos', () => {
+test('education loads structured degree entries from profile content', () => {
   const answer = answerForQuestion('education').variants[0];
   assert.deepEqual(answer.blocks, [{ type: 'education' }]);
-  assert.deepEqual(
-    profile.education.map(({ degree, period }) => ({ degree, period })),
-    [
-      { degree: 'Ph.D. Student', period: 'September 2023 – Present' },
-      { degree: 'Bachelor of Science (B.Sc.)', period: 'September 2019 – June 2023' },
-    ],
-  );
-  assert.ok(profile.education.every(({ icon }) => icon === 'assets/icons/nju.png'));
+  assert.deepEqual(profile.education, profileContent.education);
 });
 
 test('one education label can appear in Try asking and after identity with one counter', () => {
@@ -714,7 +678,7 @@ test('publication overview exposes every paper and its resource actions', () => 
   assert.ok(profile.publications.length > 0);
   profile.publications.forEach((publication) => {
     assert.ok(Array.isArray(publication.authors));
-    assert.ok(publication.authors.includes(profile.name));
+    assert.ok(publication.authors.includes(profile.publicationName));
     assert.ok(publicationTypes.has(publication.type));
     assert.ok(Number.isInteger(publication.firstAuthorCount));
     assert.ok(publication.firstAuthorCount >= 1);
@@ -749,13 +713,6 @@ test('publication overview exposes every paper and its resource actions', () => 
     });
   });
 
-  const rncme = profile.publications.find(({ id }) => id === 'rncme');
-  assert.equal(rncme.type, 'conference');
-  assert.equal(rncme.resources.pdf, 'assets/publications/rncme/paper.pdf');
-  assert.equal(rncme.resources.code, 'assets/publications/rncme/code.zip');
-  assert.equal(rncme.resources.poster, 'assets/publications/rncme/poster.png');
-  assert.match(rncme.resources.bib, /^@inproceedings\{/);
-
 });
 
 test('publication groups prioritize conference, journal, and preprint with newest papers first', () => {
@@ -774,126 +731,39 @@ test('publication groups prioritize conference, journal, and preprint with newes
   );
 });
 
-test('skills preserve the original website order and SVG metadata', () => {
+test('skills preserve configured order and icon metadata', () => {
   const skills = intents.find(({ id }) => id === 'skills');
 
-  assert.deepEqual(skills.displayPrompts, ['What technical skills do you have?']);
-  assert.equal(
-    answerForQuestion(skills).variants[0].text,
-    'Here are some of my technical skills.',
-  );
-  assert.deepEqual(
-    profile.skills.map(({ name }) => name),
-    ['C', 'C++', 'LaTeX', 'Vim', 'Linux', 'Python', 'HTML', 'JavaScript', 'Java'],
-  );
-  assert.ok(profile.skills.every(({ icon }) => icon.endsWith('.svg')));
-  assert.equal(profile.skills.find(({ name }) => name === 'Linux').note, 'Especially Ubuntu.');
+  assert.deepEqual(profile.skills, profileContent.skills);
+  assert.ok(skills.displayPrompts.length > 0);
+  assert.ok(answerForQuestion(skills).variants[0].text.length > 0);
 });
 
-test('hobbies preserve every original item, detail, and SVG icon', () => {
-  const detailText = (detail) => typeof detail === 'string'
-    ? detail
-    : detail.content.map((part) => typeof part === 'string' ? part : part.text).join('');
-  const detailsFor = (index) => profile.hobbies[index].details.map(detailText).join(' ');
-
-  assert.deepEqual(
-    profile.hobbies.map(({ name }) => name),
-    ['Table Tennis', 'Singing', 'Body Building', 'Running'],
-  );
-  assert.ok(profile.hobbies.every(({ icon }) => icon.endsWith('.svg')));
-  assert.match(detailsFor(0), /Fan Zhendong ALC/);
-  assert.match(detailsFor(1), /^My favorite artists/);
-  assert.match(detailsFor(1), /I am the Champion of .*Cantonese Singing Competition/);
-  assert.deepEqual(profile.hobbies[1].details[1].content[1], { text: 'Champion', strong: true });
-  assert.match(detailsFor(3), /3m16s/);
-  assert.match(detailsFor(3), /I am recovering from a knee injury/);
+test('hobbies preserve configured items and details', () => {
+  assert.deepEqual(profile.hobbies, profileContent.hobbies);
 });
 
-test('services include program committee and complete TA metadata with SVG icons', () => {
+test('services load academic and teaching metadata from profile content', () => {
   const services = intents.find(({ id }) => id === 'services');
 
-  assert.deepEqual(services.displayPrompts, ['How about your academic service experience?']);
-  assert.equal(
-    answerForQuestion(services).variants[0].text,
-    'My academic service experience includes the roles of conference reviewer and teaching assistant.',
-  );
-  assert.deepEqual(profile.services.academic[0], {
-    role: 'Program Committee',
-    organization: 'AAAI 2026',
-    icon: 'assets/icons/aaai.svg',
-  });
-  assert.deepEqual(
-    profile.services.teachingAssistants.map(({ course, teacher, semesters }) => ({
-      course, teacher, semesters,
-    })),
-    [
-      {
-        course: 'C Programming Language',
-        teacher: 'Hengfeng Wei',
-        semesters: ['Fall 2021', 'Fall 2022', 'Fall 2023'],
-      },
-      { course: 'Python', teacher: 'Ye Tao', semesters: ['Fall 2021'] },
-      {
-        course: 'Python',
-        teacher: 'Li Zhang',
-        semesters: ['Spring 2022', 'Fall 2022', 'Spring 2023', 'Spring 2024'],
-      },
-      { course: 'Programming Training', teacher: 'Zhen Wu', semesters: ['Summer 2024'] },
-    ],
-  );
-  assert.ok(profile.services.teachingAssistants.every(({ icon }) => icon.endsWith('.svg')));
+  assert.deepEqual(profile.services, profileContent.services);
+  assert.ok(services.displayPrompts.length > 0);
+  assert.ok(answerForQuestion(services).variants[0].text.length > 0);
 });
 
-test('correspondence keeps both original address blocks without icon metadata', () => {
-  assert.deepEqual(profile.correspondence, {
-    laboratory: [
-      'A434, School of Artificial Intelligence',
-      'Nanjing University Xianlin Campus.',
-    ],
-    mailAddress: [
-      'Zi-Yu Mao',
-      'State Key Laboratory for Novel Software Technology',
-      'Nanjing University Xianlin Campus Mailbox 603',
-      '163 Xianlin Avenue, Qixia District, Nanjing 210023, China.',
-    ],
-  });
-  assert.doesNotMatch(JSON.stringify(profile.correspondence), /icon|\.svg/);
+test('correspondence loads configured address blocks and icons', () => {
+  assert.deepEqual(profile.correspondence, profileContent.correspondence);
+  assert.ok(profile.correspondence.every(({ icon }) => icon.endsWith('.svg')));
 });
 
-test('header profile data includes three emails and both social profiles', () => {
-  assert.deepEqual(
-    profile.emails.map(({ address }) => address),
-    ['maozy@lamda.nju.edu.cn', 'maozy@smail.nju.edu.cn', 'mzy0624@gmail.com'],
-  );
-  assert.equal(profile.emails.find(({ label }) => label === 'NJU Mail').icon, 'assets/icons/nju.png');
-  assert.ok(profile.emails.every(({ icon }) => /\.(svg|png)$/.test(icon)));
-  assert.equal(profile.links.github, 'https://github.com/mzy0624');
-  assert.match(profile.links.googleScholar, /^https:\/\/scholar\.google\.com\//);
-  assert.deepEqual(
-    profile.socialProfiles.map(({ label, hrefKey, icon }) => ({ label, hrefKey, icon })),
-    [
-      { label: 'GitHub', hrefKey: 'github', icon: 'assets/icons/github.svg' },
-      {
-        label: 'Google Scholar',
-        hrefKey: 'googleScholar',
-        icon: 'assets/icons/google-scholar.svg',
-      },
-    ],
-  );
+test('header contact and social data come from profile content', () => {
+  assert.deepEqual(profile.emails, profileContent.emails);
+  assert.deepEqual(profile.links, profileContent.links);
+  assert.deepEqual(profile.socialProfiles, profileContent.socialProfiles);
 });
 
-test('sidebar affiliations preserve LAMDA, NJUAI, and NJU order', () => {
-  assert.deepEqual(
-    profile.affiliations.map(({ name, logo }) => ({ name, logo })),
-    [
-      { name: 'LAMDA Group', logo: 'assets/affiliations/lamda.png' },
-      {
-        name: 'School of Artificial Intelligence, Nanjing University',
-        logo: 'assets/affiliations/njuai.png',
-      },
-      { name: 'Nanjing University', logo: 'assets/affiliations/nju.png' },
-    ],
-  );
+test('sidebar affiliations preserve configured order', () => {
+  assert.deepEqual(profile.affiliations, profileContent.affiliations);
 });
 
 test('does not emit an image unless the routed answer explicitly contains one', async () => {
@@ -923,10 +793,10 @@ test('streams biography links as safe structured token metadata', async () => {
   const links = events
     .filter((event) => event.type === 'token' && event.link)
     .map((event) => event.link.href);
-  assert.ok(links.includes(profile.links.schoolAI));
-  assert.ok(links.includes(profile.links.nju));
-  assert.ok(links.includes(profile.links.lamda));
-  assert.ok(links.includes(profile.links.mingLi));
+  const configuredLinks = answerForQuestion('identity_general').variants[0].content
+    .filter(({ href }) => href)
+    .map(({ href }) => href);
+  assert.deepEqual([...new Set(links)], configuredLinks);
 });
 
 test('one portrait label can appear on both suggestion surfaces with one image response', () => {
@@ -935,17 +805,18 @@ test('one portrait label can appear on both suggestion surfaces with one image r
   const imageAnswers = answers
     .filter(({ variants }) => variants.some((variant) => Boolean(variant.image)))
     .map(({ id, variants }) => [id, variants[0].image.src, variants[0].image.fullSrc]);
-  assert.deepEqual(imageAnswers, [[
-    'portrait', 'assets/photo.png', 'assets/photo-original.jpg',
-  ]]);
+  const configuredImageAnswers = answerContent.answers
+    .filter(({ variants }) => variants.some(({ image }) => Boolean(image)))
+    .map(({ id, variants }) => [id, variants[0].image.src, variants[0].image.fullSrc]);
+  assert.deepEqual(imageAnswers, configuredImageAnswers);
   assert.ok(suggestionPlacements.tryAsking.includes(portrait.id));
   assert.ok(suggestionPlacements.followUps.identity_general.includes(portrait.id));
-  assert.deepEqual(portrait.displayPrompts, ['Show me a photo of you']);
+  assert.deepEqual(
+    portrait.displayPrompts,
+    questionContent.labels.find(({ id }) => id === 'portrait').displayPrompts,
+  );
   assert.equal(portrait.answerId, 'portrait');
-  assert.match(portraitAnswer.variants[0].text, /May 11, 2025/);
-  assert.match(portraitAnswer.variants[0].text, /Nanjing University Xianlin Campus/);
-  assert.doesNotMatch(portraitAnswer.variants[0].text, /University['’]s/);
-  assert.match(portraitAnswer.variants[0].text, /singing.*several hundred/i);
+  assert.ok(portraitAnswer.variants[0].text.length > 0);
 });
 
 test('portrait uses one per-conversation answer count regardless of display surface', () => {

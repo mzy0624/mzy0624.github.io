@@ -42,6 +42,20 @@
     grid-template-columns: 160px minmax(0, 1fr);
   }
 
+  .identity-affiliation-logos {
+    gap: 18px;
+  }
+
+  .identity-affiliation-logo {
+    padding: 0;
+  }
+
+  .identity-affiliation-logo img {
+    width: 72%;
+    max-width: none;
+    height: auto;
+  }
+
   .page.sidebar-expanded .page-content {
     margin-left: 268px;
   }

@@ -31,13 +31,13 @@
 - `routing-dataset/test.jsonl`：1,125 条
 - `routing-dataset/all.jsonl`：完整数据
 - `routing-dataset/stats.json`：统计信息
-- `routing-evaluation-source.json`：独立评测语义组的可维护源文件
+- `../content/router/routing-evaluation-source.json`：独立评测语义组的可维护源文件
 - `routing-evaluation/calibration.jsonl`：阈值校准集，400 条
 - `routing-evaluation/test.jsonl`：最终测试集，400 条
 - `routing-evaluation/all.jsonl`：完整独立评测集，800 条
 - `routing-evaluation/stats.json`：评测集统计信息
-- `label-boundaries.json`：经过确认的 13 个 Label 语义边界
-- `question-bank.json`：用于未来相似度路由的人工审核问题库，与页面展示问题相互独立
+- `../content/router/label-boundaries.json`：经过确认的 Label 语义边界
+- `../content/router/question-bank.json`：用于相似度路由的人工审核问题库，与页面展示问题相互独立
 - `../scripts/generate-routing-dataset.mjs`：可复现的数据生成器
 
 重新生成：
@@ -122,7 +122,7 @@ Validation 和 Test 保持 Unknown 占多数，用于模拟真实访问并校准
 
 ## 数据边界
 
-Yes/No 形式不再使用全局规则，而是服从各 Label 在 `label-boundaries.json` 中定义的范围。例如：
+Yes/No 形式不再使用全局规则，而是服从各 Label 在 `../content/router/label-boundaries.json` 中定义的范围。例如：
 
 - `Do you have any technical skills?` → `skills`
 - `Have you published any papers?` → `papers`
@@ -142,7 +142,7 @@ Yes/No 形式不再使用全局规则，而是服从各 Label 在 `label-boundar
 
 ## 相似度路由问题库
 
-`question-bank.json` 已覆盖 `label-boundaries.json` 中的全部 13 个 Label，共 570 条问题。该问题库只包含英文问法，并为每一类覆盖以下七种表达风格：
+`../content/router/question-bank.json` 覆盖 `../content/router/label-boundaries.json` 中定义的 Label。该问题库只包含英文问法，并覆盖多种表达风格：
 
 - 直接提问
 - 祈使表达

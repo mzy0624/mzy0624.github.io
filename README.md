@@ -1,15 +1,17 @@
-# Zi-Yu Mao Academic Agent
+# Single-User Academic Agent Template
 
 [中文说明](README-ZH.md)
 
-An agent-style personal academic homepage built from scratch. The site is fully static and does not call an LLM API. Free-form questions are routed to curated answers by a lightweight embedding model that runs locally in the browser.
+An agent-style, content-driven personal academic homepage. The site is fully static and does not call an LLM API. Free-form questions are routed to curated answers by a lightweight embedding model that runs locally in the browser.
+
+The application supports one homepage owner at a time. All owner-specific information lives in [`content/`](content/README.md), so another person can reuse the template by replacing JSON content and assets without editing application code.
 
 ## Features
 
 - ChatGPT-inspired, responsive interface for desktop and mobile
 - Suggested questions, follow-up questions, and multiple conversation sessions
 - Token-by-token output for both text and structured content
-- Curated answers about Zi-Yu Mao's background, research, publications, technical skills, hobbies, academic service, and contact information
+- Curated, replaceable answers about the owner's background, research, publications, technical skills, hobbies, academic service, and contact information
 - Browser-side semantic routing with no server or API key
 - Calibrated `unknown` fallback for questions outside the supported knowledge base
 - Answer-level repetition handling with multiple response variants
@@ -23,6 +25,7 @@ Install the dependencies and start the Vite development server:
 
 ```bash
 npm install
+npm run content:validate
 npm run dev
 ```
 
@@ -79,8 +82,8 @@ It supports listing, adding, editing, and removing publications. The same operat
 ```bash
 npm run publication:manage -- list
 npm run publication:manage -- add
-npm run publication:manage -- edit rncme
-npm run publication:manage -- remove rncme
+npm run publication:manage -- edit paper-id
+npm run publication:manage -- remove paper-id
 ```
 
 The manager maintains the publication type, title, author order, first or co-first authorship, full venue name, venue abbreviation, official URL, TL;DR, and optional PDF, Code, Poster, and BibTeX resources. Before editing or removing an entry, it creates a recoverable copy in `publication-backups/`.
@@ -111,7 +114,7 @@ npm run publication:add -- /path/to/publication-folder --dry-run
 npm run publication:add -- /path/to/publication-folder
 ```
 
-The importer validates the manifest, copies local resources to `public/assets/publications/<id>/`, and inserts the new publication at the beginning of `src/data/publications.json`. Missing optional files are ignored, and their buttons are not rendered.
+The importer validates the manifest, copies local resources to `public/assets/publications/<id>/`, and inserts the new publication at the beginning of `content/publications.json`. Missing optional files are ignored, and their buttons are not rendered.
 
 Local resource paths are not stored in `publications.json`. External `http(s)` URLs may be supplied under `resources.pdf`, `resources.code`, `resources.poster`, `resources.bib`, and `resources.official`; an external URL takes precedence over a local file of the same type.
 
@@ -119,7 +122,7 @@ Additional formatting rules:
 
 - List `authors` in publication order.
 - `firstAuthorCount` is the number of first authors counted from the beginning of the author list.
-- The page automatically bolds first authors, underlines `Zi-Yu Mao`, and adds an equal-contribution note when applicable.
+- The page automatically bolds first authors, underlines the name configured in `content/site.json → owner.publicationName`, and adds an equal-contribution note when applicable.
 - Store the complete venue text in `venue` without an initial `In:`. The page adds `In:` to conference and journal papers but not to preprints.
 - `summary` appears in the TL;DR tooltip.
 - When `resources.official` is present, `venueShort` becomes the final venue button and links to the official page.
@@ -132,14 +135,15 @@ npm run publication:sync
 
 ## Maintaining Questions and Answers
 
+To replace the current owner's information, edit only the JSON files documented in [`content/README.md`](content/README.md) and the referenced files under `public/assets/`.
+
 To add or modify a supported answer label:
 
-1. Define the label, answer variants, and structured blocks in `src/data/intents.js`.
-2. Maintain its representative and synonymous questions in `src/data/label-questions.js`.
-3. Choose where it can appear in `src/data/suggestion-placements.js`.
-4. Add a block renderer to `src/components/answers.js` if the answer needs a new structured presentation.
-5. Update the semantic boundary in `training/label-boundaries.json`.
-6. Regenerate the routing data and embeddings, add tests for the new behavior, and run the full test suite.
+1. Define fixed answer variants and structured blocks in `content/answers.json`.
+2. Maintain labels, representative questions, synonymous questions, and placements in `content/questions.json`.
+3. Add a block renderer to `src/components/answers.js` if the answer needs a new structured presentation.
+4. Update the semantic boundary in `content/router/label-boundaries.json`.
+5. Regenerate the routing data and embeddings, add tests for the new behavior, and run the full test suite.
 
 Useful data commands:
 
@@ -174,18 +178,20 @@ agent.ask('How about your publications?', 'papers');
 ## Project Structure
 
 ```text
+content/                        # All replaceable single-user content
+├── site.json                  # Owner, Agent, SEO, avatar, and UI text
+├── profile.json               # Education, skills, hobbies, services, and contact data
+├── answers.json               # Fixed and repeated answer variants
+├── questions.json             # Labels, question banks, and placements
+└── publications.json          # Publication metadata
+
 src/
 ├── api/
 │   ├── academic-agent.js       # Sessions, response variants, and streaming events
 │   ├── dom.js                  # DOM creation helpers
 │   └── typing-speed.js         # Length-aware output timing
 ├── components/                 # Header, sidebar, conversation, composer, and answer views
-├── data/
-│   ├── intents.js              # Labels, fixed answers, and repeat responses
-│   ├── label-questions.js      # Representative questions for each label
-│   ├── profile.js              # Structured profile data
-│   ├── publications.json       # Publication metadata
-│   └── suggestion-placements.js# Try Asking and follow-up placements
+├── data/                       # Validated content adapters and generated indexes
 ├── models/
 │   ├── intent-model.js         # Router interface
 │   ├── embedding-intent-model.js

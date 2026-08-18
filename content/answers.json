@@ -1,0 +1,406 @@
+{
+  "commonRepeatAnswers": [
+    {
+      "text": "Didn't you ask me that already? 🤔",
+      "blocks": []
+    },
+    {
+      "text": "I've already answered this quite a few times 😠",
+      "blocks": []
+    }
+  ],
+  "answers": [
+    {
+      "id": "portrait",
+      "variants": [
+        {
+          "text": "This photo captures me singing in front of an audience of several hundred at Nanjing University Xianlin Campus on May 11, 2025.",
+          "image": {
+            "src": "assets/photo.png",
+            "fullSrc": "assets/photo-original.jpg",
+            "alt": "Portrait of Zi-Yu Mao"
+          },
+          "blocks": []
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "identity_general",
+      "variants": [
+        {
+          "text": "I'm Zi-Yu Mao (毛子钰), a third-year Ph.D. student at the School of Artificial Intelligence, Nanjing University, and a member of the LAMDA Group, led by Professor Zhi-Hua Zhou. I conduct my doctoral research under the supervision of Professor Ming Li.",
+          "content": [
+            {
+              "text": "I'm Zi-Yu Mao (毛子钰), a third-year Ph.D. student at the "
+            },
+            {
+              "text": "School of Artificial Intelligence",
+              "href": "https://ai.nju.edu.cn"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "Nanjing University",
+              "href": "https://www.nju.edu.cn"
+            },
+            {
+              "text": ", and a member of the "
+            },
+            {
+              "text": "LAMDA Group",
+              "href": "https://www.lamda.nju.edu.cn/CH.MainPage.ashx"
+            },
+            {
+              "text": ", led by Professor "
+            },
+            {
+              "text": "Zhi-Hua Zhou",
+              "href": "https://cs.nju.edu.cn/zhouzh/index.htm"
+            },
+            {
+              "text": ". I conduct my doctoral research under the supervision of Professor "
+            },
+            {
+              "text": "Ming Li",
+              "href": "https://ai.nju.edu.cn/lim/index.htm"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "blocks": [
+            {
+              "type": "affiliations"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "identity_contact",
+      "variants": [
+        {
+          "text": "You can reach me at any of the following email addresses:",
+          "blocks": [
+            {
+              "type": "emails"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "education",
+      "variants": [
+        {
+          "text": "Here is my educational background.",
+          "blocks": [
+            {
+              "type": "education"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "research",
+      "variants": [
+        {
+          "text": "My research interests include Machine Learning and Data Mining, especially:",
+          "content": [
+            {
+              "text": "My research interests include "
+            },
+            {
+              "text": "Machine Learning",
+              "strong": true
+            },
+            {
+              "text": " and "
+            },
+            {
+              "text": "Data Mining",
+              "strong": true
+            },
+            {
+              "text": ", especially:"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "emphasisList",
+              "items": [
+                "Learnware Paradigm",
+                "Model Capability Mining"
+              ]
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "learnware",
+      "variants": [
+        {
+          "text": "The Learnware Paradigm provides a framework for turning well-trained models into reusable and composable units. Each learnware pairs a model with a specification that characterizes, organizes, and identifies its capabilities for reuse and collaboration on new tasks. As more learnwares join and interact within the system, their capabilities can be continually composed and evolved, enabling the system to solve problems that no single model could handle alone.",
+          "content": [
+            {
+              "text": "The "
+            },
+            {
+              "text": "Learnware Paradigm",
+              "strong": true
+            },
+            {
+              "text": " provides a framework for turning well-trained models into reusable and composable units. Each learnware pairs a "
+            },
+            {
+              "text": "model",
+              "strong": true
+            },
+            {
+              "text": " with a "
+            },
+            {
+              "text": "specification",
+              "strong": true
+            },
+            {
+              "text": " that characterizes, organizes, and identifies its capabilities for reuse and collaboration on new tasks. As more learnwares join and interact within the system, their capabilities can be continually composed and evolved, enabling the system to solve problems that no single model could handle alone."
+            }
+          ],
+          "blocks": [
+            {
+              "type": "statement",
+              "position": "before",
+              "text": "Learnware = Model + Specification",
+              "strong": true,
+              "centered": true
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "model_capability_mining",
+      "variants": [
+        {
+          "text": "Model Capability Mining studies how to discover, understand, characterize, and represent the abstract, latent, and high-dimensional functional capabilities manifested by trained models through their behavior across different data and tasks, revealing what each model can do, where it may be useful, and how its capabilities relate to those of other models. The resulting capability representations can serve as specifications in the Learnware Paradigm, enabling models to be organized, identified, reused, and composed for new tasks.",
+          "content": [
+            {
+              "text": "Model Capability Mining",
+              "strong": true
+            },
+            {
+              "text": " studies how to discover, understand, characterize, and represent the "
+            },
+            {
+              "text": "abstract, latent, and high-dimensional functional capabilities",
+              "strong": true
+            },
+            {
+              "text": " manifested by trained models through their behavior across different data and tasks, revealing what each model can do, where it may be useful, and how its capabilities relate to those of other models. The resulting capability representations can serve as specifications in the "
+            },
+            {
+              "text": "Learnware Paradigm",
+              "strong": true
+            },
+            {
+              "text": ", enabling models to be organized, identified, reused, and composed for new tasks."
+            }
+          ],
+          "blocks": []
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "papers",
+      "variants": [
+        {
+          "text": "Here are the publications currently listed on my website.",
+          "blocks": [
+            {
+              "type": "publications"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "skills",
+      "variants": [
+        {
+          "text": "Here are some of my technical skills.",
+          "blocks": [
+            {
+              "type": "skills"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "hobbies",
+      "variants": [
+        {
+          "text": "Beyond research, these are the hobbies currently listed on my website.",
+          "blocks": [
+            {
+              "type": "hobbies"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "services",
+      "variants": [
+        {
+          "text": "My academic service experience includes the roles of conference reviewer and teaching assistant.",
+          "blocks": [
+            {
+              "type": "services"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "internship",
+      "variants": [
+        {
+          "text": "NULL",
+          "blocks": []
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "correspondence",
+      "variants": [
+        {
+          "text": "Here are my laboratory and mailing addresses.",
+          "blocks": [
+            {
+              "type": "correspondence"
+            }
+          ]
+        }
+      ],
+      "repeatMode": "tracked"
+    },
+    {
+      "id": "unknown",
+      "variants": [
+        {
+          "text": "I don't know enough to answer that reliably. You could try asking about my academic background, research, publications, skills, or hobbies instead.",
+          "blocks": [],
+          "samplingWeight": 10
+        },
+        {
+          "text": "I'm not sure about that. My current knowledge is limited to the information included in this academic profile.",
+          "blocks": [],
+          "samplingWeight": 10
+        },
+        {
+          "text": "I don't have a reliable answer to that. Please try a question about my research or academic experience.",
+          "blocks": [],
+          "samplingWeight": 10
+        },
+        {
+          "text": "My Martian-to-Earth translator returned nothing but static 📡, so I have nothing useful to tell you 👽.",
+          "blocks": []
+        },
+        {
+          "text": "That one is beyond me, but would you like some water? I can pour you a glass. 💧",
+          "blocks": []
+        },
+        {
+          "text": "The answer escaped while I stopped to pet a cat 🐈, and I have no idea where it went.",
+          "blocks": []
+        },
+        {
+          "text": "You have reached the blank part of my brain; would you like some tomato-and-egg stir-fry 🍅🍳 instead?",
+          "blocks": []
+        },
+        {
+          "text": "A suspiciously confident pigeon 🐦 appears to know more about that than I do.",
+          "blocks": []
+        },
+        {
+          "text": "My last remaining brain cell is still compiling ⏳, so no answer has come back.",
+          "blocks": []
+        },
+        {
+          "text": "The answer may be hiding behind the sofa 🛋️, because it certainly is not in my head.",
+          "blocks": []
+        },
+        {
+          "text": "That question has left me completely blank; would a cookie 🍪 improve the situation?",
+          "blocks": []
+        },
+        {
+          "text": "The Moon declined to comment 🌙, and I have nothing more informative to add.",
+          "blocks": []
+        },
+        {
+          "text": "My rubber duck 🐤 is reviewing the question, but neither of us has found an answer.",
+          "blocks": []
+        },
+        {
+          "text": "A cat 🐈 walked across my keyboard ⌨️  and deleted whatever answer I might have had.",
+          "blocks": []
+        },
+        {
+          "text": "Cosmic rays ☄️  appear to have erased that knowledge before it reached me.",
+          "blocks": []
+        },
+        {
+          "text": "I consulted the tomatoes 🍅, but they were every bit as clueless as I am.",
+          "blocks": []
+        },
+        {
+          "text": "Someone wearing a cape 🦸 would have a much better chance of answering that than I do.",
+          "blocks": []
+        },
+        {
+          "text": "My hamster 🐹 is on a tea break ☕, so the knowledge desk is currently unattended.",
+          "blocks": []
+        },
+        {
+          "text": "The answer cupboard is empty, but please accept this emergency cup of tea ☕.",
+          "blocks": []
+        },
+        {
+          "text": "The answer missed its train 🚆 and will not be arriving in my brain today.",
+          "blocks": []
+        },
+        {
+          "text": "A tiny committee of squirrels 🐿️ requested more evidence, so I have reached no conclusion.",
+          "blocks": []
+        },
+        {
+          "text": "The oracle is out for lunch 🍱, and I do not have a substitute answer.",
+          "blocks": []
+        },
+        {
+          "text": "My crystal ball is installing updates 🔮, so I cannot retrieve an answer right now.",
+          "blocks": []
+        }
+      ],
+      "repeatMode": "stateless"
+    }
+  ]
+}

@@ -20,8 +20,8 @@ function normalizeText(text) {
     .replace(/\s+/g, ' ');
 }
 
-const boundaries = readJson('training/label-boundaries.json');
-const questionBank = readJson('training/question-bank.json');
+const boundaries = readJson('content/router/label-boundaries.json');
+const questionBank = readJson('content/router/question-bank.json');
 const answersById = new Map(answers.map((answer) => [answer.id, answer]));
 const allowedQuestionStyles = new Set([
   'direct',

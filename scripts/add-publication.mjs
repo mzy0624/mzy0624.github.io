@@ -17,7 +17,7 @@ import {
 } from './lib/publication-resources.mjs';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
-const catalogPath = path.join(projectRoot, 'src/data/publications.json');
+const catalogPath = path.join(projectRoot, 'content/publications.json');
 const publicationAssetsRoot = path.join(projectRoot, 'public/assets/publications');
 const externalResourceKeys = ['pdf', 'code', 'poster', 'bib', 'official'];
 const publicationTypes = new Set(['preprint', 'conference', 'journal']);
@@ -157,7 +157,7 @@ async function main() {
   const { record, copies } = await publicationRecord(manifest, sourceDirectory);
   const catalog = JSON.parse(await readFile(catalogPath, 'utf8'));
 
-  if (!Array.isArray(catalog)) fail('src/data/publications.json must contain an array.');
+  if (!Array.isArray(catalog)) fail('content/publications.json must contain an array.');
   if (catalog.some(({ id }) => id === record.id)) fail(`Publication id "${record.id}" already exists.`);
 
   const targetDirectory = path.join(publicationAssetsRoot, record.id);

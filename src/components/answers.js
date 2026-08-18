@@ -1,5 +1,6 @@
 import { asset, element } from '../api/dom.js';
 import { groupPublications } from '../data/publication-groups.js';
+import { site } from '../data/site.js';
 
 let publicationTooltipSequence = 0;
 
@@ -220,6 +221,35 @@ function educationDetails(profile, details) {
 }
 
 const blockRenderers = {
+  affiliations(profile) {
+    if (!site.identityAffiliationLogos) return null;
+    return element(
+      'nav',
+      {
+        className: 'response-detail identity-affiliation-logos',
+        attributes: { 'aria-label': 'Academic affiliations' },
+      },
+      profile.affiliations.map((affiliation) =>
+        element(
+          'a',
+          {
+            className: 'identity-affiliation-logo',
+            attributes: {
+              href: affiliation.url,
+              target: '_blank',
+              rel: 'noreferrer',
+              title: affiliation.name,
+              'aria-label': affiliation.name,
+            },
+          },
+          element('img', {
+            attributes: { src: asset(affiliation.logo), alt: '', 'aria-hidden': 'true' },
+          }),
+        ),
+      ),
+    );
+  },
+
   statement(_profile, block) {
     return element(
       'p',
@@ -245,7 +275,7 @@ const blockRenderers = {
           'section',
           { className: 'publication-section' },
           element('h2', { className: 'publication-heading', text: heading }),
-          publications.map((publication) => publicationEntry(publication, profile.name)),
+          publications.map((publication) => publicationEntry(publication, profile.publicationName)),
         ),
       ),
     );
@@ -417,19 +447,22 @@ const blockRenderers = {
   },
 
   correspondence(profile) {
-    const addresses = [
-      ['🏣 Laboratory', profile.correspondence.laboratory],
-      ['📪 Mailing Address', profile.correspondence.mailAddress],
-    ];
-
     return element(
       'section',
       { className: 'response-detail correspondence-list' },
-      addresses.map(([title, lines]) =>
+      profile.correspondence.map(({ title, icon, lines }) =>
         element(
           'section',
           { className: 'correspondence-item' },
-          element('h2', { text: title }),
+          element(
+            'div',
+            { className: 'correspondence-summary' },
+            element('img', {
+              className: 'correspondence-icon',
+              attributes: { src: asset(icon), alt: '', 'aria-hidden': 'true' },
+            }),
+            element('h2', { text: title }),
+          ),
           element(
             'address',
             {},

@@ -10,7 +10,7 @@ import {
 } from './lib/local-embedding-runtime.mjs';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const questionBankPath = resolve(projectRoot, 'training/question-bank.json');
+const questionBankPath = resolve(projectRoot, 'content/router/question-bank.json');
 const outputDirectory = resolve(projectRoot, 'public/data');
 const manifestPath = resolve(outputDirectory, 'question-bank-embeddings.json');
 const embeddingsPath = resolve(outputDirectory, 'question-bank-embeddings.bin');

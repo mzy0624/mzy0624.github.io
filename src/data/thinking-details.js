@@ -2,7 +2,7 @@ const moment = (status, detail) => Object.freeze({ status, detail });
 
 export const thinkingMoments = Object.freeze([
   moment(
-    'Pondering Archimedes and cat treats',
+    'Pondering',
     'I spent a moment wondering whether Archimedes ever ate a cat treat.',
   ),
   moment(
@@ -10,15 +10,15 @@ export const thinkingMoments = Object.freeze([
     'A hamster was requesting sunflower seeds under the table, so I handled that first.',
   ),
   moment(
-    'Playing table tennis with Ma Long',
+    'Playing table tennis',
     'I played a round of table tennis with Ma Long.',
   ),
   moment(
-    'Recounting the salt vote',
+    'Recounting',
     'The tomato and scrambled eggs were voting on whether they needed more salt, and the recount held me up a little.',
   ),
   moment(
-    'Teaching a pigeon gradient descent',
+    'Teaching a pigeon',
     'I tried to teach a pigeon gradient descent, which took longer than expected.',
   ),
   moment(
@@ -30,7 +30,7 @@ export const thinkingMoments = Object.freeze([
     'I just chatted with my girlfriend for a while.',
   ),
   moment(
-    "Calculating a cat's paper capacity",
+    'Calculating',
     'I calculated how many papers a cat could sit on at once.',
   ),
   moment(
@@ -38,11 +38,11 @@ export const thinkingMoments = Object.freeze([
     'I found the missing semicolon under the sofa.',
   ),
   moment(
-    'Teaching goldfish about Learnware',
+    'Teaching a goldfish',
     'I tried to make a goldfish understand the Learnware Paradigm.',
   ),
   moment(
-    'Debating coffee as an optimizer',
+    'Debating coffee',
     'The committee remains divided on whether coffee counts as an optimizer, and its meeting ran a little long.',
   ),
   moment(
@@ -50,11 +50,11 @@ export const thinkingMoments = Object.freeze([
     'The kettle took longer than expected to finish its peer review, so this answer had to wait.',
   ),
   moment(
-    'Watching a rubber duck reject the null',
+    'Watching a rubber duck',
     'A rubber duck has just rejected the null hypothesis.',
   ),
   moment(
-    'Rehearsing a chorus with cicadas',
+    'Rehearsing a chorus',
     'I joined the cicadas outside for a quick chorus rehearsal.',
   ),
   moment(
@@ -70,15 +70,15 @@ export const thinkingMoments = Object.freeze([
     'Current leaderboard: a determined squirrel first, my running PB second.',
   ),
   moment(
-    'Sorting clouds by citation count',
+    'Sorting clouds',
     'A few clouds needed sorting by citation count, but they refused to stay in order.',
   ),
   moment(
-    'Asking the bookshelf for fewer equations',
+    'Asking the bookshelf',
     'I asked the bookshelf for something with fewer equations.',
   ),
   moment(
-    'Debating tomatoes in fruit salad',
+    'Debating tomatoes',
     'I was wondering whether tomatoes belong in a fruit salad.',
   ),
   moment(
@@ -90,7 +90,7 @@ export const thinkingMoments = Object.freeze([
     'I helped a cactus exit Vim, which took a moment.',
   ),
   moment(
-    'Meeting with three paper clips',
+    'Meeting',
     'An emergency meeting with three paper clips ran slightly over schedule.',
   ),
   moment(

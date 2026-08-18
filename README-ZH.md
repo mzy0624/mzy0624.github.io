@@ -1,11 +1,14 @@
-# Zi-Yu Mao Academic Agent
+# 单用户学术 Agent 主页模板
 
-一个从零实现的 Agent 风格个人学术主页。页面本身是静态网站，不调用 LLM API；自由输入通过浏览器内运行的轻量 embedding 模型路由到固定回答。
+一个内容驱动的 Agent 风格个人学术主页。页面本身是静态网站，不调用 LLM API；自由输入通过浏览器内运行的轻量 embedding 模型路由到固定回答。
+
+项目始终只展示一位主页所有者。所有个人信息集中在 `content/`，其他人复用时只需替换 JSON 内容与 `public/assets/` 下的资源，不需要修改应用代码。字段说明见 [`content/README.md`](content/README.md)。
 
 ## 开发与构建
 
 ```bash
 npm install
+npm run content:validate
 npm run dev
 ```
 
@@ -39,8 +42,8 @@ npm run publication:manage
 ```bash
 npm run publication:manage -- list
 npm run publication:manage -- add
-npm run publication:manage -- edit rncme
-npm run publication:manage -- remove rncme
+npm run publication:manage -- edit paper-id
+npm run publication:manage -- remove paper-id
 ```
 
 管理器会维护论文类型、标题、作者顺序、第一作者/共同一作、完整发表信息、会议或期刊缩写与官方链接、TL;DR，以及可选的 PDF、Code、Poster 和 Bib。论文类型使用 `preprint`、`conference` 或 `journal`，页面会据此归入 Preprint、Conference Paper 或 Journal Paper。资源既可填写 `http(s)` 链接，也可提供本地文件路径；本地文件会被复制到论文资源目录。编辑和删除前会在 `publication-backups/` 中创建可恢复备份，删除还必须再次输入论文 ID 确认。
@@ -63,11 +66,11 @@ npm run publication:add -- /path/to/publication-folder --dry-run
 npm run publication:add -- /path/to/publication-folder
 ```
 
-脚本会校验数据，将材料复制到 `public/assets/publications/<id>/`，并把新论文插入 `src/data/publications.json` 首位。缺失的本地材料会被忽略，对应按钮不会出现。
+脚本会校验数据，将材料复制到 `public/assets/publications/<id>/`，并把新论文插入 `content/publications.json` 首位。缺失的本地材料会被忽略，对应按钮不会出现。
 
 `publications.json` 不记录本地材料路径。外部资源可以在 `resources` 中设置 `pdf`、`code`、`poster`、`bib` 或 `official` 的 `http(s)` URL；外部设置优先于同名本地文件。
 
-`authors` 按署名顺序填写，`firstAuthorCount` 表示从第一位开始共有几位第一作者。页面会自动加粗第一作者、给 `Zi-Yu Mao` 加下划线，并在共同一作时添加 `* Equal contribution.`。
+`authors` 按署名顺序填写，`firstAuthorCount` 表示从第一位开始共有几位第一作者。页面会自动加粗第一作者、给 `content/site.json` 中 `owner.publicationName` 对应的作者加下划线，并在共同一作时添加 `* Equal contribution.`。
 
 `venue` 只填写完整发表信息，不要包含开头的 `In:`。页面会为会议和期刊论文自动添加非斜体的 `In:`，预印本则不会添加。
 
@@ -76,18 +79,20 @@ npm run publication:add -- /path/to/publication-folder
 ## 目录结构
 
 ```text
+content/                        # 所有可替换的单用户内容
+├── site.json                  # 姓名、Agent、SEO、头像与界面文字
+├── profile.json               # 教育、技能、爱好、服务与联系资料
+├── answers.json               # 固定回答与重复回答
+├── questions.json             # labels、问题库与展示位置
+└── publications.json          # 论文元数据
+
 src/
 ├── api/
 │   ├── academic-agent.js       # 会话、重复回答与流式事件 API
 │   ├── dom.js                  # DOM 构建工具
 │   └── typing-speed.js         # 按回答长度计算输出速度
 ├── components/                 # 页头、侧边栏、对话、输入框与答案视图
-├── data/
-│   ├── intents.js              # labels、固定回答与重复回答
-│   ├── label-questions.js      # 每个 label 的代表性问题
-│   ├── profile.js              # 结构化个人资料
-│   ├── publications.json       # 论文元数据
-│   └── suggestion-placements.js# Try asking 与回答后问题的展示位置
+├── data/                       # 内容校验适配层与生成索引
 ├── models/
 │   ├── intent-model.js         # 路由模型接口
 │   ├── embedding-intent-model.js
@@ -125,12 +130,11 @@ agent.ask('How about your publications?', 'papers');
 
 ## 增加或修改 label
 
-1. 在 `src/data/intents.js` 定义 label 与固定回答。
-2. 在 `src/data/label-questions.js` 维护同义问题。
-3. 在 `src/data/suggestion-placements.js` 决定它是否出现在 `Try asking` 或其他回答下方。
-4. 若需要新的结构化输出，在 `src/components/answers.js` 增加 block renderer。
-5. 在 `training/label-boundaries.json` 更新语义边界，并重新生成问题库、embedding 与评测配置。
-6. 为新行为补充测试，再运行完整测试与构建。
+1. 在 `content/answers.json` 定义固定回答。
+2. 在 `content/questions.json` 维护 label、同义问题和展示位置。
+3. 若需要新的结构化输出类型，在 `src/components/answers.js` 增加 block renderer。
+4. 在 `content/router/label-boundaries.json` 更新语义边界，并重新生成问题库、embedding 与评测配置。
+5. 为新行为补充测试，再运行完整测试与构建。
 
 常用数据命令：
 

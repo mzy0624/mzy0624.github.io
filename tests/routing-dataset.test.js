@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { intents } from '../src/data/intents.js';
 import { labelQuestions } from '../src/data/label-questions.js';
+import questionContent from '../content/questions.json' with { type: 'json' };
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const datasetDirectory = resolve(projectRoot, 'training/routing-dataset');
@@ -78,8 +79,9 @@ test('general Yes/No routing follows each label boundary', () => {
     assert.ok(matches.every((record) => record.route_label === expectedLabel), text);
   }
 
+  const boundaryPrompt = questionContent.nearScopePrompts[0].en;
   const identityFact = all.filter((record) => (
-    normalizeText(record.text).includes(normalizeText('Are you a member of the LAMDA Group?'))
+    normalizeText(record.text).includes(normalizeText(boundaryPrompt))
   ));
   assert.ok(identityFact.length > 0);
   assert.ok(identityFact.every((record) => record.gate_label === 'reject'));

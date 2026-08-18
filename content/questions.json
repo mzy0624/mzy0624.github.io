@@ -1,0 +1,1039 @@
+{
+  "labels": [
+    {
+      "priority": 10,
+      "keywords": [
+        "photo",
+        "picture",
+        "image",
+        "portrait",
+        "what do you look like",
+        "照片",
+        "图片",
+        "相片",
+        "长什么样",
+        "看看你",
+        "看一下你"
+      ],
+      "id": "portrait",
+      "icon": "📸",
+      "iconType": "emoji",
+      "answerId": "portrait",
+      "displayPrompts": [
+        "Show me a photo of you"
+      ],
+      "questions": [
+        "Can you show me a photo of yourself?",
+        "What do you look like?",
+        "May I see your picture?",
+        "Show me a photograph of yourself.",
+        "Could you share a photo of you?",
+        "Let me see what you look like.",
+        "Is there a photograph of you?",
+        "Show me what you look like."
+      ],
+      "trainingQuestions": {
+        "en": [
+          "Can you show me a photo of yourself?",
+          "What do you look like?",
+          "May I see your picture?",
+          "Show me a photograph of yourself.",
+          "Could you share a photo of you?",
+          "Let me see what you look like.",
+          "Is there a photograph of you?",
+          "Show me what you look like.",
+          "Can I see a photo of you?",
+          "Show me your portrait.",
+          "Share a photo of yourself.",
+          "Could I see what you look like?"
+        ],
+        "zh": [
+          "可以给我看看你的照片吗？",
+          "你长什么样？",
+          "能展示一张你的照片吗？",
+          "我可以看看你的肖像照吗？",
+          "展示一张你的个人照片。",
+          "让我看看你的样子。",
+          "可以分享一张你的照片吗？",
+          "能看看你的个人照片吗？",
+          "请展示一张你的照片。",
+          "我想知道你长什么样。"
+        ]
+      }
+    },
+    {
+      "id": "identity_general",
+      "icon": "🧑🏻‍💻",
+      "iconType": "emoji",
+      "keywords": [
+        "who are you",
+        "introduce yourself",
+        "tell me about yourself",
+        "brief introduction",
+        "what do you currently do",
+        "current academic position",
+        "student or a researcher",
+        "student or researcher",
+        "about you",
+        "你是谁",
+        "介绍一下你自己",
+        "介绍自己",
+        "个人简介",
+        "你现在是做什么的"
+      ],
+      "answerId": "identity_general",
+      "displayPrompts": [
+        "Who are you?",
+        "Introduce yourself."
+      ],
+      "questions": [
+        "Who are you?",
+        "Could you introduce yourself?",
+        "Tell me a little about yourself.",
+        "Give me a brief introduction to who you are.",
+        "How would you describe yourself?",
+        "What should I know about you?",
+        "Can I get a short introduction?",
+        "Please introduce yourself."
+      ],
+      "trainingQuestions": {
+        "en": [
+          "Who are you?",
+          "Could you introduce yourself?",
+          "Tell me a little about yourself.",
+          "Give me a brief introduction to who you are.",
+          "How would you describe yourself?",
+          "What should I know about you?",
+          "Can I get a short introduction?",
+          "Please introduce yourself.",
+          "Can you tell me who you are?",
+          "What is your brief self-introduction?",
+          "How do you introduce yourself?",
+          "Give me an overview of yourself."
+        ],
+        "zh": [
+          "你是谁？",
+          "请介绍一下你自己。",
+          "可以做一个简单的自我介绍吗？",
+          "告诉我一些关于你的信息。",
+          "你会怎样介绍自己？",
+          "我应该如何了解你？",
+          "请给我一个简短的个人介绍。",
+          "可以说说你自己吗？",
+          "简单介绍一下你的身份。",
+          "我想了解你是谁。"
+        ]
+      }
+    },
+    {
+      "id": "identity_contact",
+      "priority": 6,
+      "keywords": [
+        "how can i contact you",
+        "how do i contact you",
+        "how can i reach you",
+        "how do i reach you",
+        "what is your email",
+        "what is your email address",
+        "your email address",
+        "email you",
+        "我该如何联系你",
+        "如何联系你",
+        "怎么联系你",
+        "怎样联系你",
+        "怎么和你联系",
+        "你的邮箱是什么",
+        "你的电子邮箱",
+        "邮箱地址"
+      ],
+      "answerId": "identity_contact",
+      "displayPrompts": [
+        "How can I contact you?"
+      ],
+      "questions": [
+        "How can I contact you?",
+        "What is the best way to reach you?",
+        "Which email address should I use to contact you?",
+        "Could you share your email addresses?",
+        "How may I get in touch with you?",
+        "Where can I send you an email?",
+        "What are your contact emails?",
+        "How should someone contact you online?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "How can I contact you?",
+          "What is the best way to reach you?",
+          "Which email address should I use to contact you?",
+          "Could you share your email addresses?",
+          "How may I get in touch with you?",
+          "Where can I send you an email?",
+          "What are your contact emails?",
+          "How should someone contact you online?",
+          "How should I get in contact with you?",
+          "Can you give me your contact information?",
+          "What email can I use to reach you?",
+          "Tell me how to contact you."
+        ],
+        "zh": [
+          "我该如何联系你？",
+          "联系你的最佳方式是什么？",
+          "我应该使用哪个邮箱联系你？",
+          "可以提供你的电子邮箱吗？",
+          "怎样才能和你取得联系？",
+          "我可以把邮件发到哪里？",
+          "你的联系邮箱有哪些？",
+          "告诉我如何通过邮件联系你。",
+          "可以给我你的联系方式吗？",
+          "哪个邮箱可以联系到你？"
+        ]
+      }
+    },
+    {
+      "priority": 1,
+      "keywords": [
+        "tell me about your education",
+        "how about your education",
+        "educational background",
+        "academic background",
+        "academic journey",
+        "academic timeline",
+        "summarize your education",
+        "where did you receive your education",
+        "education experience",
+        "教育经历",
+        "学术经历",
+        "教育背景",
+        "本科和博士",
+        "学历经历"
+      ],
+      "id": "education",
+      "icon": "📚",
+      "iconType": "emoji",
+      "answerId": "education",
+      "displayPrompts": [
+        "Tell me about your education",
+        "How about your education?"
+      ],
+      "questions": [
+        "Tell me about your education.",
+        "What is your educational background?",
+        "Could you summarize your academic journey?",
+        "Walk me through your education history.",
+        "Could you describe your academic training?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "Tell me about your education.",
+          "What is your educational background?",
+          "Could you summarize your academic journey?",
+          "Walk me through your education history.",
+          "Could you describe your academic training?",
+          "Where did you study?",
+          "What degrees have you pursued?",
+          "Tell me about your university education.",
+          "What is your academic education history?",
+          "Where did you complete your undergraduate studies?",
+          "What are you studying for your Ph.D.?",
+          "Give me an overview of your education."
+        ],
+        "zh": [
+          "介绍一下你的教育经历。",
+          "你的教育背景是什么？",
+          "可以概括一下你的求学经历吗？",
+          "说说你的教育历史。",
+          "你接受过哪些学术训练？",
+          "你在哪里读的本科？",
+          "你从什么时候开始读博士？",
+          "你获得过什么学位？",
+          "请介绍你的大学教育经历。",
+          "概括一下你的本科和博士经历。"
+        ]
+      }
+    },
+    {
+      "id": "research",
+      "icon": "🔬",
+      "iconType": "emoji",
+      "keywords": [
+        "what are your research interests",
+        "what do you research",
+        "what are your research areas",
+        "research interests",
+        "research direction",
+        "your research",
+        "research areas",
+        "research",
+        "你的研究方向是什么",
+        "你主要研究什么",
+        "研究兴趣",
+        "研究方向",
+        "研究领域",
+        "研究",
+        "方向",
+        "课题"
+      ],
+      "answerId": "research",
+      "displayPrompts": [
+        "What are your research interests?",
+        "What are your main research areas?"
+      ],
+      "questions": [
+        "What are your research interests?",
+        "Which research areas do you focus on?",
+        "What topics are you currently researching?",
+        "Could you describe your research direction?",
+        "What fields does your research cover?",
+        "What is the main focus of your Ph.D. research?",
+        "Tell me about your research interests."
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What are your research interests?",
+          "Which research areas do you focus on?",
+          "What topics are you currently researching?",
+          "Could you describe your research direction?",
+          "What fields does your research cover?",
+          "What is the main focus of your Ph.D. research?",
+          "Tell me about your research interests.",
+          "What do you work on as a researcher?",
+          "Which topics define your research agenda?",
+          "What is your current research focus?",
+          "Tell me what you study in your research.",
+          "What problems are central to your research?"
+        ],
+        "zh": [
+          "你的研究兴趣是什么？",
+          "你主要关注哪些研究领域？",
+          "你目前在研究哪些问题？",
+          "可以介绍一下你的研究方向吗？",
+          "你的研究涵盖哪些领域？",
+          "你的博士研究重点是什么？",
+          "告诉我你的研究兴趣。",
+          "你作为研究者主要做什么？",
+          "你当前的研究重点是什么？",
+          "哪些主题构成了你的研究方向？"
+        ]
+      }
+    },
+    {
+      "id": "learnware",
+      "keywords": [
+        "what is the learnware paradigm",
+        "what is learnware",
+        "explain learnware",
+        "learnware paradigm",
+        "learnwares",
+        "learnware",
+        "reusable model",
+        "什么是 learnware paradigm",
+        "什么是 learnware",
+        "解释一下 learnware",
+        "learnware 是什么",
+        "学件范式",
+        "学件",
+        "模型复用"
+      ],
+      "answerId": "learnware",
+      "displayPrompts": [
+        "What is the Learnware Paradigm?"
+      ],
+      "questions": [
+        "What is the Learnware Paradigm?",
+        "Could you explain the Learnware Paradigm?",
+        "What does learnware mean?",
+        "How would you describe learnware?",
+        "What problem is the Learnware Paradigm trying to solve?",
+        "Can you give me an introduction to learnware?",
+        "What is the basic idea behind learnware?",
+        "Why is the Learnware Paradigm useful?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What is the Learnware Paradigm?",
+          "Could you explain the Learnware Paradigm?",
+          "What does learnware mean?",
+          "How would you describe learnware?",
+          "What problem is the Learnware Paradigm trying to solve?",
+          "Can you give me an introduction to learnware?",
+          "What is the basic idea behind learnware?",
+          "Why is the Learnware Paradigm useful?",
+          "Tell me what the Learnware Paradigm is.",
+          "What is the central idea of learnware?",
+          "Give me a short explanation of learnware.",
+          "What do you mean by the Learnware Paradigm?"
+        ],
+        "zh": [
+          "什么是学件范式？",
+          "可以解释一下 Learnware Paradigm 吗？",
+          "Learnware 是什么意思？",
+          "你会如何描述学件？",
+          "学件范式试图解决什么问题？",
+          "可以介绍一下 Learnware 吗？",
+          "学件的基本思想是什么？",
+          "为什么学件范式有用？",
+          "请简要解释学件范式。",
+          "你所说的 Learnware Paradigm 是什么？"
+        ]
+      }
+    },
+    {
+      "id": "model_capability_mining",
+      "keywords": [
+        "what is model capability mining",
+        "explain model capability mining",
+        "model capability mining",
+        "mining model capabilities",
+        "什么是 model capability mining",
+        "解释 model capability mining",
+        "模型能力挖掘"
+      ],
+      "answerId": "model_capability_mining",
+      "displayPrompts": [
+        "What is Model Capability Mining?"
+      ],
+      "questions": [
+        "What is Model Capability Mining?",
+        "Could you explain Model Capability Mining?",
+        "What does Model Capability Mining mean?",
+        "How would you define Model Capability Mining?",
+        "Can you give me an introduction to Model Capability Mining?",
+        "What is the basic idea behind Model Capability Mining?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What is Model Capability Mining?",
+          "Could you explain Model Capability Mining?",
+          "What does Model Capability Mining mean?",
+          "How would you define Model Capability Mining?",
+          "Can you give me an introduction to Model Capability Mining?",
+          "What is the basic idea behind Model Capability Mining?",
+          "Tell me what Model Capability Mining is.",
+          "What is the central idea of Model Capability Mining?",
+          "Give me a short explanation of Model Capability Mining.",
+          "Why do you study Model Capability Mining?",
+          "What problem does Model Capability Mining address?",
+          "What do you mean by Model Capability Mining?"
+        ],
+        "zh": [
+          "什么是模型能力挖掘？",
+          "可以解释一下 Model Capability Mining 吗？",
+          "Model Capability Mining 是什么意思？",
+          "你会如何定义模型能力挖掘？",
+          "可以介绍一下 Model Capability Mining 吗？",
+          "模型能力挖掘的基本思想是什么？",
+          "模型能力挖掘试图解决什么问题？",
+          "为什么要研究模型能力挖掘？",
+          "请简要解释模型能力挖掘。",
+          "你所说的 Model Capability Mining 是什么？"
+        ]
+      }
+    },
+    {
+      "id": "papers",
+      "icon": "📑",
+      "iconType": "emoji",
+      "keywords": [
+        "how about your publications",
+        "what papers have you published",
+        "show me your papers",
+        "show your publications",
+        "list your papers",
+        "your publications",
+        "your papers",
+        "publication list",
+        "published work",
+        "papers",
+        "publications",
+        "paper",
+        "publication",
+        "你的论文有哪些",
+        "介绍一下你的论文",
+        "列出你的论文",
+        "论文列表",
+        "论文情况",
+        "你的论文",
+        "学术成果",
+        "论文",
+        "发表",
+        "文章",
+        "成果"
+      ],
+      "answerId": "papers",
+      "displayPrompts": [
+        "How about your publications?",
+        "What papers have you published?"
+      ],
+      "questions": [
+        "How about your publications?",
+        "What papers have you published?",
+        "Could you show me your publication list?",
+        "Tell me about your published work.",
+        "Which research papers are on your website?",
+        "Can I see your academic publications?",
+        "What are your recent papers?",
+        "Please list your publications.",
+        "Have you published any papers?",
+        "What are your recent publications?",
+        "What is your latest paper?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "How about your publications?",
+          "What papers have you published?",
+          "Could you show me your publication list?",
+          "Tell me about your published work.",
+          "Which research papers are on your website?",
+          "Can I see your academic publications?",
+          "What are your recent papers?",
+          "Please list your publications.",
+          "Have you published any papers?",
+          "What are your recent publications?",
+          "What is your latest paper?",
+          "Which publications have you authored?"
+        ],
+        "zh": [
+          "介绍一下你的论文。",
+          "你发表过哪些论文？",
+          "可以展示你的论文列表吗？",
+          "告诉我你已经发表的工作。",
+          "你的主页上有哪些研究论文？",
+          "我可以看看你的学术论文吗？",
+          "你最近有哪些论文？",
+          "请列出你的发表成果。",
+          "概括一下你的论文情况。",
+          "你有哪些已经发表的研究工作？"
+        ]
+      }
+    },
+    {
+      "id": "skills",
+      "icon": "🔧",
+      "iconType": "emoji",
+      "keywords": [
+        "what skills do you have",
+        "what are your skills",
+        "show me your skills",
+        "what is in your toolkit",
+        "your toolkit",
+        "technical skills",
+        "programming skills",
+        "skill",
+        "skills",
+        "toolkit",
+        "programming",
+        "你掌握哪些技能",
+        "你会哪些技能",
+        "你有什么技能",
+        "展示你的技能",
+        "技能",
+        "技术栈",
+        "编程能力",
+        "会什么"
+      ],
+      "answerId": "skills",
+      "displayPrompts": [
+        "What technical skills do you have?"
+      ],
+      "questions": [
+        "What technical skills do you have?",
+        "What are your technical skills?",
+        "Which development tools do you know?",
+        "Tell me about your technical abilities.",
+        "Do you have any technical skills?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What technical skills do you have?",
+          "What are your technical skills?",
+          "Which development tools do you know?",
+          "Tell me about your technical abilities.",
+          "Do you have any technical skills?",
+          "Which technical skills are in your toolkit?",
+          "What programming tools can you use?",
+          "Which programming languages and tools do you know?",
+          "Give me an overview of your technical toolkit.",
+          "What technologies are you familiar with?",
+          "Tell me which development skills you have.",
+          "What are your programming and software skills?"
+        ],
+        "zh": [
+          "你有哪些技术技能？",
+          "你的技术能力包括什么？",
+          "你会使用哪些开发工具？",
+          "介绍一下你的技术能力。",
+          "你的技术工具箱里有什么？",
+          "你熟悉哪些编程语言和工具？",
+          "概括一下你的技术栈。",
+          "你掌握哪些编程技能？",
+          "你熟悉哪些技术？",
+          "你平时使用哪些技术工具？"
+        ]
+      }
+    },
+    {
+      "id": "hobbies",
+      "icon": "🪄",
+      "iconType": "emoji",
+      "keywords": [
+        "what are your hobbies",
+        "tell me about your hobbies",
+        "show me your hobbies",
+        "what do you do beyond research",
+        "what do you do in your free time",
+        "your hobbies",
+        "hobby",
+        "hobbies",
+        "free time",
+        "outside research",
+        "你有哪些兴趣爱好",
+        "介绍一下你的爱好",
+        "你的爱好是什么",
+        "平时喜欢做什么",
+        "兴趣",
+        "爱好",
+        "业余",
+        "平时做什么"
+      ],
+      "answerId": "hobbies",
+      "displayPrompts": [
+        "What are your hobbies?"
+      ],
+      "questions": [
+        "What are your hobbies?",
+        "What do you enjoy outside research?",
+        "How do you spend your free time?",
+        "Could you tell me about your personal interests?",
+        "What activities do you enjoy beyond academics?",
+        "Tell me about your favorite pastimes.",
+        "Tell me what you do when you are not researching.",
+        "Do you have any hobbies?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What are your hobbies?",
+          "What do you enjoy outside research?",
+          "How do you spend your free time?",
+          "Could you tell me about your personal interests?",
+          "What activities do you enjoy beyond academics?",
+          "Tell me about your favorite pastimes.",
+          "Tell me what you do when you are not researching.",
+          "Do you have any hobbies?",
+          "What do you like to do for fun?",
+          "Tell me about your interests outside academia.",
+          "Which hobbies do you spend time on?",
+          "What do you enjoy doing personally?"
+        ],
+        "zh": [
+          "你有哪些兴趣爱好？",
+          "研究之外你喜欢做什么？",
+          "你如何度过空闲时间？",
+          "可以介绍一下你的个人兴趣吗？",
+          "学术之外你喜欢哪些活动？",
+          "你有什么喜欢的业余活动？",
+          "不做研究时你会做什么？",
+          "你平时喜欢什么？",
+          "介绍一下你的爱好。",
+          "你喜欢做哪些有趣的事情？"
+        ]
+      }
+    },
+    {
+      "id": "services",
+      "icon": "💁",
+      "iconType": "emoji",
+      "keywords": [
+        "how about your service experience",
+        "tell me about your service experience",
+        "what is your service experience",
+        "service experience",
+        "what academic services have you provided",
+        "what is your academic service experience",
+        "tell me about your academic services",
+        "how do you contribute academically",
+        "program committee experience",
+        "teaching assistant experience",
+        "academic service",
+        "services",
+        "program committee",
+        "teaching assistant",
+        "你有哪些学术服务经历",
+        "介绍一下你的学术服务",
+        "学术服务经历",
+        "程序委员会经历",
+        "助教经历",
+        "学术服务",
+        "助教"
+      ],
+      "answerId": "services",
+      "displayPrompts": [
+        "How about your academic service experience?"
+      ],
+      "questions": [
+        "What academic service have you done?",
+        "Could you describe your academic service experience?",
+        "What academic duties have you taken on?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What academic service have you done?",
+          "Could you describe your academic service experience?",
+          "What academic duties have you taken on?",
+          "Tell me about your service experience.",
+          "What service roles have you held?",
+          "Could you summarize your service experience?",
+          "What academic and teaching service have you done?",
+          "Which program committee and teaching roles have you taken?",
+          "What service contributions have you made?",
+          "Describe your service and teaching assistant experience.",
+          "What professional service experience do you have?",
+          "Give me an overview of your service experience."
+        ],
+        "zh": [
+          "你的服务经历怎么样？",
+          "介绍一下你的服务经历。",
+          "你承担过哪些服务角色？",
+          "可以概括一下你的服务经历吗？",
+          "你做过哪些学术服务和助教工作？",
+          "你有哪些程序委员会和教学服务经历？",
+          "你做出过哪些服务贡献？",
+          "描述一下你的服务和助教经历。",
+          "你有哪些专业服务经历？",
+          "概括一下你的服务经验。"
+        ]
+      }
+    },
+    {
+      "id": "internship",
+      "icon": "💼",
+      "iconType": "emoji",
+      "keywords": [
+        "how about your internship experience",
+        "tell me about your internship experience",
+        "what internships have you completed",
+        "do you have internship experience",
+        "have you completed any internships",
+        "where have you interned",
+        "industry internship experience",
+        "internship background",
+        "internship history",
+        "internship experience",
+        "internships",
+        "internship",
+        "intern",
+        "你的实习经历怎么样",
+        "介绍一下你的实习经历",
+        "你做过哪些实习",
+        "你有实习经历吗",
+        "你在哪里实习过",
+        "实习背景",
+        "实习经历",
+        "实习"
+      ],
+      "answerId": "internship",
+      "displayPrompts": [
+        "How about your internship experience?"
+      ],
+      "questions": [
+        "How about your internship experience?",
+        "Tell me which internships you have completed.",
+        "Could you describe your internship experience?",
+        "Where have you interned?",
+        "Describe your experience working as an intern.",
+        "What is your internship background?",
+        "Summarize your industry internship experience.",
+        "Tell me about your internship history.",
+        "Do you have any internship experience?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "How about your internship experience?",
+          "Tell me which internships you have completed.",
+          "Could you describe your internship experience?",
+          "Where have you interned?",
+          "Describe your experience working as an intern.",
+          "What is your internship background?",
+          "Summarize your industry internship experience.",
+          "Tell me about your internship history.",
+          "Do you have any internship experience?",
+          "What internships have you completed?",
+          "Give me an overview of your internship experience.",
+          "Tell me about your internships."
+        ],
+        "zh": [
+          "你的实习经历怎么样？",
+          "你完成过哪些实习？",
+          "可以介绍一下你的实习经历吗？",
+          "你在哪里实习过？",
+          "介绍一下你做实习生的经历。",
+          "你的实习背景是什么？",
+          "概括你的行业实习经历。",
+          "告诉我你的实习历史。",
+          "你做过哪些实习？",
+          "你曾在哪些机构实习？"
+        ]
+      }
+    },
+    {
+      "id": "correspondence",
+      "icon": "📍",
+      "iconType": "emoji",
+      "keywords": [
+        "what is your correspondence address",
+        "what is your contact address",
+        "show me your correspondence address",
+        "correspondence address",
+        "laboratory and mailing address",
+        "mailing and laboratory address",
+        "你的联系地址是什么",
+        "你的通讯地址是什么",
+        "联系地址",
+        "通讯地址",
+        "实验室和邮寄地址",
+        "邮寄和实验室地址"
+      ],
+      "answerId": "correspondence",
+      "displayPrompts": [
+        "What is your correspondence address?"
+      ],
+      "questions": [
+        "What is your correspondence address?",
+        "Where should physical mail be sent to you?",
+        "What is your mailing address?",
+        "Could you provide your laboratory address?",
+        "Where is your office or laboratory located?",
+        "What address should I use for correspondence?",
+        "Can you give me your postal address?",
+        "Where can official mail be delivered to you?"
+      ],
+      "trainingQuestions": {
+        "en": [
+          "What is your correspondence address?",
+          "Where should physical mail be sent to you?",
+          "What is your mailing address?",
+          "Could you provide your laboratory address?",
+          "Where is your office or laboratory located?",
+          "What address should I use for correspondence?",
+          "Can you give me your postal address?",
+          "Where can official mail be delivered to you?",
+          "Where is your laboratory?",
+          "Where can correspondence be mailed to you?",
+          "Give me your laboratory and postal addresses.",
+          "What are your lab and mail addresses?"
+        ],
+        "zh": [
+          "你的通讯地址是什么？",
+          "实体邮件应该寄到哪里？",
+          "你的邮寄地址是什么？",
+          "可以提供你的实验室地址吗？",
+          "你的办公室或实验室在哪里？",
+          "正式通信应该使用哪个地址？",
+          "可以给我你的邮政地址吗？",
+          "邮件可以寄送到哪里？",
+          "请提供你的实验室和邮寄地址。",
+          "你的实验室地址和通信地址分别是什么？"
+        ]
+      }
+    },
+    {
+      "id": "unknown",
+      "icon": "",
+      "keywords": [],
+      "answerId": "unknown",
+      "displayPrompts": [],
+      "questions": [],
+      "trainingQuestions": {
+        "en": [],
+        "zh": []
+      }
+    }
+  ],
+  "suggestionPlacements": {
+    "tryAsking": [
+      "portrait",
+      "identity_general",
+      "education",
+      "research",
+      "papers",
+      "skills",
+      "hobbies",
+      "services",
+      "correspondence"
+    ],
+    "initialTryAsking": [
+      "identity_general",
+      "research",
+      "papers"
+    ],
+    "followUps": {
+      "identity_general": [
+        "identity_contact",
+        "portrait",
+        "education"
+      ],
+      "research": [
+        "learnware",
+        "model_capability_mining"
+      ]
+    }
+  },
+  "datasetSeed": "mzy-routing-dataset-v1",
+  "nearScopePrompts": [
+    {
+      "en": "Are you a member of the LAMDA Group?",
+      "zh": "你是 LAMDA 研究组的成员吗？"
+    },
+    {
+      "en": "Are you a Ph.D. student?",
+      "zh": "你是博士生吗？"
+    },
+    {
+      "en": "Do you study machine learning?",
+      "zh": "你研究机器学习吗？"
+    },
+    {
+      "en": "Have you served on a program committee?",
+      "zh": "你担任过程序委员会成员吗？"
+    },
+    {
+      "en": "Are you based at Nanjing University?",
+      "zh": "你在南京大学吗？"
+    },
+    {
+      "en": "What is your GPA?",
+      "zh": "你的绩点是多少？"
+    },
+    {
+      "en": "How old are you?",
+      "zh": "你多大了？"
+    },
+    {
+      "en": "When is your birthday?",
+      "zh": "你的生日是什么时候？"
+    },
+    {
+      "en": "What is your phone number?",
+      "zh": "你的电话号码是什么？"
+    },
+    {
+      "en": "Where is your home address?",
+      "zh": "你的家庭住址在哪里？"
+    },
+    {
+      "en": "What awards have you won?",
+      "zh": "你获得过哪些奖项？"
+    },
+    {
+      "en": "What projects are you currently building?",
+      "zh": "你目前在做哪些项目？"
+    },
+    {
+      "en": "Who is your Ph.D. supervisor?",
+      "zh": "你的博士导师是谁？"
+    },
+    {
+      "en": "What is your full legal name?",
+      "zh": "你的法定全名是什么？"
+    },
+    {
+      "en": "What is your Chinese name?",
+      "zh": "你的中文名是什么？"
+    },
+    {
+      "en": "Which university do you attend?",
+      "zh": "你在哪所大学就读？"
+    },
+    {
+      "en": "Where are you currently located?",
+      "zh": "你现在在哪里？"
+    },
+    {
+      "en": "Which year of your Ph.D. are you in?",
+      "zh": "你现在是博士几年级？"
+    },
+    {
+      "en": "Which research group are you in?",
+      "zh": "你属于哪个研究组？"
+    },
+    {
+      "en": "What is the history of the LAMDA Group?",
+      "zh": "LAMDA 研究组的历史是什么？"
+    },
+    {
+      "en": "How can I apply to NJUAI?",
+      "zh": "如何申请南京大学人工智能学院？"
+    },
+    {
+      "en": "What are the admission requirements for Nanjing University?",
+      "zh": "南京大学的入学要求是什么？"
+    },
+    {
+      "en": "How many citations do your papers have?",
+      "zh": "你的论文有多少引用？"
+    },
+    {
+      "en": "What is the acceptance rate of ICML?",
+      "zh": "ICML 的录取率是多少？"
+    },
+    {
+      "en": "Can you implement the method from your paper?",
+      "zh": "你能实现你论文中的方法吗？"
+    },
+    {
+      "en": "What are the exact experimental results in your paper?",
+      "zh": "你论文中的具体实验结果是什么？"
+    },
+    {
+      "en": "What will your next paper be about?",
+      "zh": "你的下一篇论文会研究什么？"
+    },
+    {
+      "en": "What are your plans after graduation?",
+      "zh": "你毕业后有什么计划？"
+    },
+    {
+      "en": "What are your office hours?",
+      "zh": "你的办公时间是什么？"
+    },
+    {
+      "en": "What grades did you receive in college?",
+      "zh": "你大学期间的成绩是多少？"
+    },
+    {
+      "en": "How is your Ph.D. funded?",
+      "zh": "你的博士经费来自哪里？"
+    },
+    {
+      "en": "Are you currently in a relationship?",
+      "zh": "你现在有恋爱对象吗？"
+    },
+    {
+      "en": "Show me a video of yourself.",
+      "zh": "给我看一段你的视频。"
+    },
+    {
+      "en": "Explain machine learning in detail.",
+      "zh": "详细解释一下机器学习。"
+    },
+    {
+      "en": "Explain data mining in detail.",
+      "zh": "详细解释一下数据挖掘。"
+    },
+    {
+      "en": "What is Model Capability Representation?",
+      "zh": "什么是模型能力表征？"
+    },
+    {
+      "en": "List all papers written by Ming Li.",
+      "zh": "列出 Ming Li 的所有论文。"
+    },
+    {
+      "en": "What courses does Ming Li teach?",
+      "zh": "Ming Li 教授哪些课程？"
+    },
+    {
+      "en": "Can I join the LAMDA Group through you?",
+      "zh": "我可以通过你加入 LAMDA 研究组吗？"
+    }
+  ]
+}
