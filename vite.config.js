@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
 import { readFileSync } from 'node:fs';
 
-const site = JSON.parse(readFileSync(new URL('./content/site.json', import.meta.url), 'utf8'));
-const profile = JSON.parse(readFileSync(new URL('./content/profile.json', import.meta.url), 'utf8'));
+function readContent(filename) {
+  return JSON.parse(readFileSync(new URL(`./content/${filename}`, import.meta.url), 'utf8'));
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -12,21 +13,27 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;');
 }
 
-const imagePreloads = [
-  site.assets.avatar,
-  ...profile.affiliations.map(({ logo }) => logo),
-].map((path, index) => (
-  `    <link rel="preload" as="image" href="./${escapeHtml(path)}"${index === 0 ? ' fetchpriority="high"' : ''} />`
-)).join('\n');
-
 export default defineConfig({
   base: './',
   plugins: [{
     name: 'single-user-content',
     transformIndexHtml(html) {
+      const site = readContent('site.json');
+      const profile = readContent('profile.json');
+      const imagePreloads = [
+        site.assets.avatar,
+        site.assets.profileLink,
+        site.assets.externalLink,
+        ...profile.emails.map(({ icon }) => icon),
+        ...profile.socialProfiles.map(({ icon }) => icon),
+      ].filter((path, index, paths) => paths.indexOf(path) === index).map((path, index) => (
+        `    <link rel="preload" as="image" href="./${escapeHtml(path)}"${index === 0 ? ' fetchpriority="high"' : ''} />`
+      )).join('\n');
+
       return html
         .replaceAll('__SITE_TITLE__', escapeHtml(site.pageTitle))
         .replaceAll('__SITE_DESCRIPTION__', escapeHtml(site.description))
+        .replaceAll('__SITE_LOADING_TEXT__', escapeHtml(site.startupLoading.text))
         .replace('    <!-- SITE_IMAGE_PRELOADS -->', imagePreloads);
     },
   }],

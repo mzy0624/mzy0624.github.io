@@ -4,7 +4,7 @@ Everything specific to the homepage owner lives in this directory. Reusing the t
 
 ## Files
 
-- `site.json`: owner name, publication name, Agent name, page metadata, copyright year, avatar path, source-repository button and hover Easter egg, composer placeholder, and hero greetings.
+- `site.json`: owner name, publication name, Agent name, page metadata, copyright year, avatar path, startup-loader Cookie, source-repository button and hover Easter egg, composer placeholder, and hero greetings.
 - `profile.json`: emails, affiliations, links, education, skills, hobbies, services, and correspondence addresses.
 - `answers.json`: fixed answer variants, structured answer blocks, portrait metadata, unknown responses, and repeat responses.
 - `questions.json`: labels, display prompts, synonymous questions, keyword fallback data, routing-data examples, Try Asking placement, and follow-up placement.
@@ -14,6 +14,8 @@ Everything specific to the homepage owner lives in this directory. Reusing the t
 - `router/question-bank.json`: the human-reviewed English prototypes embedded by the browser router.
 
 Static files referenced by these JSON files live under `public/assets/`. Paths are written relative to `public/`, for example `assets/avatar.png`.
+
+`site.json → startupLoading` controls the initial loading screen and its first-party cache Cookie. Increase `cookieVersion` whenever critical UI assets are replaced so returning visitors perform the blocking preload once again. The loader waits for critical UI images on the first visit; after entry, the remaining profile logos, icons, and portrait media are warmed in the background.
 
 ## Reuse checklist
 

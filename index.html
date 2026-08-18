@@ -11,8 +11,90 @@
     <link rel="icon" type="image/x-icon" href="./favicon.ico?v=1" />
     <!-- SITE_IMAGE_PRELOADS -->
     <title>__SITE_TITLE__</title>
+    <style>
+      .startup-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        color: #565852;
+        background: #fff;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 220ms ease, visibility 220ms ease;
+      }
+
+      .startup-loader.is-leaving {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .startup-loader__content,
+      .startup-loader__dots {
+        display: flex;
+        align-items: center;
+      }
+
+      .startup-loader__content {
+        width: 80vw;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: clamp(24px, 4vw, 48px);
+        font-weight: 500;
+        line-height: 1.05;
+        letter-spacing: -0.045em;
+        text-align: center;
+      }
+
+      .startup-loader__content > span:first-child {
+        white-space: nowrap;
+      }
+
+      .startup-loader__dots {
+        gap: 4px;
+      }
+
+      .startup-loader__dots i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #0c9b77;
+        animation: startup-loader-pulse 900ms infinite ease-in-out;
+      }
+
+      .startup-loader__dots i:nth-child(2) { animation-delay: 120ms; }
+      .startup-loader__dots i:nth-child(3) { animation-delay: 240ms; }
+
+      @keyframes startup-loader-pulse {
+        0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+        30% { opacity: 1; transform: translateY(-2px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .startup-loader,
+        .startup-loader__dots i {
+          transition: none;
+          animation: none;
+        }
+      }
+
+      @media (min-width: 901px) {
+        .startup-loader__content {
+          font-size: clamp(36px, 3vw, 42px);
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="startup-loader" class="startup-loader" role="status" aria-live="polite">
+      <div class="startup-loader__content">
+        <span>__SITE_LOADING_TEXT__</span>
+        <span class="startup-loader__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

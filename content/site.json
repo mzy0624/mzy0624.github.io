@@ -10,9 +10,16 @@
   "description": "Explore Zi-Yu Mao's research, publications, experience, and interests.",
   "copyrightStartYear": 2023,
   "composerPlaceholder": "Ask anything about MZY...",
+  "startupLoading": {
+    "text": "Loading profile",
+    "cookieName": "academic-agent-assets-ready",
+    "cookieVersion": "2",
+    "cookieMaxAgeDays": 30
+  },
   "identityAffiliationLogos": true,
   "assets": {
     "avatar": "assets/avatar.png",
+    "profileLink": "assets/icons/link.svg",
     "externalLink": "assets/icons/external-link.svg"
   },
   "sourceRepository": {

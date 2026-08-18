@@ -89,7 +89,7 @@ export function createProfileMenus(profile, idPrefix) {
       id: `${idPrefix}-social-popover`,
       label: 'Show external profiles',
       title: 'Find me online',
-      icon: site.assets.externalLink,
+      icon: site.assets.profileLink,
       items: profile.socialProfiles.map((socialProfile) => ({
         href: profile.links[socialProfile.hrefKey],
         icon: socialProfile.icon,

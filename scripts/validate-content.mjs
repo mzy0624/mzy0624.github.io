@@ -67,6 +67,12 @@ requireText(site.agentName, 'site.agentName');
 requireText(site.pageTitle, 'site.pageTitle');
 requireText(site.description, 'site.description');
 requireText(site.composerPlaceholder, 'site.composerPlaceholder');
+requireText(site.startupLoading?.text, 'site.startupLoading.text');
+requireText(site.startupLoading?.cookieName, 'site.startupLoading.cookieName');
+requireText(site.startupLoading?.cookieVersion, 'site.startupLoading.cookieVersion');
+if (!Number.isInteger(site.startupLoading?.cookieMaxAgeDays) || site.startupLoading.cookieMaxAgeDays < 1) {
+  fail('site.startupLoading.cookieMaxAgeDays must be a positive integer.');
+}
 if (typeof site.identityAffiliationLogos !== 'boolean') {
   fail('site.identityAffiliationLogos must be a boolean.');
 }
@@ -76,6 +82,7 @@ if (!Number.isInteger(site.copyrightStartYear)) {
 requireArray(site.heroGreetings, 'site.heroGreetings');
 site.heroGreetings?.forEach((greeting, index) => requireText(greeting, `site.heroGreetings[${index}]`));
 addAsset(site.assets?.avatar, 'site.assets.avatar');
+addAsset(site.assets?.profileLink, 'site.assets.profileLink');
 addAsset(site.assets?.externalLink, 'site.assets.externalLink');
 if (site.sourceRepository?.enabled) {
   requireText(site.sourceRepository.ariaLabel, 'site.sourceRepository.ariaLabel');
