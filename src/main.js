@@ -3,7 +3,7 @@ import './styles/desktop.css';
 import './styles/mobile.css';
 import { AcademicAgent } from './api/academic-agent.js';
 import { mount } from './api/dom.js';
-import { deferredImageAssets, preloadImages } from './api/image-preloader.js';
+import { deferredImageAssets, preloadImagesLazily } from './api/image-preloader.js';
 import {
   dismissStartupLoader,
   markStartupAssetsReady,
@@ -45,7 +45,7 @@ async function bootstrap() {
 
   // Only begin warming profile logos, answer icons, and portrait media after
   // every critical image has been painted and the startup layer is gone.
-  void preloadImages(deferredImageAssets(profile, answers));
+  void preloadImagesLazily(deferredImageAssets(profile, answers));
 }
 
 bootstrap().catch((error) => {

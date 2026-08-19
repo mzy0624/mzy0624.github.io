@@ -24,7 +24,6 @@ export default defineConfig({
         site.assets.avatar,
         site.assets.profileLink,
         site.assets.externalLink,
-        ...profile.emails.map(({ icon }) => icon),
         ...profile.socialProfiles.map(({ icon }) => icon),
       ].filter((path, index, paths) => paths.indexOf(path) === index).map((path, index) => (
         `    <link rel="preload" as="image" href="./${escapeHtml(path)}"${index === 0 ? ' fetchpriority="high"' : ''} />`

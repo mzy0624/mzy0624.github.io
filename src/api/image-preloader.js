@@ -32,7 +32,6 @@ export function profileImageAssets(profile) {
 export function criticalUiImageAssets(profile) {
   return [...new Set([
     ...persistentUiImageAssets,
-    ...profile.emails.map(({ icon }) => icon),
     ...profile.socialProfiles.map(({ icon }) => icon),
   ])];
 }
@@ -96,4 +95,27 @@ export function preloadProfileImages(profile) {
 
 export function preloadImages(paths, { fetchPriority = 'auto' } = {}) {
   return Promise.all(paths.map((path) => preloadImage(path, { fetchPriority })));
+}
+
+function waitForBrowserIdle() {
+  return new Promise((resolve) => {
+    if (typeof globalThis.requestIdleCallback === 'function') {
+      globalThis.requestIdleCallback(resolve, { timeout: 500 });
+      return;
+    }
+    globalThis.setTimeout(resolve, 50);
+  });
+}
+
+export async function preloadImagesLazily(paths, {
+  fetchPriority = 'low',
+  preload = preloadImage,
+  schedule = waitForBrowserIdle,
+} = {}) {
+  const results = [];
+  for (const path of paths) {
+    await schedule();
+    results.push(await preload(path, { fetchPriority }));
+  }
+  return results;
 }

@@ -14,7 +14,7 @@
     "text": "Loading profile",
     "errorText": "Unable to load profile assets. Please refresh.",
     "cookieName": "academic-agent-assets-ready",
-    "cookieVersion": "2",
+    "cookieVersion": "3",
     "cookieMaxAgeDays": 30
   },
   "identityAffiliationLogos": true,
