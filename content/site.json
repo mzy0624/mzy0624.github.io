@@ -12,6 +12,7 @@
   "composerPlaceholder": "Ask anything about MZY...",
   "startupLoading": {
     "text": "Loading profile",
+    "errorText": "Unable to load profile assets. Please refresh.",
     "cookieName": "academic-agent-assets-ready",
     "cookieVersion": "2",
     "cookieMaxAgeDays": 30

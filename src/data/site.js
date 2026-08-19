@@ -11,6 +11,7 @@ requireNonEmptyString(siteContent.pageTitle, 'pageTitle');
 requireNonEmptyString(siteContent.description, 'description');
 requireNonEmptyString(siteContent.composerPlaceholder, 'composerPlaceholder');
 requireNonEmptyString(siteContent.startupLoading?.text, 'startupLoading.text');
+requireNonEmptyString(siteContent.startupLoading?.errorText, 'startupLoading.errorText');
 requireNonEmptyString(siteContent.startupLoading?.cookieName, 'startupLoading.cookieName');
 requireNonEmptyString(siteContent.startupLoading?.cookieVersion, 'startupLoading.cookieVersion');
 if (!Number.isInteger(siteContent.startupLoading?.cookieMaxAgeDays)) {

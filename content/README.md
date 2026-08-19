@@ -15,7 +15,7 @@ Everything specific to the homepage owner lives in this directory. Reusing the t
 
 Static files referenced by these JSON files live under `public/assets/`. Paths are written relative to `public/`, for example `assets/avatar.png`.
 
-`site.json → startupLoading` controls the initial loading screen and its first-party cache Cookie. Increase `cookieVersion` whenever critical UI assets are replaced so returning visitors perform the blocking preload once again. The loader waits for critical UI images on the first visit; after entry, the remaining profile logos, icons, and portrait media are warmed in the background.
+`site.json → startupLoading` controls the initial loading screen and its first-party cache Cookie. Increase `cookieVersion` whenever critical UI assets are replaced. On every visit, the loader waits for critical files to load, mounts the page, verifies that the corresponding DOM images are decoded, and waits for browser paint before it disappears. The Cookie records the validated asset version but never bypasses this display check. After entry, the remaining profile logos, icons, and portrait media are warmed in the background.
 
 ## Reuse checklist
 

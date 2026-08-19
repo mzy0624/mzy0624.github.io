@@ -68,6 +68,7 @@ requireText(site.pageTitle, 'site.pageTitle');
 requireText(site.description, 'site.description');
 requireText(site.composerPlaceholder, 'site.composerPlaceholder');
 requireText(site.startupLoading?.text, 'site.startupLoading.text');
+requireText(site.startupLoading?.errorText, 'site.startupLoading.errorText');
 requireText(site.startupLoading?.cookieName, 'site.startupLoading.cookieName');
 requireText(site.startupLoading?.cookieVersion, 'site.startupLoading.cookieVersion');
 if (!Number.isInteger(site.startupLoading?.cookieMaxAgeDays) || site.startupLoading.cookieMaxAgeDays < 1) {

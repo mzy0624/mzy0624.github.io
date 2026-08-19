@@ -4,7 +4,13 @@ import './styles/mobile.css';
 import { AcademicAgent } from './api/academic-agent.js';
 import { mount } from './api/dom.js';
 import { deferredImageAssets, preloadImages } from './api/image-preloader.js';
-import { dismissStartupLoader, prepareStartupAssets } from './api/startup-loader.js';
+import {
+  dismissStartupLoader,
+  markStartupAssetsReady,
+  prepareStartupAssets,
+  showStartupLoaderError,
+  waitForCriticalDomImages,
+} from './api/startup-loader.js';
 import { createAcademicAgentApp } from './app.js';
 import { answers, commonRepeatAnswers, labels } from './data/intents.js';
 import { profile } from './data/profile.js';
@@ -33,15 +39,16 @@ async function bootstrap() {
   const app = createAcademicAgentApp({ agent, profile });
 
   mount(document.getElementById('app'), app);
+  await waitForCriticalDomImages(startup.paths);
+  markStartupAssetsReady();
   await dismissStartupLoader(document.getElementById('startup-loader'));
 
-  // A Cookie hit allows entry without blocking. Revalidate critical images in
-  // the background, then load profile logos, answer icons, and portrait media.
-  void startup.criticalPromise;
+  // Only begin warming profile logos, answer icons, and portrait media after
+  // every critical image has been painted and the startup layer is gone.
   void preloadImages(deferredImageAssets(profile, answers));
 }
 
 bootstrap().catch((error) => {
-  document.getElementById('startup-loader')?.remove();
+  showStartupLoaderError(document.getElementById('startup-loader'));
   console.error('Unable to initialize the academic Agent.', error);
 });

@@ -206,10 +206,12 @@
       ]
     },
     {
-      "name": "Body Building",
+      "name": "Fitness",
       "since": "2018",
       "icon": "assets/icons/body-building.svg",
-      "details": []
+      "details": [
+        "Slacking off lately..."
+      ]
     },
     {
       "name": "Running",

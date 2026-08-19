@@ -53,6 +53,16 @@
         white-space: nowrap;
       }
 
+      .startup-loader.has-error .startup-loader__content {
+        font-size: clamp(16px, 2.5vw, 24px);
+        line-height: 1.4;
+        letter-spacing: 0;
+      }
+
+      .startup-loader.has-error .startup-loader__content > span:first-child {
+        white-space: normal;
+      }
+
       .startup-loader__dots {
         gap: 4px;
       }

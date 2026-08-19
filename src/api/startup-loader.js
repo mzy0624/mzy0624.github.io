@@ -23,32 +23,98 @@ export function startupAssetCookie(config = site.startupLoading, secure = false)
   return attributes.join('; ');
 }
 
-export async function prepareStartupAssets(profile, documentObject = globalThis.document) {
+export async function prepareStartupAssets(
+  profile,
+  documentObject = globalThis.document,
+  preload = preloadImages,
+) {
   const cookieHit = hasStartupAssetCookie(documentObject?.cookie ?? '');
   const paths = criticalUiImageAssets(profile);
-  const criticalPromise = preloadImages(paths, { fetchPriority: 'high' });
-
-  if (cookieHit) return { cookieHit, paths, criticalPromise };
-
-  const results = await criticalPromise;
-  const loaded = results.every((result) => result.loaded);
-  if (loaded && documentObject) {
-    documentObject.cookie = startupAssetCookie(
-      site.startupLoading,
-      globalThis.location?.protocol === 'https:',
-    );
+  const results = await preload(paths, { fetchPriority: 'high' });
+  const failed = results.filter((result) => !result.loaded);
+  if (failed.length > 0) {
+    throw new Error(`Unable to load critical profile assets: ${failed.map(({ src }) => src).join(', ')}`);
   }
-  return { cookieHit, paths, criticalPromise: Promise.resolve(results), loaded };
+  return { cookieHit, paths, results };
+}
+
+function imageUrl(image, baseUrl) {
+  return new URL(image.currentSrc || image.src, baseUrl).href;
+}
+
+async function waitForImage(image) {
+  if (!image.complete) {
+    await new Promise((resolve, reject) => {
+      image.addEventListener('load', resolve, { once: true });
+      image.addEventListener('error', () => reject(new Error(`Unable to render image: ${image.src}`)), {
+        once: true,
+      });
+    });
+  }
+  if (typeof image.decode === 'function') await image.decode().catch(() => {});
+  if (image.naturalWidth <= 0) throw new Error(`Image has no rendered pixels: ${image.src}`);
+}
+
+function nextFrame() {
+  return new Promise((resolve) => {
+    const schedule = globalThis.requestAnimationFrame
+      ? globalThis.requestAnimationFrame.bind(globalThis)
+      : (callback) => globalThis.setTimeout(callback, 0);
+    schedule(resolve);
+  });
+}
+
+export async function waitForCriticalDomImages(
+  paths,
+  documentObject = globalThis.document,
+) {
+  const baseUrl = documentObject.baseURI;
+  const expectedUrls = new Set(paths.map((path) => new URL(path, baseUrl).href));
+  const images = [...documentObject.images].filter((image) => (
+    expectedUrls.has(imageUrl(image, baseUrl))
+  ));
+  const renderedUrls = new Set(images.map((image) => imageUrl(image, baseUrl)));
+  const missing = [...expectedUrls].filter((url) => !renderedUrls.has(url));
+  if (missing.length > 0) {
+    throw new Error(`Critical profile images are missing from the page: ${missing.join(', ')}`);
+  }
+
+  await Promise.all(images.map(waitForImage));
+  await nextFrame();
+  await nextFrame();
+
+  const avatarUrl = new URL(site.assets.avatar, baseUrl).href;
+  const avatarVisible = images
+    .filter((image) => imageUrl(image, baseUrl) === avatarUrl)
+    .some((image) => {
+      const bounds = image.getBoundingClientRect();
+      const style = documentObject.defaultView?.getComputedStyle(image);
+      return bounds.width > 0
+        && bounds.height > 0
+        && style?.display !== 'none'
+        && style?.visibility !== 'hidden';
+    });
+  if (!avatarVisible) throw new Error('The profile avatar is loaded but not visible.');
+}
+
+export function markStartupAssetsReady(documentObject = globalThis.document) {
+  documentObject.cookie = startupAssetCookie(
+    site.startupLoading,
+    globalThis.location?.protocol === 'https:',
+  );
+}
+
+export function showStartupLoaderError(loader) {
+  if (!loader) return;
+  loader.classList.add('has-error');
+  const label = loader.querySelector('.startup-loader__content > span:first-child');
+  if (label) label.textContent = site.startupLoading.errorText;
+  loader.querySelector('.startup-loader__dots')?.remove();
+  loader.setAttribute('aria-label', site.startupLoading.errorText);
 }
 
 export async function dismissStartupLoader(loader) {
   if (!loader) return;
-  await new Promise((resolve) => {
-    const schedule = globalThis.requestAnimationFrame
-      ? globalThis.requestAnimationFrame.bind(globalThis)
-      : (callback) => globalThis.setTimeout(callback, 0);
-    schedule(() => schedule(resolve));
-  });
   loader.classList.add('is-leaving');
 
   const reducedMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
