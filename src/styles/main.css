@@ -1075,7 +1075,6 @@ html:active-view-transition .header-identity {
 
 .publication-details {
   min-width: 0;
-  margin-top: 8px;
 }
 
 .response-detail .publication-authors,
@@ -1568,17 +1567,17 @@ html:active-view-transition .header-identity {
 
 .paper-action {
   display: inline-flex;
-  min-height: 32px;
+  min-height: 22px;
   align-items: center;
   justify-content: center;
-  padding: 6px 10px;
+  padding: 6px 8px;
   border: 1px solid var(--border-strong);
   border-radius: 9px;
   background: transparent;
   color: var(--ink);
   cursor: pointer;
   font-family: inherit;
-  font-size: var(--answer-detail-font-size);
+  font-size: var(--answer-secondary-font-size);
   font-weight: 650;
   line-height: 1;
   text-decoration: none;
