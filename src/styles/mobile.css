@@ -281,19 +281,6 @@
     height: 30px;
   }
 
-  .contact-email-copy {
-    display: block;
-  }
-
-  .contact-email-copy strong,
-  .contact-email-copy a {
-    display: block;
-  }
-
-  .contact-email-copy a {
-    margin-top: 1px;
-  }
-
   .education-item,
   .hobby-item {
     padding: 16px 0;

@@ -23,6 +23,9 @@ export const labels = deepFreeze(questionContent.labels.map((label) => {
   }
   requireStringArray(label.displayPrompts, `${label.id}.displayPrompts`, { allowEmpty: true });
   requireStringArray(label.questions, `${label.id}.questions`, { allowEmpty: true });
+  if (label.routingAliases !== undefined) {
+    requireStringArray(label.routingAliases, `${label.id}.routingAliases`, { allowEmpty: false });
+  }
   if (!Array.isArray(label.keywords)) {
     throw new TypeError(`Label "${label.id}" requires a keywords array.`);
   }

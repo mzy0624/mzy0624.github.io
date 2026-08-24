@@ -146,6 +146,25 @@
         "你的电子邮箱",
         "邮箱地址"
       ],
+      "routingAliases": [
+        "contact",
+        "contact information",
+        "contact details",
+        "how can i contact",
+        "how to contact",
+        "email",
+        "e-mail",
+        "email address",
+        "emails",
+        "联系",
+        "联系你",
+        "联系方式",
+        "怎么联系",
+        "如何联系",
+        "邮箱",
+        "邮件",
+        "电子邮箱"
+      ],
       "answerId": "identity_contact",
       "displayPrompts": [
         "How can I contact you?"

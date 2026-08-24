@@ -1,12 +1,7 @@
 import { IntentModel } from './intent-model.js';
+import { normalizePrompt } from './prompt-normalization.js';
 
-export function normalizePrompt(prompt) {
-  return String(prompt)
-    .normalize('NFKC')
-    .toLocaleLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+export { normalizePrompt } from './prompt-normalization.js';
 
 /**
  * Current model implementation.
@@ -25,6 +20,9 @@ export class DeterministicIntentModel extends IntentModel {
         source: 'deterministic-hint',
       });
     }
+
+    const aliasPrediction = this.predictionForRoutingAlias(prompt);
+    if (aliasPrediction) return aliasPrediction;
 
     const normalized = normalizePrompt(prompt);
     let bestMatch = null;

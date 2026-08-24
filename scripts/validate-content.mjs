@@ -173,6 +173,7 @@ answerContent.answers?.forEach((answer, index) => {
 
 requireArray(questionContent.labels, 'questions.labels');
 const labelIds = new Set();
+const routingAliases = new Map();
 questionContent.labels?.forEach((label, index) => {
   requireText(label.id, `questions.labels[${index}].id`);
   if (labelIds.has(label.id)) fail(`Duplicate label id "${label.id}".`);
@@ -183,6 +184,26 @@ questionContent.labels?.forEach((label, index) => {
   requireArray(label.displayPrompts, `label ${label.id}.displayPrompts`);
   requireArray(label.questions, `label ${label.id}.questions`);
   requireArray(label.keywords, `label ${label.id}.keywords`);
+  if (label.routingAliases !== undefined) {
+    requireArray(label.routingAliases, `label ${label.id}.routingAliases`);
+    label.routingAliases?.forEach((alias, aliasIndex) => {
+      requireText(alias, `label ${label.id}.routingAliases[${aliasIndex}]`);
+      if (!isText(alias)) return;
+      const normalizedAlias = alias
+        .normalize('NFKC')
+        .toLocaleLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/[.!?。！？]+$/u, '')
+        .trim();
+      const existingLabel = routingAliases.get(normalizedAlias);
+      if (existingLabel) {
+        fail(`Routing alias "${alias}" is shared by labels "${existingLabel}" and "${label.id}".`);
+      } else {
+        routingAliases.set(normalizedAlias, label.id);
+      }
+    });
+  }
   requireArray(label.trainingQuestions?.en, `label ${label.id}.trainingQuestions.en`);
   requireArray(label.trainingQuestions?.zh, `label ${label.id}.trainingQuestions.zh`);
   if (label.id !== 'unknown') {

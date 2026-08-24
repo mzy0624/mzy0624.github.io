@@ -46,7 +46,15 @@ test('uses answer ids as classification labels without question levels', () => {
 });
 
 test('routes the identity contact follow-up in English and Chinese', async () => {
-  for (const prompt of ['How can I contact you?', '我该如何联系你？']) {
+  for (const prompt of [
+    'How can I contact you?',
+    '我该如何联系你？',
+    'contact',
+    'How can I contact',
+    'email',
+    '联系',
+    '邮箱',
+  ]) {
     const result = await model.predict(prompt);
     assert.equal(result.intent.id, 'identity_contact', prompt);
   }

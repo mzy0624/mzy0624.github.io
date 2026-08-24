@@ -33,6 +33,9 @@ export class EmbeddingIntentModel extends IntentModel {
   }
 
   async predict(prompt) {
+    const aliasPrediction = this.predictionForRoutingAlias(prompt);
+    if (aliasPrediction) return aliasPrediction;
+
     try {
       const [{ manifest, embeddings }, config, [queryEmbedding]] = await Promise.all([
         this.prototypeStore.load(),

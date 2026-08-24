@@ -106,6 +106,37 @@ test('embedding model routes above threshold and rejects below threshold', async
   assert.equal(unknown.source, 'embedding-threshold');
 });
 
+test('embedding model routes explicit short aliases without loading the embedding model', async () => {
+  let embeddingCalls = 0;
+  let storeCalls = 0;
+  const model = new EmbeddingIntentModel({
+    intents,
+    embedder: {
+      embed: async () => {
+        embeddingCalls += 1;
+        throw new Error('The embedder should not run for an explicit alias.');
+      },
+    },
+    prototypeStore: {
+      load: async () => {
+        storeCalls += 1;
+        throw new Error('The prototype store should not load for an explicit alias.');
+      },
+    },
+    configLoader: async () => {
+      throw new Error('The router config should not load for an explicit alias.');
+    },
+  });
+
+  for (const prompt of ['contact', 'How can I contact?', 'email', '联系', '邮箱']) {
+    const result = await model.predict(prompt);
+    assert.equal(result.intentId, 'identity_contact', prompt);
+    assert.equal(result.source, 'explicit-routing-alias', prompt);
+  }
+  assert.equal(embeddingCalls, 0);
+  assert.equal(storeCalls, 0);
+});
+
 test('embedding model uses deterministic fallback when browser inference fails', async () => {
   let fallbackCalls = 0;
   const fallbackModel = {

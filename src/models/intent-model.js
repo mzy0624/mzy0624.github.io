@@ -47,6 +47,21 @@ export class IntentModel {
     return this.intents.filter((intent) => intent.answerId === answerId);
   }
 
+  predictionForRoutingAlias(prompt) {
+    const normalizedPrompt = normalizeRoutingAlias(prompt);
+    if (!normalizedPrompt) return null;
+
+    const intent = this.intents.find(({ routingAliases = [] }) => (
+      routingAliases.some((alias) => normalizeRoutingAlias(alias) === normalizedPrompt)
+    ));
+    if (!intent) return null;
+
+    return this.prediction(intent.id, {
+      confidence: 1,
+      source: 'explicit-routing-alias',
+    });
+  }
+
   prediction(intentId, { confidence, source }) {
     const intent = this.getIntentById(intentId) || this.getIntentById(this.fallbackId);
     return Object.freeze({
@@ -78,3 +93,4 @@ export function assertIntentModel(model) {
   }
   return model;
 }
+import { normalizeRoutingAlias } from './prompt-normalization.js';
