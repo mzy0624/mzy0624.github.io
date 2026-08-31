@@ -21,6 +21,7 @@ test('profile image warmup covers local UI images without preloading large on-de
   assert.ok(profile.affiliations.every(({ logo }) => assets.includes(logo)));
   assert.ok(profile.skills.every(({ icon }) => assets.includes(icon)));
   assert.ok(profile.hobbies.every(({ icon }) => assets.includes(icon)));
+  assert.ok(profile.internships.every(({ icon }) => assets.includes(icon)));
 });
 
 test('splits startup UI assets from deferred logos, icons, and portrait media', () => {

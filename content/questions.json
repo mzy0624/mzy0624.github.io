@@ -751,7 +751,9 @@
       ],
       "answerId": "internship",
       "displayPrompts": [
-        "How about your internship experience?"
+        "How about your internship experience?",
+        "What internships have you done?",
+        "Tell me about your internships."
       ],
       "questions": [
         "How about your internship experience?",
@@ -877,6 +879,7 @@
       "skills",
       "hobbies",
       "services",
+      "internship",
       "correspondence"
     ],
     "initialTryAsking": [

@@ -61,7 +61,8 @@
     "lamda": "https://www.lamda.nju.edu.cn/CH.MainPage.ashx",
     "zhiHuaZhou": "https://cs.nju.edu.cn/zhouzh/index.htm",
     "mingLi": "https://ai.nju.edu.cn/lim/index.htm",
-    "csDepartment": "https://cs.nju.edu.cn"
+    "csDepartment": "https://cs.nju.edu.cn",
+    "sinapisAI": "https://sinapisai.com/"
   },
   "socialProfiles": [
     {
@@ -123,6 +124,19 @@
             "hrefKey": "nju"
           },
           "."
+        ]
+      ]
+    }
+  ],
+  "internships": [
+    {
+      "name": "SinapisAI (南芥智能)",
+      "hrefKey": "sinapisAI",
+      "period": "September 2026 – Present",
+      "icon": "assets/icons/sinapisai.svg",
+      "details": [
+        [
+          "Algorithm Intern"
         ]
       ]
     }

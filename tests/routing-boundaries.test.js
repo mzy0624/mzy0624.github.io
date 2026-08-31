@@ -64,13 +64,19 @@ test('label boundaries cover every known label exactly once', () => {
   }
 });
 
-test('internship boundary and runtime answer both use tracked NULL', () => {
+test('internship boundary and runtime answer use the tracked structured response', () => {
   const boundary = boundaries.labels.find(({ labelId }) => labelId === 'internship');
   const answer = answersById.get('internship');
 
-  assert.deepEqual(boundary.response, { mode: 'tracked', text: 'NULL' });
+  assert.deepEqual(boundary.response, {
+    mode: 'tracked',
+    text: 'Here is my internship experience.',
+  });
   assert.equal(answer.repeatMode, 'tracked');
-  assert.deepEqual(answer.variants.map(({ text }) => text), ['NULL']);
+  assert.deepEqual(answer.variants, [{
+    text: 'Here is my internship experience.',
+    blocks: [{ type: 'internships' }],
+  }]);
 });
 
 test('question bank covers all labels with unique, style-diverse English questions', () => {

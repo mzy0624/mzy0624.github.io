@@ -236,10 +236,13 @@ test('randomly chooses only English display prompts for the same label', () => {
 test('does not repeat primary questions until every primary question has appeared', () => {
   const agent = createAgent({ model, intents, answers, random: () => 0.42 });
   const initial = agent.initialSuggestions();
-  const secondBatch = agent.suggestions(3);
-  const thirdBatch = agent.suggestions(3);
-  const firstCycleIds = [...initial, ...secondBatch, ...thirdBatch].map(({ id }) => id);
   const primaryIds = suggestionPlacements.tryAsking;
+  const firstCycle = [...initial];
+
+  while (firstCycle.length < primaryIds.length) {
+    firstCycle.push(...agent.suggestions(Math.min(3, primaryIds.length - firstCycle.length)));
+  }
+  const firstCycleIds = firstCycle.map(({ id }) => id);
 
   assert.equal(firstCycleIds.length, primaryIds.length);
   assert.deepEqual(new Set(firstCycleIds), new Set(primaryIds));
@@ -270,6 +273,7 @@ test('suggestion placements are maintained separately from labels', () => {
     'skills',
     'hobbies',
     'services',
+    'internship',
     'correspondence',
   ];
   assert.deepEqual(suggestionPlacements.tryAsking, primaryIds);
@@ -294,7 +298,7 @@ test('primary questions use the configured emoji icons in order', () => {
     intents
       .filter(({ id }) => suggestionPlacements.tryAsking.includes(id))
       .map(({ icon, iconType }) => ({ icon, iconType })),
-    ['📸', '🧑🏻‍💻', '📚', '🔬', '📑', '🔧', '🪄', '💁', '📍']
+    ['📸', '🧑🏻‍💻', '📚', '🔬', '📑', '🔧', '🪄', '💁', '💼', '📍']
       .map((icon) => ({ icon, iconType: 'emoji' })),
   );
 });
@@ -314,14 +318,14 @@ test('returns the configured child questions after their parent answers', () => 
   );
 });
 
-test('internship remains the only hidden known label', () => {
+test('every known label appears in Try Asking or as a follow-up', () => {
   const placedIds = new Set([
     ...suggestionPlacements.tryAsking,
     ...Object.values(suggestionPlacements.followUps).flat(),
   ]);
   const hiddenLeaves = intents.filter(({ id }) => id !== 'unknown' && !placedIds.has(id));
 
-  assert.deepEqual(hiddenLeaves.map(({ id }) => id), ['internship']);
+  assert.deepEqual(hiddenLeaves.map(({ id }) => id), []);
 });
 
 test('contact follow-up renders the configured email list with its local logos', () => {
@@ -438,7 +442,7 @@ test('unknown is stateless and never enters the repeat-response flow', async () 
   assert.equal(agent.activeConversationState.answerPools.has('unknown'), false);
 });
 
-test('internship routes to its own hidden label and joins the repeat-response flow', async () => {
+test('internship routes to its own visible label and joins the repeat-response flow', async () => {
   const agent = createAgent({
     typingDelay: 0,
     random: () => 0,
@@ -447,12 +451,12 @@ test('internship routes to its own hidden label and joins the repeat-response fl
   const response = await askText(agent, 'What internships have you completed?');
 
   assert.equal(internship.answerId, 'internship');
-  assert.ok(!suggestionPlacements.tryAsking.includes(internship.id));
+  assert.ok(suggestionPlacements.tryAsking.includes(internship.id));
   assert.ok(!Object.values(suggestionPlacements.followUps).flat().includes(internship.id));
   assert.equal(response.done.intentId, 'internship');
   assert.equal(response.done.answerId, 'internship');
   assert.equal(response.done.isRepeatResponse, false);
-  assert.equal(response.text, 'NULL');
+  assert.equal(response.text, 'Here is my internship experience.');
   assert.equal(answersById.get('internship').repeatMode, 'tracked');
   assert.equal(agent.activeConversationState.answerPools.has('internship'), true);
 
@@ -462,7 +466,7 @@ test('internship routes to its own hidden label and joins the repeat-response fl
 
   agent.startConversation();
   const fresh = agent.selectAnswer('internship');
-  assert.equal(fresh.response.text, 'NULL');
+  assert.equal(fresh.response.text, 'Here is my internship experience.');
   assert.equal(fresh.isRepeatResponse, false);
 });
 
@@ -610,6 +614,7 @@ test('preserves configured rich emphasis in the second research sub-answer', () 
 test('marks every structured profile answer for token-paced block rendering', async () => {
   const cases = [
     ['Tell me about your education', 'education', 'education'],
+    ['How about your internship experience?', 'internship', 'internships'],
     ['How can I contact you?', 'identity_contact', 'emails'],
     ['How about your publications?', 'papers', 'publications'],
     ['What technical skills do you have?', 'skills', 'skills'],
@@ -640,6 +645,21 @@ test('education loads structured degree entries from profile content', () => {
   const answer = answerForQuestion('education').variants[0];
   assert.deepEqual(answer.blocks, [{ type: 'education' }]);
   assert.deepEqual(profile.education, profileContent.education);
+});
+
+test('internship loads its structured timeline entry from profile content', () => {
+  const answer = answerForQuestion('internship').variants[0];
+  assert.deepEqual(answer.blocks, [{ type: 'internships' }]);
+  assert.deepEqual(profile.internships, profileContent.internships);
+  assert.deepEqual(profile.internships, [
+    {
+      name: 'SinapisAI (南芥智能)',
+      hrefKey: 'sinapisAI',
+      period: 'September 2026 – Present',
+      icon: 'assets/icons/sinapisai.svg',
+      details: [['Algorithm Intern']],
+    },
+  ]);
 });
 
 test('one education label can appear in Try asking and after identity with one counter', () => {

@@ -220,6 +220,40 @@ function educationDetails(profile, details) {
   );
 }
 
+function timelineList(profile, entries, { titleKey }) {
+  return element(
+    'section',
+    { className: 'response-detail education-list' },
+    entries.map((entry) =>
+      element(
+        'article',
+        { className: 'education-item' },
+        element(
+          'div',
+          { className: 'education-summary' },
+          element('img', {
+            className: 'education-icon',
+            attributes: { src: asset(entry.icon), alt: '', 'aria-hidden': 'true' },
+          }),
+          element(
+            'div',
+            { className: 'education-copy' },
+            element(
+              'h2',
+              {},
+              entry.hrefKey
+                ? externalLink(entry[titleKey], profile.links[entry.hrefKey])
+                : entry[titleKey],
+            ),
+            element('p', { className: 'education-period', text: entry.period }),
+          ),
+        ),
+        entry.details?.length ? educationDetails(profile, entry.details) : null,
+      ),
+    ),
+  );
+}
+
 const blockRenderers = {
   affiliations(profile) {
     if (!site.identityAffiliationLogos) return null;
@@ -282,31 +316,11 @@ const blockRenderers = {
   },
 
   education(profile) {
-    return element(
-      'section',
-      { className: 'response-detail education-list' },
-      profile.education.map((education) =>
-        element(
-          'article',
-          { className: 'education-item' },
-          element(
-            'div',
-            { className: 'education-summary' },
-            element('img', {
-              className: 'education-icon',
-              attributes: { src: asset(education.icon), alt: '', 'aria-hidden': 'true' },
-            }),
-            element(
-              'div',
-              { className: 'education-copy' },
-              element('h2', { text: education.degree }),
-              element('p', { className: 'education-period', text: education.period }),
-            ),
-          ),
-          educationDetails(profile, education.details),
-        ),
-      ),
-    );
+    return timelineList(profile, profile.education, { titleKey: 'degree' });
+  },
+
+  internships(profile) {
+    return timelineList(profile, profile.internships, { titleKey: 'name' });
   },
 
   skills(profile) {

@@ -131,6 +131,16 @@ profile.education?.forEach((education, index) => {
     }
   });
 });
+requireArray(profile.internships, 'profile.internships');
+profile.internships?.forEach((internship, index) => {
+  requireText(internship.name, `profile.internships[${index}].name`);
+  requireText(internship.period, `profile.internships[${index}].period`);
+  requireArray(internship.details, `profile.internships[${index}].details`);
+  addAsset(internship.icon, `profile.internships[${index}].icon`);
+  if (!isText(links[internship.hrefKey])) {
+    fail(`profile.internships[${index}] references missing link "${internship.hrefKey}".`);
+  }
+});
 requireArray(profile.skills, 'profile.skills');
 profile.skills?.forEach((skill, index) => addAsset(skill.icon, `profile.skills[${index}].icon`));
 requireArray(profile.hobbies, 'profile.hobbies');

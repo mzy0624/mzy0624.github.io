@@ -281,8 +281,12 @@
       "id": "internship",
       "variants": [
         {
-          "text": "NULL",
-          "blocks": []
+          "text": "Here is my internship experience.",
+          "blocks": [
+            {
+              "type": "internships"
+            }
+          ]
         }
       ],
       "repeatMode": "tracked"

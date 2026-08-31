@@ -41,7 +41,7 @@ npm run dev
 Each entry in `answers.json` has a stable `id`, a `repeatMode`, and one or more `variants`. Every variant requires `text` and may also contain:
 
 - `content`: token-level rich text segments with optional `strong` or `href` fields.
-- `blocks`: structured sections such as `education`, `skills`, `hobbies`, `services`, `publications`, `emails`, `correspondence`, `statement`, or `emphasisList`.
+- `blocks`: structured sections such as `education`, `internships`, `skills`, `hobbies`, `services`, `publications`, `emails`, `correspondence`, `statement`, or `emphasisList`.
 - `image`: an on-demand image with `src`, `fullSrc`, and `alt`.
 - `samplingWeight`: a relative sampling weight for that variant.
 
