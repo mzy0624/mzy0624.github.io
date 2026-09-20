@@ -214,7 +214,6 @@ textarea:focus-visible {
 }
 
 .conversation-history-item:disabled {
-  opacity: 0.55;
   cursor: default;
 }
 
