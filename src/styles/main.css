@@ -55,6 +55,10 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  text-decoration: none;
+}
+
 button:focus-visible,
 a:focus-visible,
 textarea:focus-visible {
@@ -722,13 +726,11 @@ html:active-view-transition .header-identity {
 
 .inline-answer-link {
   color: var(--accent-dark);
-  text-decoration: underline;
-  text-decoration-color: rgba(var(--accent-rgb), 0.45);
-  text-underline-offset: 3px;
+  transition: color 150ms ease;
 }
 
 .inline-answer-link:hover {
-  text-decoration-color: currentColor;
+  color: var(--accent);
 }
 
 .follow-up-suggestions {
@@ -1767,11 +1769,11 @@ html:active-view-transition .header-identity {
 .response-link {
   color: var(--accent-dark);
   font-weight: 650;
-  text-decoration: none;
+  transition: color 150ms ease;
 }
 
 .response-link:hover {
-  text-decoration: underline;
+  color: var(--accent);
 }
 
 .correspondence-item + .correspondence-item {
