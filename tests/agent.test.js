@@ -655,7 +655,7 @@ test('internship loads its structured timeline entry from profile content', () =
     {
       name: 'SinapisAI (南芥智能)',
       hrefKey: 'sinapisAI',
-      period: 'September 2026 – Present',
+      period: 'August 2026 – Present',
       icon: 'assets/icons/sinapisai.svg',
       details: [['Algorithm Intern']],
     },

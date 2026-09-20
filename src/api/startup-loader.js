@@ -107,9 +107,8 @@ export function markStartupAssetsReady(documentObject = globalThis.document) {
 export function showStartupLoaderError(loader) {
   if (!loader) return;
   loader.classList.add('has-error');
-  const label = loader.querySelector('.startup-loader__content > span:first-child');
+  const label = loader.querySelector('.startup-loader__text');
   if (label) label.textContent = site.startupLoading.errorText;
-  loader.querySelector('.startup-loader__dots')?.remove();
   loader.setAttribute('aria-label', site.startupLoading.errorText);
 }
 

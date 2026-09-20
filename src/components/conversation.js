@@ -131,16 +131,11 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
         loader = null;
       },
       showThinking(message = 'Thinking') {
-        thinkingLabel = element('span', { text: message });
+        thinkingLabel = element('span', { className: 'thinking-process-text', text: message });
         thinkingProcess = element(
           'div',
           { className: 'thinking-process', attributes: { role: 'status' } },
           thinkingLabel,
-          element(
-            'span',
-            { className: 'process-dots', attributes: { 'aria-hidden': 'true' } },
-            element('i'), element('i'), element('i'),
-          ),
         );
         content.append(thinkingProcess);
       },
@@ -149,7 +144,9 @@ export function createConversation(profile, imageLightbox = createImageLightbox(
           this.showThinking(message);
           return;
         }
-        thinkingLabel.textContent = message;
+        const nextLabel = element('span', { className: 'thinking-process-text', text: message });
+        thinkingLabel.replaceWith(nextLabel);
+        thinkingLabel = nextLabel;
       },
       hideThinking() {
         if (!thinkingProcess) return;

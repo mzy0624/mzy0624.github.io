@@ -4,6 +4,7 @@ import {
   hasStartupAssetCookie,
   markStartupAssetsReady,
   prepareStartupAssets,
+  showStartupLoaderError,
   startupAssetCookie,
   waitForCriticalDomImages,
 } from '../src/api/startup-loader.js';
@@ -77,4 +78,21 @@ test('marks the validated startup asset version only after display checks', () =
   assert.match(documentObject.cookie, new RegExp(
     `^${site.startupLoading.cookieName}=${site.startupLoading.cookieVersion}`,
   ));
+});
+
+test('replaces the animated startup label with a readable error message', () => {
+  const label = { textContent: '' };
+  const classes = new Set();
+  const attributes = new Map();
+  const loader = {
+    classList: { add: (className) => classes.add(className) },
+    querySelector: (selector) => selector === '.startup-loader__text' ? label : null,
+    setAttribute: (name, value) => attributes.set(name, value),
+  };
+
+  showStartupLoaderError(loader);
+
+  assert.ok(classes.has('has-error'));
+  assert.equal(label.textContent, site.startupLoading.errorText);
+  assert.equal(attributes.get('aria-label'), site.startupLoading.errorText);
 });

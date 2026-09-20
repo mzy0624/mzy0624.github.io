@@ -18,7 +18,6 @@
         z-index: 1000;
         display: grid;
         place-items: center;
-        color: #565852;
         background: #fff;
         opacity: 1;
         visibility: visible;
@@ -30,27 +29,35 @@
         visibility: hidden;
       }
 
-      .startup-loader__content,
-      .startup-loader__dots {
-        display: flex;
-        align-items: center;
-      }
-
       .startup-loader__content {
         width: 80vw;
-        flex-direction: row;
-        justify-content: center;
-        gap: 10px;
         font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: clamp(24px, 4vw, 48px);
+        font-size: clamp(20px, calc(4vw - 4px), 44px);
         font-weight: 500;
-        line-height: 1.05;
+        line-height: 1.3;
         letter-spacing: -0.045em;
         text-align: center;
       }
 
-      .startup-loader__content > span:first-child {
+      .startup-loader__text {
+        display: inline-block;
+        padding-bottom: 0.1em;
         white-space: nowrap;
+        color: #565852;
+        background: linear-gradient(
+          90deg,
+          #777c76 0%,
+          #777c76 40%,
+          #fff 50%,
+          #777c76 60%,
+          #777c76 100%
+        );
+        background-size: 250% 100%;
+        background-position: 100% 0;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: startup-loader-sheen 2s linear infinite;
       }
 
       .startup-loader.has-error .startup-loader__content {
@@ -59,41 +66,33 @@
         letter-spacing: 0;
       }
 
-      .startup-loader.has-error .startup-loader__content > span:first-child {
+      .startup-loader.has-error .startup-loader__text {
         white-space: normal;
+        background: none;
+        -webkit-text-fill-color: currentColor;
+        animation: none;
       }
 
-      .startup-loader__dots {
-        gap: 4px;
-      }
-
-      .startup-loader__dots i {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #0c9b77;
-        animation: startup-loader-pulse 900ms infinite ease-in-out;
-      }
-
-      .startup-loader__dots i:nth-child(2) { animation-delay: 120ms; }
-      .startup-loader__dots i:nth-child(3) { animation-delay: 240ms; }
-
-      @keyframes startup-loader-pulse {
-        0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-        30% { opacity: 1; transform: translateY(-2px); }
+      @keyframes startup-loader-sheen {
+        from { background-position: 100% 0; }
+        to { background-position: 0 0; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .startup-loader,
-        .startup-loader__dots i {
+        .startup-loader {
           transition: none;
+        }
+
+        .startup-loader__text {
+          background: none;
+          -webkit-text-fill-color: currentColor;
           animation: none;
         }
       }
 
       @media (min-width: 901px) {
         .startup-loader__content {
-          font-size: clamp(36px, 3vw, 42px);
+          font-size: clamp(32px, calc(3vw - 4px), 38px);
         }
       }
     </style>
@@ -101,8 +100,7 @@
   <body>
     <div id="startup-loader" class="startup-loader" role="status" aria-live="polite">
       <div class="startup-loader__content">
-        <span>__SITE_LOADING_TEXT__</span>
-        <span class="startup-loader__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="startup-loader__text">__SITE_LOADING_TEXT__</span>
       </div>
     </div>
     <div id="app"></div>
