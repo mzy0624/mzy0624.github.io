@@ -132,11 +132,11 @@
     {
       "name": "SinapisAI (南芥智能)",
       "hrefKey": "sinapisAI",
-      "period": "September 2026 – Present",
+      "period": "August 2026 – Present",
       "icon": "assets/icons/sinapisai.svg",
       "details": [
         [
-          "Algorithm Intern"
+          "Algorithm Intern: Efficient Model-Benchmark Evaluation"
         ]
       ]
     }
@@ -244,6 +244,11 @@
         "role": "Program Committee",
         "organization": "AAAI 2026",
         "icon": "assets/icons/aaai.svg"
+      },
+      {
+        "role": "Reviewer",
+        "organization": "ICLR 2027",
+        "icon": "assets/icons/iclr.svg"
       }
     ],
     "teachingAssistants": [
