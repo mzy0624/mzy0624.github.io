@@ -226,17 +226,6 @@
     border-radius: 15px;
   }
 
-  .image-lightbox {
-    padding: 8px;
-  }
-
-  .image-lightbox > img {
-    width: 100%;
-    max-width: 100%;
-    max-height: calc(100dvh - 16px);
-    border-radius: 14px;
-  }
-
   .response-detail {
     font-size: 13px;
   }

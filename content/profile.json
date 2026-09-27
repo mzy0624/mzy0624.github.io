@@ -241,13 +241,13 @@
   "services": {
     "academic": [
       {
-        "role": "Program Committee",
-        "organization": "AAAI 2026",
+        "organization": "AAAI",
+        "years": [2026],
         "icon": "assets/icons/aaai.svg"
       },
       {
-        "role": "Reviewer",
-        "organization": "ICLR 2027",
+        "organization": "ICLR",
+        "years": [2027],
         "icon": "assets/icons/iclr.svg"
       }
     ],

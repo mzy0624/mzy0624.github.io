@@ -21,9 +21,7 @@ export function createComposer({ onSubmit }) {
   });
 
   const resize = () => {
-    // Measure against the compact layout first, so the composer switches as
-    // soon as the prompt would wrap beside the send button.
-    form.classList.remove('is-multiline');
+    // Keep the same text width when wrapping; only the height and alignment change.
     input.style.height = 'auto';
     const lineHeight = Number.parseFloat(getComputedStyle(input).lineHeight);
     const isMultiline = input.value.length > 0

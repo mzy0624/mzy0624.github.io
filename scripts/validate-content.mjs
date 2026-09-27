@@ -146,9 +146,18 @@ profile.skills?.forEach((skill, index) => addAsset(skill.icon, `profile.skills[$
 requireArray(profile.hobbies, 'profile.hobbies');
 profile.hobbies?.forEach((hobby, index) => addAsset(hobby.icon, `profile.hobbies[${index}].icon`));
 requireArray(profile.services?.academic, 'profile.services.academic');
-profile.services?.academic?.forEach((service, index) => (
-  addAsset(service.icon, `profile.services.academic[${index}].icon`)
-));
+profile.services?.academic?.forEach((service, index) => {
+  const field = `profile.services.academic[${index}]`;
+  requireText(service.organization, `${field}.organization`);
+  requireArray(service.years, `${field}.years`);
+  if (Array.isArray(service.years)) {
+    if (service.years.length === 0) fail(`${field}.years must contain at least one year.`);
+    service.years.forEach((year) => {
+      if (!Number.isInteger(year) || year < 1) fail(`${field}.years must contain positive integers.`);
+    });
+  }
+  addAsset(service.icon, `${field}.icon`);
+});
 requireArray(profile.services?.teachingAssistants, 'profile.services.teachingAssistants');
 profile.services?.teachingAssistants?.forEach((service, index) => (
   addAsset(service.icon, `profile.services.teachingAssistants[${index}].icon`)

@@ -426,7 +426,12 @@ const blockRenderers = {
               'div',
               { className: 'service-copy' },
               element('h3', { text: service.organization }),
-              element('p', {}, element('strong', { text: 'Role: ' }), service.role),
+              element(
+                'p',
+                {},
+                element('strong', { text: service.years.length === 1 ? 'Year: ' : 'Years: ' }),
+                service.years.join(', '),
+              ),
             ),
           ),
         ),
