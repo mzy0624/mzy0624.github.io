@@ -14,7 +14,7 @@
     "topic": "Learnware",
     "summary": "RNCME models the input–output conditional distribution rather than only the input distribution, describing model functionality more faithfully for learnware identification.",
     "resources": {
-      "official": "https://icml.cc/virtual/2026/poster/62246"
+      "official": "https://proceedings.mlr.press/v306/mao26c.html"
     }
   }
 ]
