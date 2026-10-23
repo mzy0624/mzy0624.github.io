@@ -1,0 +1,26 @@
+{
+  "id": "sinapisai",
+  "type": "technical-report",
+  "title": "Toward Collective Model Intelligence: Characterizing and Coordinating Models",
+  "authors": [
+    "SinapisAI Team",
+    "Jian-Dong Liu",
+    "Qun Dai", "Zhendong Du", "Guannan Lai", "Hao-Yu Liu", "Yi-Fan Ma", "Zi-Yu Mao", "Tengzhong Sun", "Xin-Yi Zhang", "Zi-Chen Zhao",
+    "Gelin Bian", "Zongyuan Cai", "Ju Cang", "Zhangqin Chen", "Shilei Gu", "Guoding Ji", "Taojian Jiang", "Hao-Xuan Ma", "Fan Wu", "Lin-Xing Wu", "Tao Yu", "Xiao Zhang", "Tianyi Zhou",
+    "Rong Gu", "Ming Li", "Zhi-Hao Tan", "Han-Jia Ye", "Yang Yu", "De-Chuan Zhan"
+  ],
+  "firstAuthorCount": 1,
+  "authorCredit": {
+    "team": "SinapisAI Team",
+    "role": "Core contributor",
+    "name": "Zi-Yu Mao"
+  },
+  "venue": "arXiv 2610.24739",
+  "venueShort": "arXiv",
+  "year": "2026",
+  "summary": "We present a framework for Collective Model Intelligence that characterizes model capabilities with limited evaluation, organizes complementary models for cost-aware selection and collaboration, and supports efficient model serving. Mio 1.0 Lite demonstrates improved quality–cost trade-offs across nine benchmarks.",
+  "resources": {
+    "official": "https://arxiv.org/abs/2610.24739",
+    "code": "https://github.com/SinapisAI/collective-model-intelligence"
+  }
+}

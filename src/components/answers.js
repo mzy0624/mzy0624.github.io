@@ -1,5 +1,7 @@
 import { asset, element } from '../api/dom.js';
-import { groupPublications } from '../data/publication-groups.js';
+import { getPublicationVenuePrefix, groupPublications } from '../data/publication-groups.js';
+import { getPublicationAuthorDisplay } from '../data/publication-authors.js';
+import { createPublicationAuthorsTooltip } from './publication-authors-tooltip.js';
 import { site } from '../data/site.js';
 
 let publicationTooltipSequence = 0;
@@ -112,42 +114,48 @@ function publicationActions(publication) {
 }
 
 function publicationAuthors(publication, profileName) {
-  const authors = Array.isArray(publication.authors)
-    ? publication.authors
-    : [publication.authors];
-  const firstAuthorCount = Number.isInteger(publication.firstAuthorCount)
-    ? publication.firstAuthorCount
-    : 1;
-  const hasEqualContribution = firstAuthorCount > 1;
+  const { authors, notes, remainingAuthors, credit } = getPublicationAuthorDisplay(publication);
   const authorLine = element('p', { className: 'response-muted publication-authors' });
 
-  authors.forEach((author, index) => {
+  authors.forEach(({ name, isFirstAuthor, markers }, index) => {
     if (index > 0) {
       authorLine.append(document.createTextNode(', '));
     }
 
-    let authorName = element('span', { text: author });
-    if (author === profileName) {
+    let authorName = element('span', { text: name });
+    if (name === profileName) {
       authorName = element('u', { className: 'publication-self-author' }, authorName);
     }
-    if (index < firstAuthorCount) {
+    if (isFirstAuthor) {
       authorName = element('strong', { className: 'publication-first-author' }, authorName);
     }
     authorLine.append(authorName);
 
-    if (hasEqualContribution && index < firstAuthorCount) {
-      authorLine.append(element('sup', { className: 'publication-equal-marker', text: '*' }));
+    if (markers) {
+      authorLine.append(element('sup', { className: 'publication-author-marker', text: markers }));
     }
   });
 
+  if (credit) {
+    authorLine.append(
+      document.createTextNode(` (${credit.role}: `),
+      credit.name === profileName
+        ? element('u', { className: 'publication-self-author', text: credit.name })
+        : document.createTextNode(credit.name),
+      document.createTextNode(')'),
+    );
+  }
+
+  if (remainingAuthors.length) {
+    authorLine.append(document.createTextNode(', '), createPublicationAuthorsTooltip(remainingAuthors));
+  }
+
   return [
     authorLine,
-    hasEqualContribution
-      ? element('p', {
-        className: 'publication-equal-contribution',
-        text: '* Equal contribution.',
-      })
-      : null,
+    notes.map(({ symbol, text }) => element('p', {
+      className: 'publication-author-note',
+      text: `${symbol} ${text}`,
+    })),
   ];
 }
 
@@ -163,9 +171,9 @@ function publicationEntry(publication, profileName) {
       element(
         'p',
         { className: 'publication-venue' },
-        publication.type === 'preprint'
-          ? null
-          : element('span', { className: 'publication-venue-prefix', text: 'In: ' }),
+        getPublicationVenuePrefix(publication.type)
+          ? element('span', { className: 'publication-venue-prefix', text: getPublicationVenuePrefix(publication.type) })
+          : null,
         element('em', { text: publication.venue }),
       ),
     ),
@@ -299,7 +307,7 @@ const blockRenderers = {
   },
 
   publications(profile) {
-    const sections = groupPublications(profile.publications);
+    const sections = groupPublications(profile.publications, profile.publicationName);
 
     return element(
       'div',

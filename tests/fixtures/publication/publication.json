@@ -7,6 +7,10 @@
     "Coauthor"
   ],
   "firstAuthorCount": 2,
+  "authorDisplayCount": 1,
+  "authorNotes": [
+    { "symbol": "†", "text": "Core contributor.", "authors": ["Coauthor"] }
+  ],
   "venue": "Example Conference",
   "venueShort": "EXAMPLE 2027",
   "year": "2027",

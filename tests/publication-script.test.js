@@ -5,7 +5,7 @@ import { promisify } from 'node:util';
 
 const execFileAsync = promisify(execFile);
 
-test('publication script validates a manifest and places it first during dry run', async () => {
+test('publication script validates a self-contained directory import during dry run', async () => {
   const { stdout } = await execFileAsync(
     process.execPath,
     [
@@ -17,11 +17,16 @@ test('publication script validates a manifest and places it first during dry run
   );
   const plan = JSON.parse(stdout);
 
-  assert.equal(plan.position, 1);
+  assert.match(plan.targetDirectory, /publications\/example-paper$/);
+  assert.equal(plan.alreadyInPlace, false);
   assert.equal(plan.record.id, 'example-paper');
   assert.equal(plan.record.type, 'conference');
   assert.deepEqual(plan.record.authors, ['Example Author', 'Coauthor']);
   assert.equal(plan.record.firstAuthorCount, 2);
+  assert.equal(plan.record.authorDisplayCount, 1);
+  assert.deepEqual(plan.record.authorNotes, [
+    { symbol: '†', text: 'Core contributor.', authors: ['Coauthor'] },
+  ]);
   assert.deepEqual(plan.record.resources, {
     code: 'https://github.com/example/repository',
     official: 'https://example.com/paper',

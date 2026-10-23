@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { thinkingDetails, thinkingMoments } from '../src/data/thinking-details.js';
 import { AcademicAgent } from '../src/api/academic-agent.js';
 import { answers, commonRepeatAnswers, intents } from '../src/data/intents.js';
-import { groupPublications } from '../src/data/publication-groups.js';
+import { getPublicationVenuePrefix, groupPublications, publicationTypes } from '../src/data/publication-groups.js';
 import { profile } from '../src/data/profile.js';
 import answerContent from '../content/answers.json' with { type: 'json' };
 import profileContent from '../content/profile.json' with { type: 'json' };
 import questionContent from '../content/questions.json' with { type: 'json' };
-import publicationRecords from '../content/publications.json' with { type: 'json' };
+import { scanPublications } from '../scripts/lib/publications.mjs';
 import { suggestionPlacements } from '../src/data/suggestion-placements.js';
 import { DeterministicIntentModel } from '../src/models/deterministic-intent-model.js';
 
@@ -16,6 +16,8 @@ const model = new DeterministicIntentModel({
   intents,
   fallbackId: 'unknown',
 });
+
+const { records: publicationRecords } = await scanPublications();
 
 const createAgent = (options = {}) => new AcademicAgent({
   model,
@@ -693,13 +695,12 @@ test('one education label can appear in Try asking and after identity with one c
 
 test('publication overview exposes every paper and its resource actions', () => {
   const publicationsIntent = intents.find((intent) => intent.id === 'papers');
-  const publicationTypes = new Set(['preprint', 'conference', 'journal']);
   assert.deepEqual(answerForQuestion(publicationsIntent).variants[0].blocks, [{ type: 'publications' }]);
   assert.ok(profile.publications.length > 0);
   profile.publications.forEach((publication) => {
     assert.ok(Array.isArray(publication.authors));
     assert.ok(publication.authors.includes(profile.publicationName));
-    assert.ok(publicationTypes.has(publication.type));
+    assert.ok(publicationTypes.includes(publication.type));
     assert.ok(Number.isInteger(publication.firstAuthorCount));
     assert.ok(publication.firstAuthorCount >= 1);
     assert.ok(publication.firstAuthorCount <= publication.authors.length);
@@ -735,20 +736,49 @@ test('publication overview exposes every paper and its resource actions', () => 
 
 });
 
-test('publication groups prioritize conference, journal, and preprint with newest papers first', () => {
+test('publication groups prioritize conference, journal, technical report, and preprint with newest papers first', () => {
   const groups = groupPublications([
     { id: 'preprint', type: 'preprint', year: '2027' },
     { id: 'conference-old', type: 'conference', year: '2025' },
     { id: 'journal', type: 'journal', year: '2028' },
     { id: 'conference-new', type: 'conference', year: '2027' },
     { id: 'conference-newer-in-json', type: 'conference', year: '2027' },
+    { id: 'report-old', type: 'technical-report', year: '2025' },
+    { id: 'report-new', type: 'technical-report', year: '2026' },
   ]);
 
-  assert.deepEqual(groups.map(({ type }) => type), ['conference', 'journal', 'preprint']);
+  assert.deepEqual(groups.map(({ type }) => type), ['conference', 'journal', 'technical-report', 'preprint']);
   assert.deepEqual(
     groups[0].publications.map(({ id }) => id),
     ['conference-new', 'conference-newer-in-json', 'conference-old'],
   );
+  assert.deepEqual(groups[2].publications.map(({ id }) => id), ['report-new', 'report-old']);
+  assert.equal(getPublicationVenuePrefix('conference'), 'In: ');
+  assert.equal(getPublicationVenuePrefix('journal'), 'In: ');
+  assert.equal(getPublicationVenuePrefix('technical-report'), '');
+  assert.equal(getPublicationVenuePrefix('preprint'), '');
+});
+
+test('publication groups prioritize owner author position, then newest year, using the full author list', () => {
+  const owner = 'Test Owner';
+  const papers = [
+    { id: 'third-new', type: 'conference', year: '2028', authors: ['A', 'B', owner], authorDisplayCount: 1 },
+    { id: 'first-old', type: 'conference', year: '2024', authors: [owner, 'A'] },
+    { id: 'second-new', type: 'conference', year: '2027', authors: ['A', owner], firstAuthorCount: 2 },
+    { id: 'first-new', type: 'conference', year: '2026', authors: [owner] },
+    { id: 'first-tie', type: 'conference', year: '2026', authors: [owner, 'B'] },
+    { id: 'second-old', type: 'conference', year: '2025', authors: ['B', owner] },
+    { id: 'not-an-author', type: 'conference', year: '2030', authors: ['A'] },
+    { id: 'journal-first', type: 'journal', year: '2031', authors: [owner] },
+  ];
+  const sourceOrder = papers.map(({ id }) => id);
+  const groups = groupPublications(papers, owner);
+
+  assert.deepEqual(groups.map(({ type }) => type), ['conference', 'journal']);
+  assert.deepEqual(groups[0].publications.map(({ id }) => id), [
+    'first-new', 'first-tie', 'first-old', 'second-new', 'second-old', 'third-new', 'not-an-author',
+  ]);
+  assert.deepEqual(papers.map(({ id }) => id), sourceOrder);
 });
 
 test('skills preserve configured order and icon metadata', () => {

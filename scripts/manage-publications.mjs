@@ -1,38 +1,36 @@
 #!/usr/bin/env node
 
-import { constants } from 'node:fs';
 import {
-  access,
   copyFile,
   cp,
   mkdir,
   readFile,
-  rename,
   rm,
   stat,
-  writeFile,
 } from 'node:fs/promises';
 import path from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { validatePublicationAuthors } from '../src/data/publication-authors.js';
+import { publicationGroupDefinitions, publicationTypes } from '../src/data/publication-groups.js';
 import {
   localResourceFiles,
-  syncPublicationResources,
-} from './lib/publication-resources.mjs';
+  publicationsPath,
+  scanPublications,
+  syncPublications,
+  writePublication,
+} from './lib/publications.mjs';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
-const catalogPath = path.join(projectRoot, 'content/publications.json');
 const sitePath = path.join(projectRoot, 'content/site.json');
-const assetsRoot = path.join(projectRoot, 'public/assets/publications');
+const publicationsRoot = publicationsPath(projectRoot);
 const backupsRoot = path.join(projectRoot, 'publication-backups');
 const siteContent = JSON.parse(await readFile(sitePath, 'utf8'));
 const selfName = siteContent.owner.publicationName;
-const publicationTypeLabels = Object.freeze({
-  preprint: 'Preprint',
-  conference: 'Conference Paper',
-  journal: 'Journal Paper',
-});
+const publicationTypeLabels = Object.freeze(Object.fromEntries(
+  publicationGroupDefinitions.map(({ type, heading }) => [type, heading]),
+));
 const resourceLabels = Object.freeze({
   pdf: 'PDF',
   code: 'Code',
@@ -66,15 +64,7 @@ async function isFile(filePath) {
 }
 
 async function readCatalog() {
-  const catalog = JSON.parse(await readFile(catalogPath, 'utf8'));
-  if (!Array.isArray(catalog)) throw new Error('content/publications.json must contain an array.');
-  return catalog;
-}
-
-async function writeCatalog(catalog) {
-  const temporaryPath = `${catalogPath}.tmp-${process.pid}`;
-  await writeFile(temporaryPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');
-  await rename(temporaryPath, catalogPath);
+  return (await scanPublications(projectRoot)).records;
 }
 
 async function ask(terminal, label, {
@@ -101,7 +91,7 @@ async function ask(terminal, label, {
 
 async function askResource(terminal, key, publicationId, existing) {
   const filename = localResourceFiles[key];
-  const localPath = path.join(assetsRoot, publicationId, filename);
+  const localPath = path.join(publicationsRoot, publicationId, filename);
   const hasLocal = await isFile(localPath);
   const current = existing?.resources?.[key] || (hasLocal ? `本地文件 ${filename}` : '无');
 
@@ -127,6 +117,26 @@ async function askResource(terminal, key, publicationId, existing) {
     }
     return { mode: 'local', source };
   }
+}
+
+async function collectTeamCredit(terminal, authors, existing) {
+  const mode = await ask(terminal, '作者显示方式（list 为作者列表，team 为团队署名）', {
+    current: existing?.authorCredit ? 'team' : 'list',
+    required: true,
+    validate: (value) => ['list', 'team'].includes(value) ? null : '请选择 list 或 team。',
+  });
+  if (mode === 'list') return null;
+  const requireAuthor = (value) => authors.includes(value) ? null : '请填写完整作者列表中已有的姓名或团队名。';
+  const team = await ask(terminal, '团队名称', {
+    current: existing?.authorCredit?.team || authors[0], required: true, validate: requireAuthor,
+  });
+  const role = await ask(terminal, '个人贡献（例如 Core contributor）', {
+    current: existing?.authorCredit?.role || 'Core contributor', required: true,
+  });
+  const name = await ask(terminal, '个人姓名', {
+    current: existing?.authorCredit?.name || selfName, required: true, validate: requireAuthor,
+  });
+  return { team, role, name };
 }
 
 async function collectPublication(terminal, catalog, existing = null) {
@@ -164,13 +174,54 @@ async function collectPublication(terminal, catalog, existing = null) {
       return null;
     },
   });
-  const type = await ask(terminal, '论文类型（preprint/conference/journal）', {
+  const authorCredit = await collectTeamCredit(terminal, authors, existing);
+  const displayCountText = authorCredit ? String(authors.length) : await ask(terminal, '网页显示前几位作者（其余显示为 et al.）', {
+    current: existing?.authorDisplayCount ?? authors.length,
+    required: true,
+    validate(value) {
+      const count = Number(value);
+      return Number.isInteger(count) && count >= 1 && count <= authors.length
+        ? null : `请输入 1 到 ${authors.length} 之间的整数。`;
+    },
+  });
+  const noteCountText = authorCredit ? '0' : await ask(terminal, '作者备注条数（共同一作说明自动生成，0 表示无其他备注）', {
+    current: existing?.authorNotes?.length ?? 0,
+    required: true,
+    validate: (value) => Number.isInteger(Number(value)) && Number(value) >= 0
+      ? null : '请输入非负整数。',
+  });
+  const authorNotes = [];
+  const usedSymbols = new Set(Number(firstAuthorCountText) > 1 ? ['*'] : []);
+  for (let index = 0; index < Number(noteCountText); index += 1) {
+    const existingNote = existing?.authorNotes?.[index];
+    const symbol = await ask(terminal, `备注 ${index + 1} 的符号（例如 † 或 ‡）`, {
+      current: existingNote?.symbol,
+      required: true,
+      validate: (value) => usedSymbols.has(value) ? '该符号已使用，请选择其他符号。' : null,
+    });
+    usedSymbols.add(symbol);
+    const text = await ask(terminal, `备注 ${index + 1} 的英文说明`, {
+      current: existingNote?.text,
+      required: true,
+    });
+    const markedAuthors = await ask(terminal, `备注 ${index + 1} 的适用作者（完整姓名，逗号分隔）`, {
+      current: existingNote?.authors?.join(', '),
+      required: true,
+      validate(value) {
+        const names = parseAuthors(value);
+        return names.length && names.every((name) => authors.includes(name))
+          ? null : '请填写作者列表中已有的完整姓名。';
+      },
+    });
+    authorNotes.push({ symbol, text, authors: parseAuthors(markedAuthors) });
+  }
+  const type = await ask(terminal, `论文类型（${publicationTypes.join('/')}）`, {
     current: existing?.type,
     required: true,
     validate(value) {
       return Object.hasOwn(publicationTypeLabels, value)
         ? null
-        : '请选择 preprint、conference 或 journal。';
+        : `请选择 ${publicationTypes.join('、')}。`;
     },
   });
   const venue = await ask(terminal, '完整发表信息（不要包含 In:）', {
@@ -189,10 +240,9 @@ async function collectPublication(terminal, catalog, existing = null) {
     required: true,
     validate: (value) => /^\d{4}$/.test(value) ? null : '年份需要是四位数字。',
   });
-  const official = await ask(terminal, '会议/期刊官方页面 URL', {
-    current: existing?.resources?.official,
-    required: true,
-    validate: (value) => isWebUrl(value) ? null : '请输入 http(s) URL。',
+  const official = await ask(terminal, '论文官方页面 URL（可选，输入 - 清除）', {
+    current: existing?.resources?.official || '',
+    validate: (value) => !value || value === '-' || isWebUrl(value) ? null : '请输入 http(s) URL。',
   });
   const summary = await ask(terminal, 'TL;DR', {
     current: existing?.summary,
@@ -203,7 +253,9 @@ async function collectPublication(terminal, catalog, existing = null) {
   for (const key of Object.keys(resourceLabels)) {
     resourceChanges[key] = await askResource(terminal, key, id, existing);
   }
-  const resources = { ...(existing?.resources || {}), official };
+  const resources = { ...(existing?.resources || {}) };
+  if (official && official !== '-') resources.official = official;
+  else delete resources.official;
   for (const [key, change] of Object.entries(resourceChanges)) {
     if (change.mode === 'external') resources[key] = change.value;
     if (change.mode === 'local' || change.mode === 'remove') delete resources[key];
@@ -222,6 +274,15 @@ async function collectPublication(terminal, catalog, existing = null) {
     summary,
     resources,
   };
+  delete record.authorDisplayCount;
+  delete record.authorNotes;
+  delete record.authorCredit;
+  if (Number(displayCountText) < authors.length) {
+    record.authorDisplayCount = Number(displayCountText);
+  }
+  if (authorNotes.length) record.authorNotes = authorNotes;
+  if (authorCredit) record.authorCredit = authorCredit;
+  validatePublicationAuthors(record);
   return { record, resourceChanges };
 }
 
@@ -229,16 +290,12 @@ async function createBackup(publicationId) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const backupDirectory = path.join(backupsRoot, `${timestamp}-${publicationId}`);
   await mkdir(backupDirectory, { recursive: true });
-  await copyFile(catalogPath, path.join(backupDirectory, 'publications.json'));
-  const sourceAssets = path.join(assetsRoot, publicationId);
-  if ((await stat(sourceAssets).catch(() => null))?.isDirectory()) {
-    await cp(sourceAssets, path.join(backupDirectory, 'assets'), { recursive: true });
-  }
+  await cp(path.join(publicationsRoot, publicationId), backupDirectory, { recursive: true });
   return backupDirectory;
 }
 
 async function applyResourceChanges(publicationId, changes) {
-  const publicationDirectory = path.join(assetsRoot, publicationId);
+  const publicationDirectory = path.join(publicationsRoot, publicationId);
   for (const [key, change] of Object.entries(changes)) {
     if (change.mode === 'keep') continue;
     const target = path.join(publicationDirectory, localResourceFiles[key]);
@@ -265,6 +322,16 @@ function printPublications(catalog) {
     console.log(`   ID: ${publication.id}`);
     console.log(`   Type: ${publicationTypeLabels[publication.type] || publication.type}`);
     console.log(`   ${publication.authors.join(', ')}${coFirst}`);
+    if (publication.authorCredit) {
+      const { team, role, name } = publication.authorCredit;
+      console.log(`   网页署名：${team} (${role}: ${name})`);
+    }
+    if (publication.authorDisplayCount < publication.authors.length) {
+      console.log(`   网页显示前 ${publication.authorDisplayCount} 位作者，其余在 et al. 悬浮窗中显示`);
+    }
+    publication.authorNotes?.forEach((note) => {
+      console.log(`   ${note.symbol} ${note.text} (${note.authors.join(', ')})`);
+    });
     console.log(`   ${publication.venueShort} · ${publication.year}`);
   });
   console.log('');
@@ -290,9 +357,11 @@ async function choosePublication(terminal, catalog, requestedId) {
 async function addPublication(terminal) {
   const catalog = await readCatalog();
   const { record, resourceChanges } = await collectPublication(terminal, catalog);
+  await mkdir(publicationsRoot, { recursive: true });
+  await mkdir(path.join(publicationsRoot, record.id));
   await applyResourceChanges(record.id, resourceChanges);
-  await writeCatalog([record, ...catalog]);
-  await syncPublicationResources(projectRoot);
+  await writePublication(record);
+  await syncPublications(projectRoot);
   console.log(`\n已添加：${record.title}\n`);
 }
 
@@ -302,9 +371,8 @@ async function editPublication(terminal, requestedId) {
   const { record, resourceChanges } = await collectPublication(terminal, catalog, existing);
   const backup = await createBackup(existing.id);
   await applyResourceChanges(existing.id, resourceChanges);
-  const nextCatalog = catalog.map((publication) => publication.id === existing.id ? record : publication);
-  await writeCatalog(nextCatalog);
-  await syncPublicationResources(projectRoot);
+  await writePublication(record);
+  await syncPublications(projectRoot);
   console.log(`\n已更新：${record.title}`);
   console.log(`备份：${path.relative(projectRoot, backup)}\n`);
 }
@@ -318,9 +386,8 @@ async function removePublication(terminal, requestedId) {
     return;
   }
   const backup = await createBackup(publication.id);
-  await writeCatalog(catalog.filter(({ id }) => id !== publication.id));
-  await rm(path.join(assetsRoot, publication.id), { recursive: true, force: true });
-  await syncPublicationResources(projectRoot);
+  await rm(path.join(publicationsRoot, publication.id), { recursive: true });
+  await syncPublications(projectRoot);
   console.log(`\n已删除：${publication.title}`);
   console.log(`可从 ${path.relative(projectRoot, backup)} 恢复。\n`);
 }
@@ -347,7 +414,6 @@ async function interactiveMenu(terminal) {
 }
 
 async function main() {
-  await access(catalogPath, constants.R_OK | constants.W_OK);
   const [command, requestedId] = process.argv.slice(2);
   if (command === '--help' || command === '-h' || command === 'help') {
     printHelp();

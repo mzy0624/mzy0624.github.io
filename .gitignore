@@ -10,7 +10,10 @@ training/routing-evaluation/*
 !training/routing-evaluation/embedding-test-report.json
 
 # Generated data indexes
-src/data/publication-resources.generated.json
+src/data/publications.generated.json
+
+# Local-only papers (metadata and attachments stay outside public/)
+/publications/private-*/
 
 # Local environment files
 .env

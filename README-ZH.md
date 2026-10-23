@@ -2,7 +2,7 @@
 
 一个内容驱动的 Agent 风格个人学术主页。页面本身是静态网站，不调用 LLM API；自由输入通过浏览器内运行的轻量 embedding 模型路由到固定回答。
 
-项目始终只展示一位主页所有者。所有个人信息集中在 `content/`，其他人复用时只需替换 JSON 内容与 `public/assets/` 下的资源，不需要修改应用代码。字段说明见 [`content/README.md`](content/README.md)。
+项目始终只展示一位主页所有者。个人资料集中在 `content/`，每篇论文的元数据与附件放在 `publications/<id>/`。其他人复用时只需替换 JSON 与资源，不需要修改应用代码。字段说明见 [`content/README.md`](content/README.md)。
 
 ## 开发与构建
 
@@ -46,17 +46,20 @@ npm run publication:manage -- edit paper-id
 npm run publication:manage -- remove paper-id
 ```
 
-管理器会维护论文类型、标题、作者顺序、第一作者/共同一作、完整发表信息、会议或期刊缩写与官方链接、TL;DR，以及可选的 PDF、Code、Poster 和 Bib。论文类型使用 `preprint`、`conference` 或 `journal`，页面会据此归入 Preprint、Conference Paper 或 Journal Paper。资源既可填写 `http(s)` 链接，也可提供本地文件路径；本地文件会被复制到论文资源目录。编辑和删除前会在 `publication-backups/` 中创建可恢复备份，删除还必须再次输入论文 ID 确认。
+管理器会维护论文类型、标题、作者顺序、第一作者/共同一作、完整发表信息、会议或期刊缩写与官方链接、TL;DR，以及可选的 PDF、Code、Poster 和 Bib。论文类型使用 `conference`、`journal`、`technical-report` 或 `preprint`，按 Conference Paper → Journal Paper → Technical Report → Preprint 排列，同类下年份较新的在前。资源既可填写 `http(s)` 链接，也可提供本地文件路径。编辑和删除前会在 `publication-backups/` 中备份完整论文目录，删除还必须再次输入论文 ID 确认。
 
 如需从准备好的材料目录一次性导入，仍可使用下面的 manifest 流程。
 
-复制 `scripts/publication.template.json` 到新的论文材料目录，将其改名为 `publication.json` 并填写元数据。可选本地材料使用固定文件名：
+也可以直接在 `publications/` 下放入论文目录，不再需要登记中央列表。开发服务器会自动发现并刷新。复制 `scripts/publication.template.json` 到目录内，改名为 `publication.json` 并填写元数据。`id` 可省略并使用目录名；如果填写，必须与目录名一致。可选本地材料使用固定文件名：
 
 ```text
-paper.pdf
-code.zip
-poster.png
-citation.bib
+publications/
+└── my-paper/
+    ├── publication.json
+    ├── paper.pdf
+    ├── code.zip
+    ├── poster.png
+    └── citation.bib
 ```
 
 预检和正式添加：
@@ -66,25 +69,37 @@ npm run publication:add -- /path/to/publication-folder --dry-run
 npm run publication:add -- /path/to/publication-folder
 ```
 
-脚本会校验数据，将材料复制到 `public/assets/publications/<id>/`，并把新论文插入 `content/publications.json` 首位。缺失的本地材料会被忽略，对应按钮不会出现。
+导入脚本会将外部准备好的目录复制到 `publications/<id>/`；如果目录已经在那里，则只校验并刷新本地索引。缺失的本地材料不会出现对应按钮。
 
-`publications.json` 不记录本地材料路径。外部资源可以在 `resources` 中设置 `pdf`、`code`、`poster`、`bib` 或 `official` 的 `http(s)` URL；外部设置优先于同名本地文件。
+`publication.json` 不记录本地材料路径。外部资源可以在 `resources` 中设置 `pdf`、`code`、`poster`、`bib` 或 `official` 的 `http(s)` URL；外部设置优先于同名本地文件。网站附件地址仍为 `assets/publications/<id>/<文件名>`，生产构建不会复制配置文件或其他未识别的文件。
+
+### 仅本地显示的私密论文
+
+将整篇论文目录加入 `.gitignore`，元数据和附件一起忽略。项目已经默认忽略 `/publications/private-*/`，因此 `publications/private-draft/` 可以直接作为本地草稿目录。也可以自行添加其他目录的忽略规则。
+
+- `npm run dev` 扫描所有本地论文，包括被忽略的目录。能访问开发服务器的设备也能看到这些论文。
+- `npm run build` 按 Git 忽略规则排除论文与附件，私密内容不会进入页面、JS、source map 或附件目录。生产构建会重新扫描，不信任本地缓存；此过滤要求 Git 可用且项目处于 Git 仓库中。
+- GitHub Actions 只构建已检出的仓库内容；未跟踪、被忽略的私密目录不会上传。`.gitignore` 不会撤回已经提交到 Git 的资料。
+
+论文源文件应放在根目录的 `publications/`，不要放在会被 Vite 原样复制的 `public/`。`src/data/publications.generated.json` 是自动生成、已忽略的本地索引，无需编辑或提交。
 
 `authors` 按署名顺序填写，`firstAuthorCount` 表示从第一位开始共有几位第一作者。页面会自动加粗第一作者、给 `content/site.json` 中 `owner.publicationName` 对应的作者加下划线，并在共同一作时添加 `* Equal contribution.`。
 
-`venue` 只填写完整发表信息，不要包含开头的 `In:`。页面会为会议和期刊论文自动添加非斜体的 `In:`，预印本则不会添加。
+`venue` 只填写完整发表信息，不要包含开头的 `In:`。页面会为会议和期刊论文自动添加非斜体的 `In:`，技术报告和预印本不添加。
 
 `summary` 会显示在 TL;DR 按钮的悬浮提示中；当 `resources.official` 存在时，`venueShort` 会作为操作区最后一个会议按钮并链接到官方页面。
 
 ## 目录结构
 
 ```text
-content/                        # 所有可替换的单用户内容
+content/                        # 个人资料、回答与路由内容
 ├── site.json                  # 姓名、Agent、SEO、头像与界面文字
 ├── profile.json               # 教育、技能、爱好、服务与联系资料
 ├── answers.json               # 固定回答与重复回答
-├── questions.json             # labels、问题库与展示位置
-└── publications.json          # 论文元数据
+└── questions.json             # labels、问题库与展示位置
+
+publications/                   # 每篇论文一个目录；私密目录可通过 Git 忽略
+└── <id>/publication.json       # 元数据，与 PDF 等附件放在一起
 
 src/
 ├── api/

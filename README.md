@@ -4,7 +4,7 @@
 
 An agent-style, content-driven personal academic homepage. The site is fully static and does not call an LLM API. Free-form questions are routed to curated answers by a lightweight embedding model that runs locally in the browser.
 
-The application supports one homepage owner at a time. All owner-specific information lives in [`content/`](content/README.md), so another person can reuse the template by replacing JSON content and assets without editing application code.
+The application supports one homepage owner at a time. Owner information lives in [`content/`](content/README.md), with self-contained paper directories under [`publications/`](publications/README.md), so another person can reuse the template by replacing JSON content and assets without editing application code.
 
 ## Features
 
@@ -92,19 +92,23 @@ Publications use one of the following types:
 
 - `conference`
 - `journal`
+- `technical-report` (Technical Report)
 - `preprint`
 
 They are displayed in that order, with newer papers listed first within each group.
 
 ### Manifest-based import
 
-For a publication whose metadata and files have already been collected in one directory, copy `scripts/publication.template.json` into that directory as `publication.json` and complete its fields. Optional local resources use these fixed filenames:
+Each paper lives in `publications/<id>/`, with its metadata in `publication.json` and optional attachments alongside it. Adding a directory is enough: there is no central publication list to register it in. The development server automatically refreshes when directories, metadata, or attachments change. Copy `scripts/publication.template.json` to get started; `id` is inferred from the directory name, or must match it if explicitly supplied.
 
 ```text
-paper.pdf
-code.zip
-poster.png
-citation.bib
+publications/
+└── my-paper/
+    ├── publication.json
+    ├── paper.pdf
+    ├── code.zip
+    ├── poster.png
+    └── citation.bib
 ```
 
 Validate the import before applying it:
@@ -114,18 +118,46 @@ npm run publication:add -- /path/to/publication-folder --dry-run
 npm run publication:add -- /path/to/publication-folder
 ```
 
-The importer validates the manifest, copies local resources to `public/assets/publications/<id>/`, and inserts the new publication at the beginning of `content/publications.json`. Missing optional files are ignored, and their buttons are not rendered.
+The importer validates an externally prepared directory and copies its metadata and recognized resources into `publications/<id>/`. If the folder is already there, it only validates and refreshes the local index. Missing optional files have no corresponding buttons. The interactive manager writes the same per-paper manifests and backs up the complete directory before editing or removing it.
 
-Local resource paths are not stored in `publications.json`. External `http(s)` URLs may be supplied under `resources.pdf`, `resources.code`, `resources.poster`, `resources.bib`, and `resources.official`; an external URL takes precedence over a local file of the same type.
+Local resource paths are not stored in `publication.json`. External `http(s)` URLs may be supplied under `resources.pdf`, `resources.code`, `resources.poster`, `resources.bib`, and `resources.official`; an external URL takes precedence over a local file of the same type. The website continues to serve permitted attachments at `assets/publications/<id>/<filename>`. Manifests and unrecognized files are not copied to the production site.
+
+### Local-only papers
+
+Put a paper's **whole directory** in `.gitignore`, including `publication.json`. The default rule `/publications/private-*/` already covers folders such as `publications/private-draft/`. Other folder names can be ignored explicitly, for example `/publications/unpublished-method/`.
+
+- `npm run dev`: includes every local paper, including ignored directories. Anyone who can access this development server can see them.
+- `npm run build`: excludes Git-ignored manifests and attachments before generating metadata, bundles, source maps, or copied resources. It rechecks the source directories rather than trusting a cached local index. Git must be available and the project must be in a Git checkout for production filtering.
+- GitHub Actions builds from the checked-out repository, where untracked, ignored private directories are absent. An ignore rule does not remove information that has already been committed to Git.
+
+Keep publication source files outside `public/`; that directory is copied as-is by Vite. `src/data/publications.generated.json` is a disposable, ignored local index and should never be edited or committed.
 
 Additional formatting rules:
 
 - List `authors` in publication order.
 - `firstAuthorCount` is the number of first authors counted from the beginning of the author list.
 - The page automatically bolds first authors, underlines the name configured in `content/site.json → owner.publicationName`, and adds an equal-contribution note when applicable.
-- Store the complete venue text in `venue` without an initial `In:`. The page adds `In:` to conference and journal papers but not to preprints.
+- Store the complete venue text in `venue` without an initial `In:`. The page adds `In:` to conference and journal papers but not to technical reports or preprints.
 - `summary` appears in the TL;DR tooltip.
 - When `resources.official` is present, `venueShort` becomes the final venue button and links to the official page.
+
+Author display and contribution notes are independent of author order:
+
+- Keep the complete, ordered author list in `authors`. Set optional `authorDisplayCount` to show only the first N names, followed by `et al.`. Hover, focus, or tap it to see the remaining authors in their original order.
+- `firstAuthorCount` controls bold names and the automatic `* Equal contribution.` note when greater than one. A team author can be the sole bold author with `firstAuthorCount: 1`.
+- `authorNotes` assigns custom symbols to specific authors, with each explanation shown on its own line. These notes do not bold names or imply equal contribution. The manager prompts for the display count and notes during add/edit; the manifest importer supports the same optional fields.
+- For a compact team credit, set `authorCredit` to `{ "team": "SinapisAI Team", "role": "Core contributor", "name": "Zi-Yu Mao" }`. This displays `SinapisAI Team (Core contributor: Zi-Yu Mao)` instead of individual authors, `et al.`, and contribution notes, while retaining the complete `authors` list. Choose `team` as the author display mode in the manager to configure these fields; the manifest importer supports `authorCredit` too.
+
+For example, a lead can precede a group of core contributors without belonging to that group:
+
+```json
+"authorNotes": [
+  { "symbol": "†", "text": "Tech lead.", "authors": ["Carol Smith"] },
+  { "symbol": "‡", "text": "Core contributors; names are listed in alphabetic order by last name.", "authors": ["Alice Adams", "Bob Brown"] }
+]
+```
+
+The page preserves the author order you enter; it does not automatically sort names.
 
 The resource index is regenerated automatically before development, testing, and production builds. It can also be refreshed manually:
 
@@ -178,12 +210,14 @@ agent.ask('How about your publications?', 'papers');
 ## Project Structure
 
 ```text
-content/                        # All replaceable single-user content
+content/                        # Replaceable profile, answers, and router content
 ├── site.json                  # Owner, Agent, SEO, avatar, and UI text
 ├── profile.json               # Education, skills, hobbies, services, and contact data
 ├── answers.json               # Fixed and repeated answer variants
-├── questions.json             # Labels, question banks, and placements
-└── publications.json          # Publication metadata
+└── questions.json             # Labels, question banks, and placements
+
+publications/                   # One directory per paper; ignored papers stay local
+└── <id>/publication.json       # Metadata, alongside paper.pdf and other attachments
 
 src/
 ├── api/

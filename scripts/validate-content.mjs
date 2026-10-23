@@ -3,6 +3,9 @@
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validatePublicationAuthors } from '../src/data/publication-authors.js';
+import { publicationTypes } from '../src/data/publication-groups.js';
+import { scanPublications } from './lib/publications.mjs';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
 const contentRoot = path.join(projectRoot, 'content');
@@ -22,7 +25,6 @@ const [
   profile,
   answerContent,
   questionContent,
-  publications,
   boundaries,
   evaluationSource,
   questionBank,
@@ -31,11 +33,14 @@ const [
   readJson('profile.json'),
   readJson('answers.json'),
   readJson('questions.json'),
-  readJson('publications.json'),
   readJson('router/label-boundaries.json'),
   readJson('router/routing-evaluation-source.json'),
   readJson('router/question-bank.json'),
 ]);
+
+const { records: publications } = await scanPublications(projectRoot, {
+  includeIgnored: !process.argv.includes('--production'),
+});
 
 const errors = [];
 const assetPaths = new Set();
@@ -278,9 +283,15 @@ questionBank.labels?.forEach(({ labelId, questions: prototypes }) => {
 requireArray(publications, 'publications');
 const publicationIds = new Set();
 publications?.forEach((publication, index) => {
+  try {
+    validatePublicationAuthors(publication);
+  } catch (error) {
+    fail(error.message);
+  }
   requireText(publication.id, `publications[${index}].id`);
   requireText(publication.title, `publications[${index}].title`);
   requireText(publication.type, `publications[${index}].type`);
+  if (!publicationTypes.includes(publication.type)) fail(`Unsupported publication type: ${publication.type}`);
   requireText(publication.venue, `publications[${index}].venue`);
   requireText(publication.venueShort, `publications[${index}].venueShort`);
   if (publicationIds.has(publication.id)) fail(`Duplicate publication id "${publication.id}".`);

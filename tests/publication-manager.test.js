@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import publications from '../content/publications.json' with { type: 'json' };
+import { scanPublications } from '../scripts/lib/publications.mjs';
 
 const execFileAsync = promisify(execFile);
+const { records: publications } = await scanPublications();
 
 test('publication manager offers a standalone read-only list command', async () => {
   const { stdout } = await execFileAsync(

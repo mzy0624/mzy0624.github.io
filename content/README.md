@@ -1,6 +1,6 @@
 # Customizing the Single-User Homepage
 
-Everything specific to the homepage owner lives in this directory. Reusing the template should not require edits under `src/`.
+Profile, answer, and routing content lives in this directory. Papers live in self-contained directories under [`../publications/`](../publications/README.md). Reusing the template should not require edits under `src/`.
 
 ## Files
 
@@ -8,7 +8,6 @@ Everything specific to the homepage owner lives in this directory. Reusing the t
 - `profile.json`: emails, affiliations, links, education, skills, hobbies, services, and correspondence addresses.
 - `answers.json`: fixed answer variants, structured answer blocks, portrait metadata, unknown responses, and repeat responses.
 - `questions.json`: labels, display prompts, synonymous questions, keyword fallback data, routing-data examples, Try Asking placement, and follow-up placement.
-- `publications.json`: publication metadata and external publication-resource URLs.
 - `router/label-boundaries.json`: semantic inclusion and exclusion rules for every label.
 - `router/routing-evaluation-source.json`: calibration and test semantic groups used to evaluate routing changes.
 - `router/question-bank.json`: the human-reviewed English prototypes embedded by the browser router.
@@ -24,7 +23,7 @@ Static files referenced by these JSON files live under `public/assets/`. Paths a
 3. Replace answer text and portrait paths in `answers.json`.
 4. Update the synonymous questions in `questions.json` when the supported knowledge changes.
    If labels or their semantic scope change, update the two files under `router/` as well.
-5. Replace `publications.json` and the matching directories under `public/assets/publications/`.
+5. Replace the paper directories under `../publications/`, each with its own `publication.json` and attachments.
 6. Replace the avatar, portrait, institution logos, and other icons referenced by your content.
 7. Validate and run the site:
 
@@ -53,9 +52,10 @@ Changing an existing answer or question does not require application-code change
 
 The name used to underline the homepage owner in author lists is `site.json → owner.publicationName`. Every publication must include that exact value in `authors`.
 
-Local resources use fixed filenames under `public/assets/publications/<id>/`:
+Each `publications/<id>/` directory contains its own `publication.json`, followed by optional resources using fixed filenames:
 
 ```text
+publication.json
 paper.pdf
 code.zip
 poster.png
@@ -67,3 +67,5 @@ The publication manager reads the same content configuration:
 ```bash
 npm run publication:manage
 ```
+
+Folders are discovered automatically. See [`publications/README.md`](../publications/README.md) for local-only paper directories and the development/production exclusion policy.

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { readFileSync } from 'node:fs';
+import { publicationsPlugin } from './scripts/lib/publications-vite.mjs';
 
 function readContent(filename) {
   return JSON.parse(readFileSync(new URL(`./content/${filename}`, import.meta.url), 'utf8'));
@@ -15,7 +16,7 @@ function escapeHtml(value) {
 
 export default defineConfig({
   base: './',
-  plugins: [{
+  plugins: [publicationsPlugin(), {
     name: 'single-user-content',
     transformIndexHtml(html) {
       const site = readContent('site.json');
