@@ -607,6 +607,11 @@ test('streams a configured leading statement before its answer text', async () =
   assert.ok(textIndex > formulaIndex);
 });
 
+test('identity plain text matches its linked presentation', () => {
+  const answer = answerForQuestion('identity_general').variants[0];
+  assert.equal(answer.content.map(({ text }) => text).join(''), answer.text);
+});
+
 test('preserves configured rich emphasis in the second research sub-answer', () => {
   const answer = answerForQuestion('model_capability_mining').variants[0];
   assert.ok(answer.text.length > 0);
@@ -797,6 +802,13 @@ test('services load academic and teaching metadata from profile content', () => 
   const services = intents.find(({ id }) => id === 'services');
 
   assert.deepEqual(profile.services, profileContent.services);
+  for (const entry of profile.services.teachingAssistants) {
+    assert.ok(typeof entry.course === 'string' && entry.course.trim());
+    assert.ok(typeof entry.teacher === 'string' && entry.teacher.trim());
+    assert.ok(Array.isArray(entry.semesters) && entry.semesters.length > 0);
+    assert.ok(entry.semesters.every((semester) => /^(Spring|Summer|Fall|Winter) \d{4}$/.test(semester)));
+    assert.ok(entry.icon.startsWith('assets/icons/'));
+  }
   assert.ok(services.displayPrompts.length > 0);
   assert.ok(answerForQuestion(services).variants[0].text.length > 0);
 });

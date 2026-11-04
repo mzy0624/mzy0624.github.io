@@ -240,7 +240,7 @@
   "hardNegative": {
     "identity_general": [
       "Could you spell out your complete legal name?",
-      "Are you currently a doctoral student?",
+      "Are you currently a doctoral candidate?",
       "Which university employs or enrolls you?",
       "Who supervises your Ph.D.?",
       "Are you part of the LAMDA Group?",

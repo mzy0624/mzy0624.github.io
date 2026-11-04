@@ -78,7 +78,7 @@
   ],
   "education": [
     {
-      "degree": "Ph.D. Student",
+      "degree": "Ph.D. Candidate",
       "period": "September 2023 – Present",
       "icon": "assets/icons/nju.png",
       "details": [
@@ -288,6 +288,14 @@
           "Summer 2024"
         ],
         "icon": "assets/icons/programming-training.svg"
+      },
+      {
+        "course": "Data Mining for Complex Data Objects",
+        "teacher": "Ming Li",
+        "semesters": [
+          "Fall 2026"
+        ],
+        "icon": "assets/icons/trowel.svg"
       }
     ]
   }

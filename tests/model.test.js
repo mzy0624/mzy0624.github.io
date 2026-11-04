@@ -62,6 +62,8 @@ test('routes the identity contact follow-up in English and Chinese', async () =>
 
 test('removed identity-specific questions fall back to unknown', async () => {
   const cases = [
+    'Are you a Ph.D. candidate?',
+    'Are you currently a doctoral candidate?',
     'Who is your Ph.D. supervisor?',
     'What is your full name?',
     'What is your Chinese name?',
